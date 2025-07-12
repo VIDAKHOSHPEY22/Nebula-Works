@@ -104,7 +104,7 @@ nebula-works/
 
 | 🌌 Home Page | 🛸 Dashboard | 📅 Calendar | 👨‍👩‍👧‍👦 Team |
 |-------------|--------------|-------------|--------------|
-| ![Home](https://github.com/VIDAKHOSHPEY22/Nebula-Works/assets/home-preview.png) | ![Dashboard](https://github.com/VIDAKHOSHPEY22/Nebula-Works/assets/dashboard-preview.png) | ![Calendar](https://github.com/VIDAKHOSHPEY22/Nebula-Works/assets/calendar-preview.png) | ![Team](https://github.com/VIDAKHOSHPEY22/Nebula-Works/assets/team-preview.png) |
+| ![Home](https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/9f5c25b9737ab8b055d45cb25cfaf84d9979c12e/assets/home-preview.png) | ![Dashboard](https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/9f5c25b9737ab8b055d45cb25cfaf84d9979c12e/assets/dashboard-preview.png) | ![Calendar](https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/9f5c25b9737ab8b055d45cb25cfaf84d9979c12e/assets/calendar-preview.png) | ![Team](https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/9f5c25b9737ab8b055d45cb25cfaf84d9979c12e/assets/team-preview.png) |
 
 
 ---
