@@ -102,10 +102,32 @@ nebula-works/
 
 ## 🖼 Preview Gallery
 
-| 🌌 Home Page | 🛸 Dashboard | 📅 Calendar | 👨‍👩‍👧‍👦 Team |
-|-------------|--------------|-------------|--------------|
-| ![Home](https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/9f5c25b9737ab8b055d45cb25cfaf84d9979c12e/assets/home-preview.png) | ![Dashboard](https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/9f5c25b9737ab8b055d45cb25cfaf84d9979c12e/assets/dashboard-preview.png) | ![Calendar](https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/9f5c25b9737ab8b055d45cb25cfaf84d9979c12e/assets/calendar-preview.png) | ![Team](https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/9f5c25b9737ab8b055d45cb25cfaf84d9979c12e/assets/team-preview.png) |
+<div align="center">
 
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/main/assets/home-preview.png" width="360px"><br>
+      <b>🌌 Home Page</b>
+    </td>
+    <td align="center">
+      <img src="https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/main/assets/dashboard-preview.png" width="360px"><br>
+      <b>🛸 Dashboard</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/main/assets/calendar-preview.png" width="360px"><br>
+      <b>📅 Calendar</b>
+    </td>
+    <td align="center">
+      <img src="https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/main/assets/team-preview.png" width="360px"><br>
+      <b>👨‍👩‍👧‍👦 Team</b>
+    </td>
+  </tr>
+</table>
+
+</div>
 
 ---
 
