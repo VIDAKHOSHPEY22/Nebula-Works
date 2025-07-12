@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | NebulaWorks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="logo.png">
+    <style>
+        /* Dark Theme Variables */
+        :root {
+            --primary: #6a00ff;
+            --secondary: #00e5ff;
+            --accent: #ff00aa;
+            --dark: #0a0a20;
+            --darker: #050510;
+            --light: #e0f7fa;
+            --gray: #a0a0c0;
+            --success: #00ffaa;
+            --warning: #ffcc00;
+            --danger: #ff5555;
+            --dark-gray: #303050;
+            --medium-gray: #707090;
+            --light-gray: #c0c0e0;
+            --white: #ffffff;
+            
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --widget-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Light Theme Variables */
+        body.light-theme {
+            --dark: #f5f5ff;
+            --darker: #e0e0f0;
+            --light: #1a1a2e;
+            --gray: #606080;
+            --dark-gray: #d0d0e0;
+            --medium-gray: #9090b0;
+            --light-gray: #303050;
+            --white: #0a0a20;
+        }
+
+        body.light-theme .widget,
+        body.light-theme .system-status,
+        body.light-theme .welcome-section,
+        body.light-theme .quick-link-card,
+        body.light-theme .sidebar,
+        body.light-theme header,
+        body.light-theme .user-dropdown,
+        body.light-theme .modal-content {
+            background-color: var(--dark);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: var(--light);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--darker);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(106, 0, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: var(--white);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background-color: var(--dark);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            z-index: 100;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 36px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+            color: var(--medium-gray);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            margin-right: 15px;
+        }
+
+        .toggle-checkbox {
+            display: none;
+        }
+
+        .toggle-label {
+            position: relative;
+            display: block;
+            width: 60px;
+            height: 30px;
+            background-color: var(--dark-gray);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-label i {
+            position: absolute;
+            top: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .toggle-label .fa-sun {
+            left: 8px;
+            color: var(--warning);
+        }
+
+        .toggle-label .fa-moon {
+            right: 8px;
+            color: var(--light-gray);
+        }
+
+        .toggle-ball {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--white);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: var(--medium-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .toggle-ball {
+            transform: translateX(30px);
+            background-color: var(--white);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-sun {
+            color: var(--light-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-moon {
+            color: var(--primary);
+        }
+
+        /* Admin Dropdown */
+        .admin-dropdown {
+            position: absolute;
+            top: calc(var(--header-height) + 10px);
+            right: 25px;
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 300px;
+            padding: 15px;
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .admin-dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .admin-dropdown-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .admin-dropdown-info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .admin-dropdown-info p {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .admin-dropdown-info .admin-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: rgba(106, 0, 255, 0.2);
+            color: var(--primary);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        .admin-dropdown-menu {
+            list-style: none;
+        }
+
+        .admin-dropdown-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: var(--light-gray);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .admin-dropdown-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .admin-dropdown-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .admin-dropdown-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .admin-dropdown-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn i {
+            margin-right: 8px;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin-top: var(--header-height);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--dark);
+            padding: 25px 0;
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            transition: var(--transition);
+            z-index: 98;
+            box-shadow: var(--box-shadow);
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-menu li a i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .nav-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a.active {
+            background-color: rgba(106, 0, 255, 0.2);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav-menu li a.active i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a span {
+            flex-grow: 1;
+        }
+
+        .admin-news {
+            margin-top: 30px;
+            padding: 0 25px;
+        }
+
+        .admin-news h3 {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-item {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            padding-left: 8px;
+            border-left: 2px solid var(--dark-gray);
+        }
+
+        .news-item a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .news-item a:hover {
+            color: var(--primary);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 30px;
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            background-color: var(--darker);
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            margin-bottom: 30px;
+            background-color: var(--dark);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--widget-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .welcome-text h1 span {
+            color: var(--primary);
+        }
+
+        .welcome-text p {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
+        .admin-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .emergency-btn {
+            background-color: rgba(255, 85, 85, 0.1);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 85, 85, 0.3);
+            color: var(--danger);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .emergency-btn:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        /* Widgets Grid */
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .widget {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .widget-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white);
+        }
+
+        .widget-header i {
+            color: var(--primary);
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            color: var(--medium-gray);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        /* Admin Table Widget */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .admin-table th {
+            text-align: left;
+            padding: 12px 15px;
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--light-gray);
+        }
+
+        .admin-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .admin-table tr:hover td {
+            background-color: rgba(106, 0, 255, 0.05);
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-badge .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-badge.online {
+            background-color: rgba(0, 255, 170, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.warning {
+            background-color: rgba(255, 204, 0, 0.1);
+            color: var(--warning);
+        }
+
+        .status-badge.danger {
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+        }
+
+        /* Control Panel Widget */
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .control-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-item label {
+            font-size: 0.85rem;
+            color: var(--light-gray);
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .slider-value {
+            font-size: 0.85rem;
+            min-width: 40px;
+            text-align: right;
+            color: var(--light-gray);
+        }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch input[type="checkbox"] {
+            height: 0;
+            width: 0;
+            visibility: hidden;
+        }
+
+        .toggle-switch label {
+            cursor: pointer;
+            text-indent: -9999px;
+            width: 46px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            display: block;
+            border-radius: 12px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .toggle-switch label:after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: var(--light-gray);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .toggle-switch input:checked + label {
+            background: var(--primary);
+        }
+
+        .toggle-switch input:checked + label:after {
+            left: calc(100% - 2px);
+            transform: translateX(-100%);
+            background: var(--white);
+        }
+
+        .toggle-switch span {
+            font-size: 0.85rem;
+            color: var(--light-gray);
+        }
+
+        /* Analytics Widget */
+        .analytics-chart {
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+            margin-top: 10px;
+        }
+
+        .chart-placeholder {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .chart-placeholder i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .chart-placeholder p {
+            font-size: 0.9rem;
+        }
+
+        .time-selector {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        /* Activity Log Widget */
+        .activity-log {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .activity-log h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white);
+        }
+
+        .activity-log h2 i {
+            color: var(--primary);
+        }
+
+        .log-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .log-item {
+            display: flex;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .log-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .log-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(106, 0, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            color: var(--primary);
+        }
+
+        .log-icon.success {
+            background-color: rgba(0, 255, 170, 0.1);
+            color: var(--success);
+        }
+
+        .log-icon.warning {
+            background-color: rgba(255, 204, 0, 0.1);
+            color: var(--warning);
+        }
+
+        .log-icon.danger {
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+        }
+
+        .log-details p {
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            color: var(--light-gray);
+        }
+
+        .log-details small {
+            font-size: 0.75rem;
+            color: var(--medium-gray);
+        }
+
+        /* System Status */
+        .system-status {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .system-status h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white);
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .system-status h2 i {
+            color: var(--primary);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .gauge {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: conic-gradient(var(--primary) 0%, var(--dark-gray) 0%);
+        }
+
+        .gauge::before {
+            content: '';
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background-color: var(--dark);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) inset;
+        }
+
+        .gauge-value {
+            position: relative;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--white);
+        }
+
+        .status-item h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--light-gray);
+        }
+
+        .alert {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: var(--danger);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .alert.active {
+            opacity: 1;
+        }
+
+        /* Admin Footer */
+        .admin-footer {
+            background-color: var(--dark);
+            padding: 15px 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 30px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--medium-gray);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .resources-list {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 60px;
+                --sidebar-width: 260px;
+            }
+            
+            .welcome-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .status-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            :root {
+                --header-height: 60px;
+            }
+            
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+            
+            .logo img {
+                height: 30px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .gauge {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .gauge::before {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .gauge-value {
+                font-size: 1.2rem;
+            }
+        }
+        .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+        table-layout: fixed; /* اضافه شده */
+    }
+
+    .admin-table th, 
+    .admin-table td {
+        padding: 12px 10px; /* کاهش پدینگ */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .admin-table th {
+        background-color: rgba(106, 0, 255, 0.1);
+        color: var(--primary);
+        font-weight: 500;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* تنظیم عرض ستون‌ها */
+    .admin-table th:nth-child(1),
+    .admin-table td:nth-child(1) {
+        width: 15%; /* ID */
+    }
+
+    .admin-table th:nth-child(2),
+    .admin-table td:nth-child(2) {
+        width: 30%; /* User */
+    }
+
+    .admin-table th:nth-child(3),
+    .admin-table td:nth-child(3) {
+        width: 25%; /* Role */
+    }
+
+    .admin-table th:nth-child(4),
+    .admin-table td:nth-child(4) {
+        width: 15%; /* Status */
+    }
+
+    .admin-table th:nth-child(5),
+    .admin-table td:nth-child(5) {
+        width: 15%; /* Actions */
+        text-align: center;
+    }
+
+    .admin-table tr:hover td {
+        background-color: rgba(106, 0, 255, 0.05);
+    }
+
+    /* برای نمایش بهتر در موبایل */
+    @media (max-width: 768px) {
+        .admin-table {
+            display: block;
+            overflow-x: auto;
+        }
+        
+        .admin-table th, 
+        .admin-table td {
+            min-width: 100px;
+        }
+    }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Initializing Admin Portal...</div>
+    </div>
+    
+    <!-- Header -->
+    <header id="header">
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="logo">
+            <img src="logo.png" alt="NebulaWorks">
+            <h1>NebulaWorks <span style="color: var(--secondary); font-size: 0.8rem;">Admin Portal</span></h1>
+        </div>
+        
+        <div class="user-menu">
+            <div class="theme-toggle">
+                <input type="checkbox" id="theme-toggle" class="toggle-checkbox">
+                <label for="theme-toggle" class="toggle-label">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                    <span class="toggle-ball"></span>
+                </label>
+            </div>
+            <div class="notification">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">5</span>
+            </div>
+            <div class="user-avatar" id="admin-avatar">
+                A
+            </div>
+        </div>
+
+        <!-- Admin Dropdown -->
+        <div class="admin-dropdown" id="admin-dropdown">
+            <div class="admin-dropdown-header">
+                <div class="admin-dropdown-avatar">A</div>
+                <div class="admin-dropdown-info">
+                    <h3>Admin User</h3>
+                    <p>admin@nebulaworks.space</p>
+                    <span class="admin-badge">Administrator</span>
+                </div>
+            </div>
+            <ul class="admin-dropdown-menu">
+                <li><a href="#"><i class="fas fa-user-shield"></i> Admin Profile</a></li>
+                <li><a href="system.html"><i class="fas fa-cog"></i> System Settings</a></li>
+                <li><a href="user.html"><i class="fas fa-users-cog"></i> User Management</a></li>
+                <li><a href="security.html"><i class="fas fa-shield-alt"></i> Security Center</a></li>
+            </ul>
+            <div class="admin-dropdown-footer">
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="nav-menu">
+                <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                <li><a href="user.html"><i class="fas fa-users-cog"></i> <span>User Management</span></a></li>
+                <li><a href="system.html"><i class="fas fa-server"></i> <span>System Controls</span></a></li>
+                <li><a href="network.html"><i class="fas fa-chart-network"></i> <span>Network Analytics</span></a></li>
+                <li><a href="security.html"><i class="fas fa-shield-alt"></i> <span>Security</span></a></li>
+                <li><a href="event.html"><i class="fas fa-calendar-star"></i> <span>Event Logs</span></a></li>
+                <li><a href="settings-admin.html"><i class="fas fa-cogs"></i> <span>Settings</span></a></li>
+            </ul>
+            
+            <div class="admin-news">
+                <h3><i class="fas fa-newspaper"></i> System Alerts</h3>
+                <div class="news-item">
+                    <a href="#">3 pending security updates</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">Backup scheduled for tonight</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">New admin permissions available</a>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Welcome, <span>Administrator</span></h1>
+                    <p id="current-date">Monday, July 15, 2023</p>
+                </div>
+                <div class="admin-actions">
+                    <button class="emergency-btn">
+                        <i class="fas fa-bell"></i> Emergency Protocol
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Widgets Grid -->
+            <div class="widgets-grid">
+                <!-- User Management Widget -->
+                <article class="widget">
+                    <div class="widget-header">
+                        <h2><i class="fas fa-users-cog"></i> User Management</h2>
+                        <div class="widget-actions">
+                            <button class="btn-icon"><i class="fas fa-plus"></i></button>
+                            <button class="btn-icon"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                    </div>
+                    
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>NW-001</td>
+                                <td>
+                                    <div class="user-badge">
+                                        <div class="avatar">Y</div>
+                                        <span>Yalda</span>
+                                    </div>
+                                </td>
+                                <td>Engineer</td>
+                                <td><span class="status-badge online">Active</span></td>
+                                <td>
+                                    <button class="btn-icon"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-icon"><i class="fas fa-lock"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>NW-002</td>
+                                <td>
+                                    <div class="user-badge">
+                                        <div class="avatar">V</div>
+                                        <span>Vida</span>
+                                    </div>
+                                </td>
+                                <td>Scientist</td>
+                                <td><span class="status-badge online">Active</span></td>
+                                <td>
+                                    <button class="btn-icon"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-icon"><i class="fas fa-lock"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>NW-003</td>
+                                <td>
+                                    <div class="user-badge">
+                                        <div class="avatar">T</div>
+                                        <span>TechBot</span>
+                                    </div>
+                                </td>
+                                <td>Droid</td>
+                                <td><span class="status-badge warning">Maintenance</span></td>
+                                <td>
+                                    <button class="btn-icon"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-icon"><i class="fas fa-power-off"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+                
+                <!-- System Controls Widget -->
+                <article class="widget">
+                    <div class="widget-header">
+                        <h2><i class="fas fa-sliders-h"></i> System Controls</h2>
+                    </div>
+                    <div class="control-panel">
+                        <div class="control-item">
+                            <label>Gravity Generator</label>
+                            <div class="slider-container">
+                                <input type="range" min="0" max="100" value="92" class="slider" id="gravity-slider">
+                                <span class="slider-value">92%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="control-item">
+                            <label>Oxygen Production</label>
+                            <div class="slider-container">
+                                <input type="range" min="0" max="100" value="85" class="slider" id="oxygen-slider">
+                                <span class="slider-value">85%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="control-item">
+                            <label>Energy Distribution</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="energy-toggle" checked>
+                                <label for="energy-toggle"></label>
+                                <span>Auto-balance</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Analytics Widget -->
+                <article class="widget">
+                    <div class="widget-header">
+                        <h2><i class="fas fa-chart-line"></i> Station Analytics</h2>
+                        <select class="time-selector">
+                            <option>24 Hours</option>
+                            <option>7 Days</option>
+                            <option>30 Days</option>
+                        </select>
+                    </div>
+                    <div class="analytics-chart" id="analytics-chart">
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-bar"></i>
+                            <p>Resource Usage Analytics</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            
+            <!-- Recent Activity Widget -->
+            <section class="widget">
+                <div class="widget-header">
+                    <h2><i class="fas fa-clipboard-list"></i> Recent Activity</h2>
+                </div>
+                <div class="activity-log">
+                    <div class="log-items">
+                        <div class="log-item">
+                            <div class="log-icon success">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="log-details">
+                                <p>System backup completed successfully</p>
+                                <small>2 minutes ago by AutoSys</small>
+                            </div>
+                        </div>
+                        
+                        <div class="log-item">
+                            <div class="log-icon warning">
+                                <i class="fas fa-exclamation"></i>
+                            </div>
+                            <div class="log-details">
+                                <p>Unauthorized access attempt detected</p>
+                                <small>17 minutes ago from Terminal NW-247</small>
+                            </div>
+                        </div>
+                        
+                        <div class="log-item">
+                            <div class="log-icon">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <div class="log-details">
+                                <p>User permissions updated for Yalda</p>
+                                <small>1 hour ago by Admin</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- System Status -->
+            <section class="system-status">
+                <h2><i class="fas fa-heartbeat"></i> Core Systems Status</h2>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="gauge" id="mainframe-gauge">
+                            <span class="gauge-value">98%</span>
+                        </div>
+                        <h3>Mainframe</h3>
+                    </div>
+                    <div class="status-item">
+                        <div class="gauge" id="database-gauge">
+                            <span class="gauge-value">95%</span>
+                        </div>
+                        <h3>Database</h3>
+                    </div>
+                    <div class="status-item">
+                        <div class="gauge" id="backup-gauge">
+                            <span class="gauge-value">78%</span>
+                        </div>
+                        <h3>Backup Nodes</h3>
+                        <div class="alert active">!</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="gauge" id="security-gauge">
+                            <span class="gauge-value">100%</span>
+                        </div>
+                        <h3>Security</h3>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Admin Footer -->
+            <footer class="admin-footer">
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <p>Station Time: <span id="admin-time"></span></p>
+                        <p>Last System Check: <span id="last-check">15 minutes ago</span></p>
+                    </div>
+                    <div class="footer-right">
+                        <p>Admin Portal v2.4.1</p>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.opacity = '0';
+                    setTimeout(function() {
+                        loading.style.display = 'none';
+                    }, 500);
+                }
+            }, 1500);
+        });
+    
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (!menuToggle || !sidebar || !overlay) return;
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+    
+        // Header Scroll Effect
+        function setupHeaderScroll() {
+            const header = document.getElementById('header');
+            if (!header) return;
+            
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', function() {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll <= 0) {
+                    header.classList.remove('header-scrolled');
+                    return;
+                }
+                
+                if (currentScroll > lastScroll && !header.classList.contains('header-scrolled')) {
+                    header.classList.add('header-scrolled');
+                } 
+                
+                lastScroll = currentScroll;
+            });
+        }
+
+        // Update current date
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+            
+            // Update admin time in footer
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            const adminTime = document.getElementById('admin-time');
+            if (adminTime) {
+                adminTime.textContent = now.toLocaleTimeString('en-US', timeOptions);
+            }
+        }
+
+        // Admin Dropdown Toggle
+        function setupAdminDropdown() {
+            const adminAvatar = document.getElementById('admin-avatar');
+            const adminDropdown = document.getElementById('admin-dropdown');
+            const overlay = document.getElementById('overlay');
+            
+            if (!adminAvatar || !adminDropdown || !overlay) return;
+            
+            adminAvatar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                adminDropdown.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                adminDropdown.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!adminDropdown.contains(e.target) && e.target !== adminAvatar) {
+                    adminDropdown.classList.remove('active');
+                }
+            });
+        }
+
+        // Initialize System Gauges
+        function initGauges() {
+            const gauges = [
+                { id: 'mainframe-gauge', value: 98 },
+                { id: 'database-gauge', value: 95 },
+                { id: 'backup-gauge', value: 78 },
+                { id: 'security-gauge', value: 100 }
+            ];
+    
+            gauges.forEach(gauge => {
+                const element = document.getElementById(gauge.id);
+                if (!element) return;
+                
+                element.style.background = `conic-gradient(
+                    var(--primary) ${gauge.value}%, 
+                    var(--dark-gray) 0%
+                )`;
+                
+                // Set alert if value is critical
+                if (gauge.value <= 30) {
+                    const alertElement = document.createElement('div');
+                    alertElement.className = 'alert active';
+                    alertElement.textContent = '!';
+                    element.parentNode.appendChild(alertElement);
+                }
+            });
+        }
+
+        // Slider functionality
+        function setupSliders() {
+            const sliders = document.querySelectorAll('.slider');
+            sliders.forEach(slider => {
+                const valueDisplay = slider.nextElementSibling;
+                slider.addEventListener('input', function() {
+                    valueDisplay.textContent = `${this.value}%`;
+                });
+            });
+        }
+
+        // Theme Toggle Functionality
+        function setupThemeToggle() {
+            const themeToggle = document.getElementById('theme-toggle');
+            if (!themeToggle) return;
+
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('nebulaTheme');
+            if (savedTheme) {
+                document.body.classList.add(savedTheme);
+                themeToggle.checked = savedTheme === 'light-theme';
+            }
+
+            themeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('light-theme');
+                    localStorage.setItem('nebulaTheme', 'light-theme');
+                } else {
+                    document.body.classList.remove('light-theme');
+                    localStorage.setItem('nebulaTheme', 'dark-theme');
+                }
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setupMobileMenu();
+            setupHeaderScroll();
+            updateCurrentDate();
+            setupAdminDropdown();
+            initGauges();
+            setupSliders();
+            setupThemeToggle();
+            
+            // Update time every minute
+            setInterval(updateCurrentDate, 60000);
+            
+            // Add hover effect to widgets
+            const widgets = document.querySelectorAll('.widget');
+            widgets.forEach(widget => {
+                widget.addEventListener('mouseenter', () => {
+                    widget.style.transform = 'translateY(-5px)';
+                    widget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+                });
+                
+                widget.addEventListener('mouseleave', () => {
+                    widget.style.transform = '';
+                    widget.style.boxShadow = '';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

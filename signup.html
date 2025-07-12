@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NebulaWorks - Crew Registration</title>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="./assets/logo.png">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary: #6a00ff;
+            --primary-light: rgba(106, 0, 255, 0.2);
+            --secondary: #00e5ff;
+            --secondary-light: rgba(0, 229, 255, 0.2);
+            --accent: #ff00aa;
+            --accent-light: rgba(255, 0, 170, 0.2);
+            --dark: #0a0a20;
+            --darker: #050510;
+            --light: #e0f7fa;
+            --light-transparent: rgba(224, 247, 250, 0.7);
+            --gray: #a0a0c0;
+            --gray-dark: #505070;
+            --success: #00ffaa;
+            --error: #ff3a5e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(ellipse at bottom, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Stars Animation */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 5s) infinite ease-in-out;
+            z-index: -1;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Slide In Animation */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Auth Page Styles */
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .auth-page::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('assets/logo.png') center center no-repeat;
+            background-size: 150px;
+            opacity: 0.05;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .auth-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(20, 20, 50, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(106, 0, 255, 0.5);
+            animation: fadeIn 1s ease-out;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(106, 0, 255, 0.2);
+        }
+
+        /* Glow Effect */
+        .auth-container::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(106, 0, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Planet Viewer Section */
+        .planet-viewer {
+            position: relative;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(10, 10, 40, 0.5));
+            min-height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 40px;
+            overflow: hidden;
+            transition: transform 0.5s ease-out;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            --progress-bar-color: transparent;
+            min-height: 400px;
+            transform: translateY(0);
+            transition: transform 0.8s ease-out;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .planet-info {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            background: rgba(10, 10, 32, 0.8);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 0 20px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(106, 0, 255, 0.3);
+            z-index: 10;
+            transform: translateY(0);
+            transition: all 0.5s ease;
+            opacity: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .planet-info.hidden {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        .planet-info h2 {
+            margin: 0;
+            color: var(--secondary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .planet-info p {
+            margin: 5px 0 0;
+            font-size: 0.9rem;
+            color: var(--light-transparent);
+            line-height: 1.4;
+        }
+
+        .planet-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+            background: rgba(10, 10, 32, 0.7);
+            padding: 8px 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(106, 0, 255, 0.2);
+        }
+
+        .planet-nav button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .planet-nav button:hover {
+            transform: scale(1.3);
+        }
+
+        .planet-nav button.active {
+            background: var(--secondary);
+            transform: scale(1.3);
+            box-shadow: 0 0 10px var(--secondary);
+        }
+
+        /* Auth Form Section */
+        .auth-form {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        .logo img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+            transition: transform 0.5s ease;
+            filter: drop-shadow(0 0 10px var(--primary-light));
+        }
+
+        .logo:hover img {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo p {
+            color: var(--gray);
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            max-width: 80%;
+            margin: 0 auto;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input, 
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(106, 0, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input::placeholder,
+        .form-group select::placeholder {
+            color: var(--gray-dark);
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-group select option {
+            background: var(--dark);
+            padding: 10px;
+        }
+
+        .form-group .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        /* Checkbox Styles */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            margin-right: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .checkbox-group input[type="checkbox"]:checked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            color: white;
+            font-size: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .checkbox-group label {
+            color: var(--gray);
+            font-size: 0.9rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-group a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .checkbox-group a:hover {
+            color: var(--accent);
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(106, 0, 255, 0.3);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(106, 0, 255, 0.5);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form Buttons Container */
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+
+        .form-buttons .btn-primary {
+            margin-top: 0;
+            width: 48%;
+        }
+
+        /* Auth Footer */
+        .auth-footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .auth-footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover {
+            color: var(--accent);
+        }
+
+        .auth-footer a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background: var(--secondary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: right;
+        }
+
+        .auth-footer a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--darker);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 15px var(--primary-light));
+        }
+
+        .loading-text {
+            color: var(--secondary);
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 300;
+            position: relative;
+        }
+
+        .loading-text::after {
+            content: '...';
+            position: absolute;
+            animation: dots 1.5s infinite steps(4, end);
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* Form Steps */
+        .form-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .form-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            max-width: 33.33%;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            color: var(--gray);
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .step.active .step-number {
+            background: var(--secondary);
+            color: var(--dark);
+            border-color: var(--secondary);
+            box-shadow: 0 0 10px var(--secondary-light);
+        }
+
+        .step.completed .step-number {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-light);
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-label {
+            color: var(--secondary);
+            font-weight: 500;
+        }
+
+        .step.completed .step-label {
+            color: var(--primary);
+        }
+
+        /* Form Sections */
+        .form-section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        /* Summary items */
+        .summary-item {
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--secondary);
+            transition: all 0.3s ease;
+        }
+
+        .summary-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        /* Validation Messages */
+        .validation-message {
+            color: var(--error);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error input,
+        .form-group.error select {
+            border-color: var(--error);
+        }
+
+        .form-group.error .validation-message {
+            display: block;
+        }
+
+        .form-group.success input,
+        .form-group.success select {
+            border-color: var(--success);
+        }
+
+        /* Success State */
+        .success-state {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .success-state i {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        .success-state h2 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .success-state p {
+            color: var(--gray);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            color: var(--secondary);
+            cursor: help;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark);
+            color: var(--light);
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+            border: 1px solid var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Password Strength Meter */
+        .password-strength {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease, background 0.3s ease;
+        }
+
+        /* Desktop Styles */
+        @media (min-width: 1024px) {
+            .auth-container {
+                grid-template-columns: 1fr 1fr;
+                height: 80vh;
+                min-height: 600px;
+                max-height: 800px;
+            }
+
+            .planet-viewer {
+                height: 100%;
+                padding-top: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .auth-form {
+                max-height: 100%;
+                overflow-y: auto;
+                padding: 2rem 3rem;
+            }
+
+            .logo {
+                margin-bottom: 1.5rem;
+            }
+
+            .logo img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .logo h1 {
+                font-size: 2.5rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.8rem;
+            }
+        }
+
+        /* Tablet Styles */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .auth-container {
+                max-width: 800px;
+            }
+
+            .planet-viewer {
+                min-height: 500px;
+            }
+
+            .auth-form {
+                padding: 2rem;
+            }
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 767px) {
+            .auth-page {
+                padding: 10px;
+                height: auto;
+                min-height: 100vh;
+                display: block;
+                overflow-y: auto;
+            }
+
+            .auth-container {
+                height: auto;
+                min-height: 0;
+                max-height: none;
+                margin: 10px 0;
+            }
+
+            .planet-viewer {
+                min-height: 300px;
+                height: 50vh;
+            }
+
+            .auth-form {
+                padding: 1.5rem;
+                max-height: none;
+            }
+
+            .logo h1 {
+                font-size: 1.8rem;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+            }
+
+            .form-buttons .btn-primary {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .planet-info h2 {
+                font-size: 1.3rem;
+            }
+
+            .planet-info p {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Small Mobile Devices */
+        @media (max-width: 480px) {
+            .auth-form {
+                padding: 1.2rem;
+            }
+
+            .logo img {
+                width: 70px;
+                height: 70px;
+            }
+
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+
+            .logo p {
+                font-size: 0.9rem;
+            }
+
+            .step-label {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--primary), var(--accent));
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Model Viewer Customization */
+        .Hotspot {
+            background: var(--secondary);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: pulse 2s infinite;
+            opacity: 0.8;
+        }
+
+        .HotspotAnnotation {
+            background: rgba(10, 10, 32, 0.8);
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            color: var(--light);
+            border: 1px solid var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body class="auth-page">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <img src="assets/logo.png" alt="NebulaWorks" class="loading-logo">
+        <div class="loading-text">INITIALIZING REGISTRATION</div>
+    </div>
+    
+    <!-- Stars Background -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Main Content -->
+    <main class="auth-container">
+        <div class="planet-viewer">
+            <!-- Earth -->
+            <model-viewer 
+                id="earth-model"
+                src="assets/3d/Earth.glb" 
+                alt="3D model of Earth"
+                camera-controls 
+                auto-rotate
+                ar
+                style="display: block;"
+                exposure="1.2"
+                environment-image="neutral"
+                shadow-intensity="1">
+                <div class="planet-info">
+                    <h2>Earth</h2>
+                    <p>Our home planet with diverse ecosystems and the origin of human civilization</p>
+                </div>
+            </model-viewer>
+            
+            <!-- Mars -->
+            <model-viewer 
+                id="mars-model"
+                src="assets/3d/Mars.glb" 
+                alt="3D model of Mars"
+                camera-controls 
+                auto-rotate
+                ar
+                style="display: none;"
+                exposure="1.2"
+                environment-image="neutral"
+                shadow-intensity="1">
+                <div class="planet-info">
+                    <h2>Mars</h2>
+                    <p>The red planet with potential for colonization and terraforming projects</p>
+                </div>
+            </model-viewer>
+            
+            <!-- Jupiter -->
+            <model-viewer 
+                id="jupiter-model"
+                src="assets/3d/Jupiter.glb" 
+                alt="3D model of Jupiter"
+                camera-controls 
+                auto-rotate
+                ar
+                style="display: none;"
+                exposure="1.2"
+                environment-image="neutral"
+                shadow-intensity="1">
+                <div class="planet-info">
+                    <h2>Jupiter</h2>
+                    <p>Gas giant with spectacular atmospheric storms and valuable helium-3 resources</p>
+                </div>
+            </model-viewer>
+            
+            <div class="planet-nav">
+                <button class="active" data-planet="earth" aria-label="View Earth"></button>
+                <button data-planet="mars" aria-label="View Mars"></button>
+                <button data-planet="jupiter" aria-label="View Jupiter"></button>
+            </div>
+        </div>
+        
+        <div class="auth-form">
+            <div class="logo">
+                <img src="assets/logo.png" alt="NebulaWorks">
+                <h1>Crew Registration</h1>
+                <p>Join the interstellar workforce and explore the cosmos with us</p>
+            </div>
+            
+            <!-- Registration Steps -->
+            <div class="form-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Account</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Profile</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Confirm</div>
+                </div>
+            </div>
+            
+            <!-- Registration Form -->
+            <form id="registration-form">
+                <!-- Step 1: Account Information -->
+                <div class="form-section active" data-step="1">
+                    <div class="form-group">
+                        <label for="email">Quantum ID (Email)</label>
+                        <input type="email" id="email" required placeholder="your.email@nebula.works">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <div class="validation-message" id="email-error">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Bio-Signature (Password) <span class="tooltip">ⓘ
+                            <span class="tooltip-text">Must be at least 8 characters with uppercase, lowercase, and numbers</span>
+                        </span></label>
+                        <input type="password" id="password" required placeholder="••••••••" minlength="8">
+                        <i class="fas fa-lock input-icon"></i>
+                        <div class="password-strength">
+                            <div class="strength-meter" id="strength-meter"></div>
+                        </div>
+                        <div class="validation-message" id="password-error">Password must be at least 8 characters</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Bio-Signature</label>
+                        <input type="password" id="confirm-password" required placeholder="••••••••">
+                        <i class="fas fa-lock input-icon"></i>
+                        <div class="validation-message" id="confirm-error">Passwords do not match</div>
+                    </div>
+                    
+                    <button type="button" class="btn-primary next-step">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <!-- Step 2: Profile Information -->
+                <div class="form-section" data-step="2">
+                    <div class="form-group">
+                        <label for="fullname">Full Name</label>
+                        <input type="text" id="fullname" required placeholder="Commander John Doe">
+                        <i class="fas fa-user-astronaut input-icon"></i>
+                        <div class="validation-message" id="name-error">Please enter your full name</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="position">Desired Position</label>
+                        <select id="position" required>
+                            <option value="" disabled selected>Select your role</option>
+                            <option value="pilot">Starship Pilot</option>
+                            <option value="engineer">Systems Engineer</option>
+                            <option value="scientist">Research Scientist</option>
+                            <option value="medical">Medical Officer</option>
+                            <option value="security">Security Specialist</option>
+                            <option value="botanist">Hydroponic Botanist</option>
+                            <option value="diplomat">Interstellar Diplomat</option>
+                        </select>
+                        <i class="fas fa-briefcase input-icon"></i>
+                        <div class="validation-message" id="position-error">Please select a position</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="origin">Planet of Origin</label>
+                        <input type="text" id="origin" required placeholder="Earth, Mars, etc." list="planets">
+                        <datalist id="planets">
+                            <option value="Earth">
+                            <option value="Mars">
+                            <option value="Luna (Earth's Moon)">
+                            <option value="Titan">
+                            <option value="Europa">
+                        </datalist>
+                        <i class="fas fa-globe input-icon"></i>
+                        <div class="validation-message" id="origin-error">Please enter your planet of origin</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bio">Personal Bio (Optional)</label>
+                        <textarea id="bio" rows="3" placeholder="Tell us about your skills and experience..."></textarea>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="button" class="btn-primary btn-secondary prev-step">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button type="button" class="btn-primary next-step">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Confirmation -->
+                <div class="form-section" data-step="3">
+                    <div class="form-group">
+                        <label>Registration Summary</label>
+                        <div id="summary-email" class="summary-item"></div>
+                        <div id="summary-name" class="summary-item"></div>
+                        <div id="summary-position" class="summary-item"></div>
+                        <div id="summary-origin" class="summary-item"></div>
+                        <div id="summary-bio" class="summary-item" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">I agree to the <a href="#" id="terms-link">Interstellar Employment Terms</a></label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="newsletter">
+                        <label for="newsletter">Subscribe to NebulaWorks updates and mission alerts</label>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="button" class="btn-primary btn-secondary prev-step">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-user-astronaut"></i> Complete Registration
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Success State (hidden initially) -->
+                <div class="success-state" id="success-state">
+                    <i class="fas fa-check-circle"></i>
+                    <h2>Registration Complete!</h2>
+                    <p>Welcome to the NebulaWorks crew. Your quantum ID has been activated.</p>
+                    <button type="button" class="btn-primary" id="dashboard-btn">
+                        <i class="fas fa-rocket"></i> Proceed to Dashboard
+                    </button>
+                </div>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Already have clearance? <a href="index.html">Access portal</a></p>
+                <p class="copyright">© 2023 NebulaWorks Interstellar. All rights reserved.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Model Viewer Script -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+
+    <script>
+        // Loading Screen Transition
+        window.addEventListener('load', function() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            setTimeout(() => {
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                }, 500);
+            }, 1500);
+        });
+
+        // Create Stars Background with enhanced effects
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starsCount = 300; // Increased number of stars
+            
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Random size with more variety
+                const size = Math.random() * 4;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                // Random position
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration and delay
+                star.style.setProperty('--duration', `${3 + Math.random() * 12}s`);
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                
+                // Random twinkle effect
+                star.style.opacity = Math.random() * 0.7 + 0.1;
+                
+                // Occasionally add colored stars
+                if (Math.random() > 0.9) {
+                    const colors = ['#6a00ff', '#00e5ff', '#ff00aa'];
+                    star.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                }
+                
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Planet Navigation with enhanced animations and interactions
+        function setupPlanetNavigation() {
+            const planetButtons = document.querySelectorAll('.planet-nav button');
+            const planets = {
+                earth: {
+                    model: document.getElementById('earth-model'),
+                    info: document.querySelector('#earth-model .planet-info')
+                },
+                mars: {
+                    model: document.getElementById('mars-model'),
+                    info: document.querySelector('#mars-model .planet-info')
+                },
+                jupiter: {
+                    model: document.getElementById('jupiter-model'),
+                    info: document.querySelector('#jupiter-model .planet-info')
+                }
+            };
+            
+            let currentPlanet = 'earth';
+            let autoRotateInterval;
+            let isAutoRotating = true;
+            
+            // Enhanced switch planet function with animations
+            function switchPlanet(planetId) {
+                if (planetId === currentPlanet) return;
+                
+                // Pause auto-rotation temporarily
+                clearInterval(autoRotateInterval);
+                isAutoRotating = false;
+                
+                // Hide current planet with animation
+                planets[currentPlanet].info.classList.add('hidden');
+                
+                setTimeout(() => {
+                    // Hide all planets
+                    Object.values(planets).forEach(planet => {
+                        planet.model.style.display = 'none';
+                    });
+                    
+                    // Show selected planet
+                    planets[planetId].model.style.display = 'block';
+                    currentPlanet = planetId;
+                    
+                    // Show new planet info with animation
+                    setTimeout(() => {
+                        planets[planetId].info.classList.remove('hidden');
+                    }, 50);
+                    
+                    // Add floating animation
+                    planets[planetId].model.style.animation = 'float 6s ease-in-out infinite';
+                    
+                    // Update active button
+                    planetButtons.forEach(button => {
+                        button.classList.toggle('active', button.dataset.planet === planetId);
+                    });
+                    
+                    // Resume auto-rotation after a delay
+                    setTimeout(() => {
+                        if (isAutoRotating) {
+                            startAutoRotate();
+                        }
+                    }, 10000);
+                }, 300);
+            }
+            
+            // Start auto-rotate with smooth transitions
+            function startAutoRotate() {
+                autoRotateInterval = setInterval(() => {
+                    const planetIds = ['earth', 'mars', 'jupiter'];
+                    const currentIndex = planetIds.indexOf(currentPlanet);
+                    const nextIndex = (currentIndex + 1) % planetIds.length;
+                    switchPlanet(planetIds[nextIndex]);
+                }, 5000);
+            }
+            
+            // Button click events with enhanced interactions
+            planetButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Toggle auto-rotation state
+                    isAutoRotating = !isAutoRotating;
+                    
+                    // Haptic feedback for mobile
+                    if ('vibrate' in navigator) {
+                        navigator.vibrate(10);
+                    }
+                    
+                    // Add click effect
+                    button.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        button.style.transform = 'scale(1.3)';
+                    }, 100);
+                    
+                    switchPlanet(button.dataset.planet);
+                    
+                    // Restart auto-rotation if all buttons are clicked
+                    setTimeout(() => {
+                        isAutoRotating = true;
+                        startAutoRotate();
+                    }, 15000);
+                });
+                
+                // Add hover effects
+                button.addEventListener('mouseenter', () => {
+                    if (!button.classList.contains('active')) {
+                        button.style.transform = 'scale(1.2)';
+                        button.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+                    }
+                });
+                
+                button.addEventListener('mouseleave', () => {
+                    if (!button.classList.contains('active')) {
+                        button.style.transform = 'scale(1)';
+                        button.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+                    }
+                });
+            });
+            
+            // Start auto-rotate initially
+            startAutoRotate();
+        }
+
+        // Password Strength Checker
+        function setupPasswordStrength() {
+            const passwordInput = document.getElementById('password');
+            const strengthMeter = document.getElementById('strength-meter');
+            
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                
+                // Check password length
+                if (password.length >= 8) strength += 1;
+                if (password.length >= 12) strength += 1;
+                
+                // Check for mixed case
+                if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 1;
+                
+                // Check for numbers
+                if (/\d/.test(password)) strength += 1;
+                
+                // Check for special characters
+                if (/[^a-zA-Z0-9]/.test(password)) strength += 1;
+                
+                // Update strength meter
+                const width = strength * 25;
+                let color = '#ff3a5e'; // red
+                
+                if (strength >= 4) color = '#00ffaa'; // green
+                else if (strength >= 2) color = '#ffcc00'; // yellow
+                
+                strengthMeter.style.width = `${width}%`;
+                strengthMeter.style.background = color;
+                strengthMeter.style.boxShadow = `0 0 5px ${color}`;
+            });
+        }
+
+        // Form Navigation with enhanced validation
+        function setupFormSteps() {
+            const steps = document.querySelectorAll('.step');
+            const formSections = document.querySelectorAll('.form-section');
+            const nextButtons = document.querySelectorAll('.next-step');
+            const prevButtons = document.querySelectorAll('.prev-step');
+            const form = document.getElementById('registration-form');
+            const authForm = document.querySelector('.auth-form');
+            const successState = document.getElementById('success-state');
+            const dashboardBtn = document.getElementById('dashboard-btn');
+            
+            let currentStep = 1;
+            
+            // Update step indicators
+            function updateSteps() {
+                steps.forEach(step => {
+                    const stepNum = parseInt(step.dataset.step);
+                    step.classList.remove('active', 'completed');
+                    
+                    if (stepNum === currentStep) {
+                        step.classList.add('active');
+                    } else if (stepNum < currentStep) {
+                        step.classList.add('completed');
+                    }
+                });
+                
+                formSections.forEach(section => {
+                    section.classList.remove('active');
+                    if (parseInt(section.dataset.step) === currentStep) {
+                        section.classList.add('active');
+                        // Smooth scroll to top of form section
+                        authForm.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            }
+            
+            // Validate email format
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            // Validate password strength
+            function validatePassword(password) {
+                return password.length >= 8;
+            }
+            
+            // Validate current step
+            function validateStep(step) {
+                let isValid = true;
+                const email = document.getElementById('email');
+                const password = document.getElementById('password');
+                const confirmPassword = document.getElementById('confirm-password');
+                const fullname = document.getElementById('fullname');
+                const position = document.getElementById('position');
+                const origin = document.getElementById('origin');
+                
+                // Reset all error states
+                document.querySelectorAll('.form-group').forEach(group => {
+                    group.classList.remove('error', 'success');
+                });
+                
+                if (step === 1) {
+                    // Validate email
+                    if (!email.value || !validateEmail(email.value)) {
+                        document.getElementById('email-error').textContent = 'Please enter a valid email address';
+                        email.parentElement.classList.add('error');
+                        isValid = false;
+                    } else {
+                        email.parentElement.classList.add('success');
+                    }
+                    
+                    // Validate password
+                    if (!password.value || !validatePassword(password.value)) {
+                        document.getElementById('password-error').textContent = 'Password must be at least 8 characters';
+                        password.parentElement.classList.add('error');
+                        isValid = false;
+                    } else {
+                        password.parentElement.classList.add('success');
+                    }
+                    
+                    // Validate password match
+                    if (password.value !== confirmPassword.value) {
+                        document.getElementById('confirm-error').textContent = 'Passwords do not match';
+                        confirmPassword.parentElement.classList.add('error');
+                        isValid = false;
+                    } else if (password.value && confirmPassword.value) {
+                        confirmPassword.parentElement.classList.add('success');
+                    }
+                } else if (step === 2) {
+                    // Validate full name
+                    if (!fullname.value) {
+                        document.getElementById('name-error').textContent = 'Please enter your full name';
+                        fullname.parentElement.classList.add('error');
+                        isValid = false;
+                    } else {
+                        fullname.parentElement.classList.add('success');
+                    }
+                    
+                    // Validate position
+                    if (!position.value) {
+                        document.getElementById('position-error').textContent = 'Please select a position';
+                        position.parentElement.classList.add('error');
+                        isValid = false;
+                    } else {
+                        position.parentElement.classList.add('success');
+                    }
+                    
+                    // Validate origin
+                    if (!origin.value) {
+                        document.getElementById('origin-error').textContent = 'Please enter your planet of origin';
+                        origin.parentElement.classList.add('error');
+                        isValid = false;
+                    } else {
+                        origin.parentElement.classList.add('success');
+                    }
+                } else if (step === 3) {
+                    // Validate terms
+                    if (!document.getElementById('terms').checked) {
+                        alert('You must agree to the terms to proceed');
+                        isValid = false;
+                    }
+                }
+                
+                return isValid;
+            }
+            
+            // Update summary in step 3
+            function updateSummary() {
+                document.getElementById('summary-email').textContent = 
+                    `Quantum ID: ${document.getElementById('email').value}`;
+                document.getElementById('summary-name').textContent = 
+                    `Crew Designation: ${document.getElementById('fullname').value}`;
+                document.getElementById('summary-position').textContent = 
+                    `Assigned Position: ${document.getElementById('position').options[document.getElementById('position').selectedIndex].text}`;
+                document.getElementById('summary-origin').textContent = 
+                    `Planet of Origin: ${document.getElementById('origin').value}`;
+                
+                // Only show bio if it exists
+                const bio = document.getElementById('bio').value;
+                const bioSummary = document.getElementById('summary-bio');
+                if (bio) {
+                    bioSummary.textContent = `Personal Bio: ${bio}`;
+                    bioSummary.style.display = 'block';
+                } else {
+                    bioSummary.style.display = 'none';
+                }
+            }
+            
+            // Next step with validation
+            nextButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (validateStep(currentStep)) {
+                        currentStep++;
+                        updateSteps();
+                        
+                        // Update summary in step 3
+                        if (currentStep === 3) {
+                            updateSummary();
+                        }
+                    } else {
+                        // Add shake animation to invalid fields
+                        document.querySelectorAll('.form-group.error').forEach(group => {
+                            group.style.animation = 'shake 0.5s';
+                            setTimeout(() => {
+                                group.style.animation = '';
+                            }, 500);
+                        });
+                    }
+                });
+            });
+            
+            // Previous step
+            prevButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    currentStep--;
+                    updateSteps();
+                });
+            });
+            
+            // Terms link modal
+            document.getElementById('terms-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Interstellar Employment Terms:\n\n1. All crew members are subject to interstellar law.\n2. Hazardous duty may be required.\n3. Standard contract duration is 5 Earth years.\n4. Medical coverage includes zero-gravity therapy.\n\nFull terms available upon request.');
+            });
+            
+            // Form submission with enhanced feedback
+            form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    if (validateStep(3)) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Activating Quantum ID...';
+        submitBtn.disabled = true;
+        
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += 10;
+            submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Activating Quantum ID... ${progress}%`;
+            
+            if (progress >= 100) {
+                clearInterval(progressInterval);
+                
+                // 1. مخفی کردن فرم
+                if (form) form.style.display = 'none';
+                
+                // 2. نمایش پیغام موفقیت
+                if (successState) {
+                    successState.style.display = 'block';
+                    successState.style.opacity = '1';
+                }
+                
+                // 3. اجرای انیمیشن confetti با خطایابی
+                try {
+                    if (typeof confetti === 'function') {
+                        confetti({
+                            particleCount: 100,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+                    }
+                } catch (e) {
+                    console.error("Confetti failed:", e);
+                }
+                
+                // 4. ریدایرکت به داشبورد پس از 3 ثانیه
+                setTimeout(() => {
+                    window.location.href = 'dashboard/index.html'; // یا مسیر صحیح
+                }, 3000);
+            }
+        }, 200);
+    }
+});
+            
+            // Add shake animation for errors
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    20%, 60% { transform: translateX(-5px); }
+                    40%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            setupPlanetNavigation();
+            setupFormSteps();
+            setupPasswordStrength();
+            
+            // Add scroll event for parallax effect
+            window.addEventListener('scroll', function() {
+                const scrollY = window.scrollY;
+                const planetViewer = document.querySelector('.planet-viewer');
+                if (planetViewer) {
+                    planetViewer.style.transform = `translateY(${scrollY * 0.2}px)`;
+                }
+            });
+            
+            // Add resize event for responsive adjustments
+            window.addEventListener('resize', function() {
+                // Recalculate any responsive elements if needed
+            });
+            
+            // Add keyboard navigation for accessibility
+            document.addEventListener('keydown', function(e) {
+                // Tab key navigation
+                if (e.key === 'Tab') {
+                    // Ensure focus stays within modal
+                    const focusableElements = document.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                    const firstElement = focusableElements[0];
+                    const lastElement = focusableElements[focusableElements.length - 1];
+                    
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstElement) {
+                            lastElement.focus();
+                            e.preventDefault();
+                        }
+                    } else {
+                        if (document.activeElement === lastElement) {
+                            firstElement.focus();
+                            e.preventDefault();
+                        }
+                    }
+                }
+            });
+        });
+
+        // Simple confetti effect for success state
+        function confetti(options) {
+            const defaults = {
+                particleCount: 50,
+                spread: 60,
+                origin: { x: 0.5, y: 0.5 }
+            };
+            
+            const settings = {...defaults, ...options};
+            const colors = ['#6a00ff', '#00e5ff', '#ff00aa', '#00ffaa', '#ffcc00'];
+            
+            for (let i = 0; i < settings.particleCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.position = 'fixed';
+                confetti.style.width = `${Math.random() * 8 + 4}px`;
+                confetti.style.height = `${Math.random() * 8 + 4}px`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.left = `${(settings.origin.x * 100) + (Math.random() - 0.5) * settings.spread}%`;
+                confetti.style.top = `${settings.origin.y * 100}%`;
+                confetti.style.zIndex = '9999';
+                confetti.style.opacity = '0';
+                confetti.style.transform = 'translate(-50%, -50%)';
+                
+                document.body.appendChild(confetti);
+                
+                // Animate
+                const animation = confetti.animate([
+                    { 
+                        opacity: 0,
+                        transform: `translate(-50%, -50%) scale(0)`,
+                        top: `${settings.origin.y * 100}%`
+                    },
+                    { 
+                        opacity: 1,
+                        transform: `translate(-50%, -50%) scale(1)`,
+                        top: `${settings.origin.y * 100}%`
+                    },
+                    { 
+                        opacity: 0,
+                        transform: `translate(${(Math.random() - 0.5) * 200}%, ${Math.random() * 100 + 100}%) scale(0.5)`,
+                        top: `${(settings.origin.y * 100) + 50 + Math.random() * 50}%`
+                    }
+                ], {
+                    duration: 1500 + Math.random() * 1000,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+                });
+                
+                animation.onfinish = () => confetti.remove();
+            }
+        }
+    </script>
+</body>
+</html>

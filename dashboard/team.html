@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meet Our Team | NebulaWorks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="logo.png">
+    <style>
+        /* Dark Theme Variables */
+        :root {
+            --primary: #6a00ff;
+            --secondary: #00e5ff;
+            --accent: #ff00aa;
+            --dark: #0a0a20;
+            --darker: #050510;
+            --light: #e0f7fa;
+            --gray: #a0a0c0;
+            --success: #00ffaa;
+            --warning: #ffcc00;
+            --danger: #ff5555;
+            --dark-gray: #303050;
+            --medium-gray: #707090;
+            --light-gray: #c0c0e0;
+            --white: #ffffff;
+            
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --widget-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Light Theme Variables */
+        body.light-theme {
+            --dark: #f5f5ff;
+            --darker: #e0e0f0;
+            --light: #1a1a2e;
+            --gray: #606080;
+            --dark-gray: #d0d0e0;
+            --medium-gray: #9090b0;
+            --light-gray: #303050;
+            --white: #0a0a20;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background-color: var(--dark);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            z-index: 100;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 36px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            margin-right: 15px;
+        }
+
+        .toggle-checkbox {
+            display: none;
+        }
+
+        .toggle-label {
+            position: relative;
+            display: block;
+            width: 60px;
+            height: 30px;
+            background-color: var(--dark-gray);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-label i {
+            position: absolute;
+            top: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .toggle-label .fa-sun {
+            left: 8px;
+            color: var(--warning);
+        }
+
+        .toggle-label .fa-moon {
+            right: 8px;
+            color: var(--light-gray);
+        }
+
+        .toggle-ball {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--white);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: var(--medium-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .toggle-ball {
+            transform: translateX(30px);
+            background-color: var(--white);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-sun {
+            color: var(--light-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-moon {
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin-top: var(--header-height);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--dark);
+            padding: 25px 0;
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            transition: var(--transition);
+            z-index: 98;
+            box-shadow: var(--box-shadow);
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-menu li a i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .nav-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a.active {
+            background-color: rgba(106, 0, 255, 0.2);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav-menu li a.active i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a span {
+            flex-grow: 1;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 30px;
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            background-color: var(--darker);
+        }
+
+        /* Team Section */
+        .team-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .team-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease;
+        }
+
+        .team-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .team-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--secondary);
+            border-radius: 3px;
+        }
+
+        .team-header p {
+            font-size: 1.1rem;
+            color: var(--medium-gray);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .team-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .team-member {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            transition: var(--transition);
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.8s ease;
+        }
+
+        .team-member:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .team-member::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .member-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 5px solid rgba(106, 0, 255, 0.2);
+            object-fit: cover;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-member:hover .member-image {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .member-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .member-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--white);
+        }
+
+        .member-info p.position {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .member-info p.bio {
+            color: var(--medium-gray);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .twin-section {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-top: 50px;
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            animation: fadeIn 1s ease;
+        }
+
+        .twin-section h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .twin-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--secondary);
+            border-radius: 3px;
+        }
+
+        .twin-section p {
+            color: var(--medium-gray);
+            max-width: 800px;
+            margin: 0 auto 20px;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .twin-highlight {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+            padding: 8px 15px;
+            border-radius: 30px;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        .twin-highlight i {
+            margin-right: 8px;
+            color: var(--secondary);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 60px;
+                --sidebar-width: 260px;
+            }
+            
+            .team-header h1 {
+                font-size: 2rem;
+            }
+            
+            .team-header p {
+                font-size: 1rem;
+            }
+            
+            .twin-section h2 {
+                font-size: 1.8rem;
+            }
+            
+            .twin-section p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            :root {
+                --header-height: 60px;
+            }
+            
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+            
+            .logo img {
+                height: 30px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .team-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .member-image {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .member-info h3 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="logo">
+            <img src="logo.png" alt="NebulaWorks">
+            <h1>NebulaWorks</h1>
+        </div>
+        
+        <div class="user-menu">
+            <div class="theme-toggle">
+                <input type="checkbox" id="theme-toggle" class="toggle-checkbox">
+                <label for="theme-toggle" class="toggle-label">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                    <span class="toggle-ball"></span>
+                </label>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                <li><a href="project.html"><i class="fas fa-project-diagram"></i> <span>Projects</span></a></li>
+                <li><a href="team.html" class="active"><i class="fas fa-users"></i> <span>Team</span></a></li>
+                <li><a href="messages.html"><i class="fas fa-comments"></i> <span>Messages</span></a></li>
+                <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> <span>Calendar</span></a></li>
+                <li><a href="resources.html"><i class="fas fa-file-alt"></i> <span>Resources</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+            </ul>
+        </nav>
+        
+        <!-- Content Area -->
+        <main class="content">
+            <section class="team-section">
+                <div class="team-header">
+                    <h1>Meet Our Cosmic Team</h1>
+                    <p>We're a dynamic duo of twin developers, combining our powers to create stellar digital experiences. Two minds, one vision, and infinite possibilities.</p>
+                </div>
+                
+                <div class="team-container">
+                    <div class="team-member">
+                        <div class="member-image">
+                            <img src="https://github.com/VIDAKHOSHPEY22.png" alt="Vida Khoshpey">
+                        </div>
+                        <div class="member-info">
+                            <h3>Vida Khoshpey</h3>
+                            <p class="position">Lead Developer & UI/UX Designer</p>
+                            <p class="bio">With a passion for clean code and beautiful interfaces, I architect the digital experiences that power our projects. My focus is on creating intuitive, performant applications that users love.</p>
+                            <div class="social-links">
+                                <a href="https://github.com/VIDAKHOSHPEY22" target="_blank"><i class="fab fa-github"></i></a>
+                                <a href="https://www.linkedin.com/in/vida-khoshpey-820124265" target="_blank"><i class="fab fa-linkedin"></i></a>
+                                <a href="https://www.instagram.com/vida_twin?igsh=MTV0Y2RxeW84ZGUzcA==" target="_blank"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-image">
+                            <img src="https://github.com/YALDAKHOSHPEY.png" alt="Yalda Khoshpey">
+                        </div>
+                        <div class="member-info">
+                            <h3>Yalda Khoshpey</h3>
+                            <p class="position">Front-End Developer & Creative Director</p>
+                            <p class="bio">I bring designs to life with pixel-perfect precision and smooth animations. My expertise lies in creating engaging, responsive interfaces that tell compelling stories through interaction.</p>
+                            <div class="social-links">
+                                <a href="https://github.com/YALDAKHOSHPEY" target="_blank"><i class="fab fa-github"></i></a>
+                                <a href="https://www.linkedin.com/in/yalda-twin-331ba6312?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"><i class="fab fa-linkedin"></i></a>
+                                <a href="https://dev.to/yaldakhoshpey" target="_blank"><i class="fab fa-dev"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="twin-section">
+                    <h2>Twin Synergy</h2>
+                    <p>Being twins gives us a unique advantage in our development process. We share an almost telepathic understanding that allows us to collaborate seamlessly, anticipate each other's thoughts, and complement each other's skills perfectly.</p>
+                    <p>While we may look alike, our approaches to problem-solving are beautifully distinct. This duality enables us to tackle challenges from multiple perspectives, ensuring we deliver comprehensive solutions that account for diverse user needs.</p>
+                    <div class="twin-highlight">
+                        <i class="fas fa-star"></i>
+                        Two minds, one vision, double the creativity
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Theme Toggle Functionality
+        function setupThemeToggle() {
+            const themeToggle = document.getElementById('theme-toggle');
+            if (!themeToggle) return;
+
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('nebulaTheme');
+            if (savedTheme) {
+                document.body.classList.add(savedTheme);
+                themeToggle.checked = savedTheme === 'light-theme';
+            }
+
+            themeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('light-theme');
+                    localStorage.setItem('nebulaTheme', 'light-theme');
+                } else {
+                    document.body.classList.remove('light-theme');
+                    localStorage.setItem('nebulaTheme', 'dark-theme');
+                }
+            });
+        }
+
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (!menuToggle || !sidebar || !overlay) return;
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setupThemeToggle();
+            setupMobileMenu();
+            
+            // Add hover effect to team members
+            const teamMembers = document.querySelectorAll('.team-member');
+            teamMembers.forEach(member => {
+                member.addEventListener('mouseenter', () => {
+                    member.style.transform = 'translateY(-10px)';
+                    member.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.3)';
+                });
+                
+                member.addEventListener('mouseleave', () => {
+                    member.style.transform = '';
+                    member.style.boxShadow = 'var(--widget-shadow)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

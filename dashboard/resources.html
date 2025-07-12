@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources | NebulaWorks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="logo.png">
+    <style>
+        /* Dark Theme Variables */
+        :root {
+            --primary: #6a00ff;
+            --secondary: #00e5ff;
+            --accent: #ff00aa;
+            --dark: #0a0a20;
+            --darker: #050510;
+            --light: #e0f7fa;
+            --gray: #a0a0c0;
+            --success: #00ffaa;
+            --warning: #ffcc00;
+            --danger: #ff5555;
+            --dark-gray: #303050;
+            --medium-gray: #707090;
+            --light-gray: #c0c0e0;
+            --white: #ffffff;
+            
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --widget-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Light Theme Variables */
+        body.light-theme {
+            --dark: #f5f5ff;
+            --darker: #e0e0f0;
+            --light: #1a1a2e;
+            --gray: #606080;
+            --dark-gray: #d0d0e0;
+            --medium-gray: #9090b0;
+            --light-gray: #303050;
+            --white: #0a0a20;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background-color: var(--dark);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            z-index: 100;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 36px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            margin-right: 15px;
+        }
+
+        .toggle-checkbox {
+            display: none;
+        }
+
+        .toggle-label {
+            position: relative;
+            display: block;
+            width: 60px;
+            height: 30px;
+            background-color: var(--dark-gray);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-label i {
+            position: absolute;
+            top: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .toggle-label .fa-sun {
+            left: 8px;
+            color: var(--warning);
+        }
+
+        .toggle-label .fa-moon {
+            right: 8px;
+            color: var(--light-gray);
+        }
+
+        .toggle-ball {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--white);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: var(--medium-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .toggle-ball {
+            transform: translateX(30px);
+            background-color: var(--white);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-sun {
+            color: var(--light-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-moon {
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin-top: var(--header-height);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--dark);
+            padding: 25px 0;
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            transition: var(--transition);
+            z-index: 98;
+            box-shadow: var(--box-shadow);
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-menu li a i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .nav-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a.active {
+            background-color: rgba(106, 0, 255, 0.2);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav-menu li a.active i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a span {
+            flex-grow: 1;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 30px;
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            background-color: var(--darker);
+        }
+
+        /* Resources Section */
+        .resources-section {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: var(--medium-gray);
+            line-height: 1.6;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .resource-card {
+            background-color: var(--darker);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--widget-shadow);
+            border-color: var(--primary);
+        }
+
+        .resource-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .resource-card h3 {
+            color: var(--white);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .resource-card p {
+            color: var(--medium-gray);
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .resource-link i {
+            margin-left: 5px;
+            transition: var(--transition);
+        }
+
+        .resource-link:hover {
+            color: var(--secondary);
+        }
+
+        .resource-link:hover i {
+            transform: translateX(3px);
+        }
+
+        .challenge-banner {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .challenge-content {
+            flex: 1;
+        }
+
+        .challenge-content h3 {
+            color: var(--white);
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .challenge-content p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 15px;
+            max-width: 600px;
+        }
+
+        .challenge-button {
+            background-color: var(--white);
+            color: var(--primary);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 10px 20px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .challenge-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .challenge-button i {
+            transition: var(--transition);
+        }
+
+        .challenge-button:hover i {
+            transform: translateX(3px);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+
+            .challenge-banner {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .challenge-content {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 60px;
+                --sidebar-width: 260px;
+            }
+
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            :root {
+                --header-height: 60px;
+            }
+            
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+            
+            .logo img {
+                height: 30px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+
+            .section-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="logo">
+            <img src="logo.png" alt="NebulaWorks">
+            <h1>NebulaWorks</h1>
+        </div>
+        
+        <div class="user-menu">
+            <div class="theme-toggle">
+                <input type="checkbox" id="theme-toggle" class="toggle-checkbox">
+                <label for="theme-toggle" class="toggle-label">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                    <span class="toggle-ball"></span>
+                </label>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                <li><a href="project.html"><i class="fas fa-project-diagram"></i> <span>Projects</span></a></li>
+                <li><a href="team.html"><i class="fas fa-users"></i> <span>Team</span></a></li>
+                <li><a href="messages.html"><i class="fas fa-comments"></i> <span>Messages</span></a></li>
+                <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> <span>Calendar</span></a></li>
+                <li><a href="resources.html" class="active"><i class="fas fa-file-alt"></i> <span>Resources</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+            </ul>
+        </nav>
+        
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Dev.to Challenge Banner -->
+            <div class="challenge-banner">
+                <div class="challenge-content">
+                    <h3>Dev.to Frontend Challenge: Office Edition</h3>
+                    <p>I'm participating in this exciting challenge to build an office management dashboard with $3000 in prizes! Check out the challenge details and join me!</p>
+                    <a href="https://dev.to/devteam/join-our-newest-frontend-challenge-office-edition-sponsored-by-axero-with-3000-in-prizes-21ap" class="challenge-button" target="_blank">
+                        View Challenge <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+
+            <section class="resources-section">
+                <div class="section-header">
+                    <h2>Project Resources</h2>
+                    <p>Here are the tools, libraries, and resources I used to build this office management dashboard for the Dev.to Frontend Challenge.</p>
+                </div>
+                
+                <div class="resources-grid">
+                    <!-- Frontend Frameworks -->
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fab fa-html5"></i>
+                        </div>
+                        <h3>HTML5 & CSS3</h3>
+                        <p>The foundation of this project built with semantic HTML and modern CSS features including CSS variables for theming.</p>
+                        <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" class="resource-link" target="_blank">
+                            Learn more <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fab fa-js"></i>
+                        </div>
+                        <h3>JavaScript</h3>
+                        <p>Vanilla JavaScript for all interactive elements, DOM manipulation, and local storage for theme preferences.</p>
+                        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" class="resource-link" target="_blank">
+                            Learn more <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- UI Libraries -->
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fab fa-font-awesome"></i>
+                        </div>
+                        <h3>Font Awesome</h3>
+                        <p>Beautiful icons used throughout the interface for better visual communication and user experience.</p>
+                        <a href="https://fontawesome.com/" class="resource-link" target="_blank">
+                            Learn more <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h3>CSS Variables</h3>
+                        <p>Custom properties for consistent theming and easy switching between dark and light modes.</p>
+                        <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties" class="resource-link" target="_blank">
+                            Learn more <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- Design Resources -->
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        <h3>Color Scheme</h3>
+                        <p>Custom color palette with primary purple (#6a00ff), teal accent (#00e5ff), and pink highlight (#ff00aa).</p>
+                        <a href="https://coolors.co/" class="resource-link" target="_blank">
+                            Generate your own <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-font"></i>
+                        </div>
+                        <h3>Google Fonts</h3>
+                        <p>Using the clean and modern 'Segoe UI' system font stack for optimal readability across platforms.</p>
+                        <a href="https://fonts.google.com/" class="resource-link" target="_blank">
+                            Explore fonts <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- Development Tools -->
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <h3>GitHub</h3>
+                        <p>Version control and project hosting. The complete source code is available on GitHub.</p>
+                        <a href="https://github.com/" class="resource-link" target="_blank">
+                            Learn more <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>VS Code</h3>
+                        <p>My code editor of choice with extensions for HTML, CSS, and JavaScript development.</p>
+                        <a href="https://code.visualstudio.com/" class="resource-link" target="_blank">
+                            Download <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- Inspiration -->
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fab fa-dev"></i>
+                        </div>
+                        <h3>Dev.to Community</h3>
+                        <p>Inspired by the Dev.to Frontend Challenge to create an office management dashboard.</p>
+                        <a href="https://dev.to/" class="resource-link" target="_blank">
+                            Join community <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>UI Design Patterns</h3>
+                        <p>Modern dashboard design patterns inspired by popular productivity tools like Notion and ClickUp.</p>
+                        <a href="https://www.uipatterns.io/" class="resource-link" target="_blank">
+                            Explore patterns <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Theme Toggle Functionality
+        function setupThemeToggle() {
+            const themeToggle = document.getElementById('theme-toggle');
+            if (!themeToggle) return;
+
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('nebulaTheme');
+            if (savedTheme) {
+                document.body.classList.add(savedTheme);
+                themeToggle.checked = savedTheme === 'light-theme';
+            }
+
+            themeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('light-theme');
+                    localStorage.setItem('nebulaTheme', 'light-theme');
+                } else {
+                    document.body.classList.remove('light-theme');
+                    localStorage.setItem('nebulaTheme', 'dark-theme');
+                }
+            });
+        }
+
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (!menuToggle || !sidebar || !overlay) return;
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setupThemeToggle();
+            setupMobileMenu();
+        });
+    </script>
+</body>
+</html>

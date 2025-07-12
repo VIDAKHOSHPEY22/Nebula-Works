@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Logs | NebulaWorks Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="logo.png">
+    <style>
+        /* Dark Theme Variables */
+        :root {
+            --primary: #6a00ff;
+            --secondary: #00e5ff;
+            --accent: #ff00aa;
+            --dark: #0a0a20;
+            --darker: #050510;
+            --light: #e0f7fa;
+            --gray: #a0a0c0;
+            --success: #00ffaa;
+            --warning: #ffcc00;
+            --danger: #ff5555;
+            --dark-gray: #303050;
+            --medium-gray: #707090;
+            --light-gray: #c0c0e0;
+            --white: #ffffff;
+            
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --widget-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Light Theme Variables */
+        body.light-theme {
+            --dark: #f5f5ff;
+            --darker: #e0e0f0;
+            --light: #1a1a2e;
+            --gray: #606080;
+            --dark-gray: #d0d0e0;
+            --medium-gray: #9090b0;
+            --light-gray: #303050;
+            --white: #0a0a20;
+        }
+
+        body.light-theme .widget,
+        body.light-theme .system-status,
+        body.light-theme .welcome-section,
+        body.light-theme .quick-link-card,
+        body.light-theme .sidebar,
+        body.light-theme header,
+        body.light-theme .user-dropdown,
+        body.light-theme .modal-content {
+            background-color: var(--dark);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: var(--light);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--darker);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(106, 0, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: var(--white);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background-color: var(--dark);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            z-index: 100;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 36px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+            color: var(--medium-gray);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            margin-right: 15px;
+        }
+
+        .toggle-checkbox {
+            display: none;
+        }
+
+        .toggle-label {
+            position: relative;
+            display: block;
+            width: 60px;
+            height: 30px;
+            background-color: var(--dark-gray);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-label i {
+            position: absolute;
+            top: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .toggle-label .fa-sun {
+            left: 8px;
+            color: var(--warning);
+        }
+
+        .toggle-label .fa-moon {
+            right: 8px;
+            color: var(--light-gray);
+        }
+
+        .toggle-ball {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--white);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: var(--medium-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .toggle-ball {
+            transform: translateX(30px);
+            background-color: var(--white);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-sun {
+            color: var(--light-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-moon {
+            color: var(--primary);
+        }
+
+        /* Admin Dropdown */
+        .admin-dropdown {
+            position: absolute;
+            top: calc(var(--header-height) + 10px);
+            right: 25px;
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 300px;
+            padding: 15px;
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .admin-dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .admin-dropdown-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .admin-dropdown-info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .admin-dropdown-info p {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .admin-dropdown-info .admin-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: rgba(106, 0, 255, 0.2);
+            color: var(--primary);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        .admin-dropdown-menu {
+            list-style: none;
+        }
+
+        .admin-dropdown-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: var(--light-gray);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .admin-dropdown-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .admin-dropdown-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .admin-dropdown-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .admin-dropdown-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn i {
+            margin-right: 8px;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin-top: var(--header-height);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--dark);
+            padding: 25px 0;
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            transition: var(--transition);
+            z-index: 98;
+            box-shadow: var(--box-shadow);
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-menu li a i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .nav-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a.active {
+            background-color: rgba(106, 0, 255, 0.2);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav-menu li a.active i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a span {
+            flex-grow: 1;
+        }
+
+        .admin-news {
+            margin-top: 30px;
+            padding: 0 25px;
+        }
+
+        .admin-news h3 {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-item {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            padding-left: 8px;
+            border-left: 2px solid var(--dark-gray);
+        }
+
+        .news-item a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .news-item a:hover {
+            color: var(--primary);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 30px;
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            background-color: var(--darker);
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            margin-bottom: 30px;
+            background-color: var(--dark);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--widget-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .welcome-text h1 span {
+            color: var(--primary);
+        }
+
+        .welcome-text p {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
+        .admin-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .emergency-btn {
+            background-color: rgba(255, 85, 85, 0.1);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 85, 85, 0.3);
+            color: var(--danger);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .emergency-btn:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        /* Widgets Grid */
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .widget {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .widget-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white);
+        }
+
+        .widget-header i {
+            color: var(--primary);
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            color: var(--medium-gray);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        /* Event Logs Table */
+        .event-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .event-table th {
+            text-align: left;
+            padding: 12px 15px;
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .event-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--light-gray);
+        }
+
+        .event-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .event-table tr:hover td {
+            background-color: rgba(106, 0, 255, 0.05);
+        }
+
+        .event-severity {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .event-severity.info {
+            background-color: rgba(0, 229, 255, 0.1);
+            color: var(--secondary);
+        }
+
+        .event-severity.warning {
+            background-color: rgba(255, 204, 0, 0.1);
+            color: var(--warning);
+        }
+
+        .event-severity.critical {
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+        }
+
+        .event-severity.security {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        /* Event Filters */
+        .event-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .filter-select {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border: none;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            font-size: 0.85rem;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .filter-btn {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+            border: none;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover {
+            background-color: rgba(106, 0, 255, 0.2);
+        }
+
+        /* Event Stats */
+        .event-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: var(--transition);
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon.info {
+            background-color: rgba(0, 229, 255, 0.1);
+            color: var(--secondary);
+        }
+
+        .stat-icon.warning {
+            background-color: rgba(255, 204, 0, 0.1);
+            color: var(--warning);
+        }
+
+        .stat-icon.critical {
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+        }
+
+        .stat-icon.security {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--white);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+        }
+
+        /* Event Timeline */
+        .event-timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-top: 30px;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: rgba(106, 0, 255, 0.2);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 30px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -30px;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .timeline-dot.info {
+            background-color: rgba(0, 229, 255, 0.1);
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+        }
+
+        .timeline-dot.warning {
+            background-color: rgba(255, 204, 0, 0.1);
+            color: var(--warning);
+            border: 2px solid var(--warning);
+        }
+
+        .timeline-dot.critical {
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+            border: 2px solid var(--danger);
+        }
+
+        .timeline-dot.security {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .timeline-content {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .timeline-time {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .timeline-description {
+            font-size: 0.9rem;
+            color: var(--light-gray);
+            margin-bottom: 10px;
+        }
+
+        .timeline-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .user-avatar-small {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        /* Admin Footer */
+        .admin-footer {
+            background-color: var(--dark);
+            padding: 15px 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 30px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--medium-gray);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .resources-list {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 60px;
+                --sidebar-width: 260px;
+            }
+            
+            .welcome-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .event-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .event-filters {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            :root {
+                --header-height: 60px;
+            }
+            
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+            
+            .logo img {
+                height: 30px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .event-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .event-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Event Logs...</div>
+    </div>
+    
+    <!-- Header -->
+    <header id="header">
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="logo">
+            <img src="logo.png" alt="NebulaWorks">
+            <h1>NebulaWorks <span style="color: var(--secondary); font-size: 0.8rem;">Event Logs</span></h1>
+        </div>
+        
+        <div class="user-menu">
+            <div class="theme-toggle">
+                <input type="checkbox" id="theme-toggle" class="toggle-checkbox">
+                <label for="theme-toggle" class="toggle-label">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                    <span class="toggle-ball"></span>
+                </label>
+            </div>
+            <div class="notification">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">7</span>
+            </div>
+            <div class="user-avatar" id="admin-avatar">
+                A
+            </div>
+        </div>
+
+        <!-- Admin Dropdown -->
+        <div class="admin-dropdown" id="admin-dropdown">
+            <div class="admin-dropdown-header">
+                <div class="admin-dropdown-avatar">A</div>
+                <div class="admin-dropdown-info">
+                    <h3>Admin User</h3>
+                    <p>admin@nebulaworks.space</p>
+                    <span class="admin-badge">Security Admin</span>
+                </div>
+            </div>
+            <ul class="admin-dropdown-menu">
+                <li><a href="#"><i class="fas fa-user-shield"></i> Admin Profile</a></li>
+                <li><a href="system.html"><i class="fas fa-cog"></i> System Settings</a></li>
+                <li><a href="user.html"><i class="fas fa-users-cog"></i> User Management</a></li>
+                <li><a href="security.html"><i class="fas fa-shield-alt"></i> Security Center</a></li>
+            </ul>
+            <div class="admin-dropdown-footer">
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                <li><a href="user.html"><i class="fas fa-users-cog"></i> <span>User Management</span></a></li>
+                <li><a href="system.html"><i class="fas fa-server"></i> <span>System Controls</span></a></li>
+                <li><a href="network.html"><i class="fas fa-chart-network"></i> <span>Network Analytics</span></a></li>
+                <li><a href="security.html"><i class="fas fa-shield-alt"></i> <span>Security</span></a></li>
+                <li><a href="event.html" class="active"><i class="fas fa-calendar-star"></i> <span>Event Logs</span></a></li>
+                <li><a href="settings-admin.html"><i class="fas fa-cogs"></i> <span>Settings</span></a></li>
+            </ul>
+            
+            <div class="admin-news">
+                <h3><i class="fas fa-newspaper"></i> Recent Events</h3>
+                <div class="news-item">
+                    <a href="#">3 new security events</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">System update completed</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">Backup process started</a>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Event <span>Logs</span></h1>
+                    <p id="current-date">Monitoring all system activities and events</p>
+                </div>
+                <div class="admin-actions">
+                    <button class="emergency-btn">
+                        <i class="fas fa-filter"></i> Advanced Filters
+                    </button>
+                    <button class="emergency-btn">
+                        <i class="fas fa-file-export"></i> Export Logs
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Event Stats -->
+            <div class="event-stats">
+                <div class="stat-card">
+                    <div class="stat-icon info">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="stat-value">142</div>
+                    <div class="stat-label">Informational Events</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-value">28</div>
+                    <div class="stat-label">Warnings</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon critical">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Critical Events</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon security">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="stat-value">19</div>
+                    <div class="stat-label">Security Events</div>
+                </div>
+            </div>
+            
+            <!-- Event Filters -->
+            <div class="event-filters">
+                <div class="filter-group">
+                    <label>Event Type</label>
+                    <select class="filter-select">
+                        <option>All Events</option>
+                        <option>Informational</option>
+                        <option>Warnings</option>
+                        <option>Critical</option>
+                        <option>Security</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Time Range</label>
+                    <select class="filter-select">
+                        <option>Last 24 Hours</option>
+                        <option>Last 7 Days</option>
+                        <option>Last 30 Days</option>
+                        <option>Custom Range</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Source</label>
+                    <select class="filter-select">
+                        <option>All Sources</option>
+                        <option>System</option>
+                        <option>Security</option>
+                        <option>Network</option>
+                        <option>Applications</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>User</label>
+                    <select class="filter-select">
+                        <option>All Users</option>
+                        <option>Admin</option>
+                        <option>System</option>
+                        <option>Yalda</option>
+                        <option>Vida</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group" style="align-self: flex-end;">
+                    <button class="filter-btn">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Event Logs Table -->
+            <section class="widget">
+                <div class="widget-header">
+                    <h2><i class="fas fa-list-alt"></i> Recent Events</h2>
+                    <div class="widget-actions">
+                        <button class="btn-icon"><i class="fas fa-sync-alt"></i></button>
+                        <button class="btn-icon"><i class="fas fa-cog"></i></button>
+                    </div>
+                </div>
+                
+                <table class="event-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Event</th>
+                            <th>Source</th>
+                            <th>User</th>
+                            <th>Severity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>10:23 AM</td>
+                            <td>Unauthorized access attempt</td>
+                            <td>Security Gateway</td>
+                            <td>Unknown</td>
+                            <td><span class="event-severity critical">Critical</span></td>
+                            <td>
+                                <button class="btn-icon"><i class="fas fa-search"></i></button>
+                                <button class="btn-icon"><i class="fas fa-flag"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>09:45 AM</td>
+                            <td>Database backup completed</td>
+                            <td>Backup System</td>
+                            <td>System</td>
+                            <td><span class="event-severity info">Informational</span></td>
+                            <td>
+                                <button class="btn-icon"><i class="fas fa-search"></i></button>
+                                <button class="btn-icon"><i class="fas fa-flag"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>08:12 AM</td>
+                            <td>User permissions changed</td>
+                            <td>User Management</td>
+                            <td>Admin</td>
+                            <td><span class="event-severity security">Security</span></td>
+                            <td>
+                                <button class="btn-icon"><i class="fas fa-search"></i></button>
+                                <button class="btn-icon"><i class="fas fa-flag"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>07:30 AM</td>
+                            <td>High CPU usage detected</td>
+                            <td>Monitoring</td>
+                            <td>System</td>
+                            <td><span class="event-severity warning">Warning</span></td>
+                            <td>
+                                <button class="btn-icon"><i class="fas fa-search"></i></button>
+                                <button class="btn-icon"><i class="fas fa-flag"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Yesterday</td>
+                            <td>New device connected</td>
+                            <td>Network</td>
+                            <td>Yalda</td>
+                            <td><span class="event-severity info">Informational</span></td>
+                            <td>
+                                <button class="btn-icon"><i class="fas fa-search"></i></button>
+                                <button class="btn-icon"><i class="fas fa-flag"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <!-- Event Timeline -->
+            <section class="widget">
+                <div class="widget-header">
+                    <h2><i class="fas fa-history"></i> Event Timeline</h2>
+                    <select class="filter-select">
+                        <option>Today</option>
+                        <option>Yesterday</option>
+                        <option>This Week</option>
+                    </select>
+                </div>
+                
+                <div class="event-timeline">
+                    <div class="timeline-line"></div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-dot critical">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <div class="timeline-title">Security Alert: Unauthorized Access Attempt</div>
+                                <div class="timeline-time">10:23 AM</div>
+                            </div>
+                            <div class="timeline-description">
+                                Multiple failed login attempts detected from IP 192.168.1.105. The IP has been temporarily blocked.
+                            </div>
+                            <div class="timeline-user">
+                                <div class="user-avatar-small">S</div>
+                                <span>Security System</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-dot info">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <div class="timeline-title">Backup Process Completed</div>
+                                <div class="timeline-time">09:45 AM</div>
+                            </div>
+                            <div class="timeline-description">
+                                Daily database backup completed successfully. 12.4GB of data was backed up to the secure storage.
+                            </div>
+                            <div class="timeline-user">
+                                <div class="user-avatar-small">B</div>
+                                <span>Backup System</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-dot security">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <div class="timeline-title">User Permissions Changed</div>
+                                <div class="timeline-time">08:12 AM</div>
+                            </div>
+                            <div class="timeline-description">
+                                Admin updated permissions for user Yalda. New role: Senior Engineer with elevated access rights.
+                            </div>
+                            <div class="timeline-user">
+                                <div class="user-avatar-small">A</div>
+                                <span>Admin User</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-dot warning">
+                            <i class="fas fa-exclamation"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <div class="timeline-title">High Resource Usage</div>
+                                <div class="timeline-time">07:30 AM</div>
+                            </div>
+                            <div class="timeline-description">
+                                CPU usage on Main Server reached 95% for 15 minutes. Automatic scaling initiated to handle the load.
+                            </div>
+                            <div class="timeline-user">
+                                <div class="user-avatar-small">M</div>
+                                <span>Monitoring System</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Admin Footer -->
+            <footer class="admin-footer">
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <p>Last Event: <span id="last-event">10:23 AM</span></p>
+                        <p>Events Today: <span id="events-today">47</span></p>
+                    </div>
+                    <div class="footer-right">
+                        <p>Event Portal v2.4.1</p>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.opacity = '0';
+                    setTimeout(function() {
+                        loading.style.display = 'none';
+                    }, 500);
+                }
+            }, 1500);
+        });
+    
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (!menuToggle || !sidebar || !overlay) return;
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+    
+        // Header Scroll Effect
+        function setupHeaderScroll() {
+            const header = document.getElementById('header');
+            if (!header) return;
+            
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', function() {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll <= 0) {
+                    header.classList.remove('header-scrolled');
+                    return;
+                }
+                
+                if (currentScroll > lastScroll && !header.classList.contains('header-scrolled')) {
+                    header.classList.add('header-scrolled');
+                } 
+                
+                lastScroll = currentScroll;
+            });
+        }
+
+        // Update current date
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+            
+            // Update event time in footer
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            const eventTime = document.getElementById('event-time');
+            if (eventTime) {
+                eventTime.textContent = now.toLocaleTimeString('en-US', timeOptions);
+            }
+        }
+
+        // Admin Dropdown Toggle
+        function setupAdminDropdown() {
+            const adminAvatar = document.getElementById('admin-avatar');
+            const adminDropdown = document.getElementById('admin-dropdown');
+            const overlay = document.getElementById('overlay');
+            
+            if (!adminAvatar || !adminDropdown || !overlay) return;
+            
+            adminAvatar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                adminDropdown.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                adminDropdown.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!adminDropdown.contains(e.target) && e.target !== adminAvatar) {
+                    adminDropdown.classList.remove('active');
+                }
+            });
+        }
+
+        // Theme Toggle Functionality
+        function setupThemeToggle() {
+            const themeToggle = document.getElementById('theme-toggle');
+            if (!themeToggle) return;
+
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('nebulaTheme');
+            if (savedTheme) {
+                document.body.classList.add(savedTheme);
+                themeToggle.checked = savedTheme === 'light-theme';
+            }
+
+            themeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('light-theme');
+                    localStorage.setItem('nebulaTheme', 'light-theme');
+                } else {
+                    document.body.classList.remove('light-theme');
+                    localStorage.setItem('nebulaTheme', 'dark-theme');
+                }
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setupMobileMenu();
+            setupHeaderScroll();
+            updateCurrentDate();
+            setupAdminDropdown();
+            setupThemeToggle();
+            
+            // Update time every minute
+            setInterval(updateCurrentDate, 60000);
+            
+            // Add hover effect to widgets
+            const widgets = document.querySelectorAll('.widget');
+            widgets.forEach(widget => {
+                widget.addEventListener('mouseenter', () => {
+                    widget.style.transform = 'translateY(-5px)';
+                    widget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+                });
+                
+                widget.addEventListener('mouseleave', () => {
+                    widget.style.transform = '';
+                    widget.style.boxShadow = '';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

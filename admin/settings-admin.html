@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Settings | NebulaWorks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="logo.png">
+    <style>
+        /* Dark Theme Variables */
+        :root {
+            --primary: #6a00ff;
+            --secondary: #00e5ff;
+            --accent: #ff00aa;
+            --dark: #0a0a20;
+            --darker: #050510;
+            --light: #e0f7fa;
+            --gray: #a0a0c0;
+            --success: #00ffaa;
+            --warning: #ffcc00;
+            --danger: #ff5555;
+            --dark-gray: #303050;
+            --medium-gray: #707090;
+            --light-gray: #c0c0e0;
+            --white: #ffffff;
+            
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --widget-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Light Theme Variables */
+        body.light-theme {
+            --dark: #f5f5ff;
+            --darker: #e0e0f0;
+            --light: #1a1a2e;
+            --gray: #606080;
+            --dark-gray: #d0d0e0;
+            --medium-gray: #9090b0;
+            --light-gray: #303050;
+            --white: #0a0a20;
+        }
+
+        body.light-theme .widget,
+        body.light-theme .system-status,
+        body.light-theme .welcome-section,
+        body.light-theme .quick-link-card,
+        body.light-theme .sidebar,
+        body.light-theme header,
+        body.light-theme .user-dropdown,
+        body.light-theme .modal-content {
+            background-color: var(--dark);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: var(--light);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--darker);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(106, 0, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: var(--white);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background-color: var(--dark);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            z-index: 100;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 36px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+            color: var(--medium-gray);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            margin-right: 15px;
+        }
+
+        .toggle-checkbox {
+            display: none;
+        }
+
+        .toggle-label {
+            position: relative;
+            display: block;
+            width: 60px;
+            height: 30px;
+            background-color: var(--dark-gray);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-label i {
+            position: absolute;
+            top: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .toggle-label .fa-sun {
+            left: 8px;
+            color: var(--warning);
+        }
+
+        .toggle-label .fa-moon {
+            right: 8px;
+            color: var(--light-gray);
+        }
+
+        .toggle-ball {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--white);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: var(--medium-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .toggle-ball {
+            transform: translateX(30px);
+            background-color: var(--white);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-sun {
+            color: var(--light-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-moon {
+            color: var(--primary);
+        }
+
+        /* Admin Dropdown */
+        .admin-dropdown {
+            position: absolute;
+            top: calc(var(--header-height) + 10px);
+            right: 25px;
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 300px;
+            padding: 15px;
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .admin-dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .admin-dropdown-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .admin-dropdown-info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .admin-dropdown-info p {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .admin-dropdown-info .admin-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: rgba(106, 0, 255, 0.2);
+            color: var(--primary);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        .admin-dropdown-menu {
+            list-style: none;
+        }
+
+        .admin-dropdown-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: var(--light-gray);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .admin-dropdown-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .admin-dropdown-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .admin-dropdown-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .admin-dropdown-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn i {
+            margin-right: 8px;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin-top: var(--header-height);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--dark);
+            padding: 25px 0;
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            transition: var(--transition);
+            z-index: 98;
+            box-shadow: var(--box-shadow);
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-menu li a i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .nav-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a.active {
+            background-color: rgba(106, 0, 255, 0.2);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav-menu li a.active i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a span {
+            flex-grow: 1;
+        }
+
+        .admin-news {
+            margin-top: 30px;
+            padding: 0 25px;
+        }
+
+        .admin-news h3 {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-item {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            padding-left: 8px;
+            border-left: 2px solid var(--dark-gray);
+        }
+
+        .news-item a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .news-item a:hover {
+            color: var(--primary);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 30px;
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            background-color: var(--darker);
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            margin-bottom: 30px;
+            background-color: var(--dark);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--widget-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .welcome-text h1 span {
+            color: var(--primary);
+        }
+
+        .welcome-text p {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
+        .admin-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .emergency-btn {
+            background-color: rgba(255, 85, 85, 0.1);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 85, 85, 0.3);
+            color: var(--danger);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .emergency-btn:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        /* Settings Tabs */
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            color: var(--medium-gray);
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        /* Settings Content */
+        .settings-content {
+            display: none;
+        }
+
+        .settings-content.active {
+            display: block;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: var(--light-gray);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            color: var(--white);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(106, 0, 255, 0.2);
+        }
+
+        .form-text {
+            font-size: 0.85rem;
+            color: var(--medium-gray);
+            margin-top: 8px;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: '';
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--white);
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Select Dropdown */
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            color: var(--medium-gray);
+            pointer-events: none;
+        }
+
+        select.form-control {
+            appearance: none;
+            padding-right: 40px;
+        }
+
+        /* Settings Card */
+        .settings-card {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .settings-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-card h3 i {
+            color: var(--primary);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #5a00d6;
+        }
+
+        .btn-outline {
+            background: none;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            border: 1px solid rgba(255, 85, 85, 0.3);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            background-color: rgba(255, 85, 85, 0.05);
+        }
+
+        .danger-zone h3 {
+            color: var(--danger);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Admin Footer */
+        .admin-footer {
+            background-color: var(--dark);
+            padding: 15px 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 30px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--medium-gray);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .resources-list {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 60px;
+                --sidebar-width: 260px;
+            }
+            
+            .welcome-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .settings-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 5px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            :root {
+                --header-height: 60px;
+            }
+            
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+            
+            .logo img {
+                height: 30px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Admin Settings...</div>
+    </div>
+    
+    <!-- Header -->
+    <header id="header">
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="logo">
+            <img src="logo.png" alt="NebulaWorks">
+            <h1>NebulaWorks <span style="color: var(--secondary); font-size: 0.8rem;">Settings</span></h1>
+        </div>
+        
+        <div class="user-menu">
+            <div class="theme-toggle">
+                <input type="checkbox" id="theme-toggle" class="toggle-checkbox">
+                <label for="theme-toggle" class="toggle-label">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                    <span class="toggle-ball"></span>
+                </label>
+            </div>
+            <div class="notification">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">2</span>
+            </div>
+            <div class="user-avatar" id="admin-avatar">
+                A
+            </div>
+        </div>
+
+        <!-- Admin Dropdown -->
+        <div class="admin-dropdown" id="admin-dropdown">
+            <div class="admin-dropdown-header">
+                <div class="admin-dropdown-avatar">A</div>
+                <div class="admin-dropdown-info">
+                    <h3>Admin User</h3>
+                    <p>admin@nebulaworks.space</p>
+                    <span class="admin-badge">System Admin</span>
+                </div>
+            </div>
+            <ul class="admin-dropdown-menu">
+                <li><a href="#"><i class="fas fa-user-shield"></i> Admin Profile</a></li>
+                <li><a href="system.html"><i class="fas fa-cog"></i> System Settings</a></li>
+                <li><a href="user.html"><i class="fas fa-users-cog"></i> User Management</a></li>
+                <li><a href="security.html"><i class="fas fa-shield-alt"></i> Security Center</a></li>
+            </ul>
+            <div class="admin-dropdown-footer">
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                <li><a href="user.html"><i class="fas fa-users-cog"></i> <span>User Management</span></a></li>
+                <li><a href="system.html"><i class="fas fa-server"></i> <span>System Controls</span></a></li>
+                <li><a href="network.html"><i class="fas fa-chart-network"></i> <span>Network Analytics</span></a></li>
+                <li><a href="security.html"><i class="fas fa-shield-alt"></i> <span>Security</span></a></li>
+                <li><a href="event.html"><i class="fas fa-calendar-star"></i> <span>Event Logs</span></a></li>
+                <li><a href="settings-admin.html" class="active"><i class="fas fa-cogs"></i> <span>Settings</span></a></li>
+            </ul>
+            
+            <div class="admin-news">
+                <h3><i class="fas fa-newspaper"></i> System Updates</h3>
+                <div class="news-item">
+                    <a href="#">New settings available</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">Backup schedule changed</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">Performance improvements</a>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-text">
+                    <h1>System <span>Settings</span></h1>
+                    <p id="current-date">Configure your NebulaWorks administration panel</p>
+                </div>
+                <div class="admin-actions">
+                    <button class="emergency-btn">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Settings Tabs -->
+            <div class="settings-tabs">
+                <button class="tab-btn active" data-tab="general">
+                    <i class="fas fa-cog"></i> General
+                </button>
+                <button class="tab-btn" data-tab="appearance">
+                    <i class="fas fa-palette"></i> Appearance
+                </button>
+                <button class="tab-btn" data-tab="notifications">
+                    <i class="fas fa-bell"></i> Notifications
+                </button>
+                <button class="tab-btn" data-tab="security">
+                    <i class="fas fa-shield-alt"></i> Security
+                </button>
+                <button class="tab-btn" data-tab="advanced">
+                    <i class="fas fa-sliders-h"></i> Advanced
+                </button>
+            </div>
+            
+            <!-- General Settings -->
+            <div class="settings-content active" id="general-settings">
+                <div class="settings-card">
+                    <h3><i class="fas fa-info-circle"></i> System Information</h3>
+                    
+                    <div class="form-group">
+                        <label>System Name</label>
+                        <input type="text" class="form-control" value="NebulaWorks Admin Portal">
+                        <p class="form-text">This name will appear in the header and browser tab</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>System Timezone</label>
+                        <div class="select-wrapper">
+                            <select class="form-control">
+                                <option>UTC</option>
+                                <option selected>Asia/Tehran</option>
+                                <option>America/New_York</option>
+                                <option>Europe/London</option>
+                                <option>Asia/Tokyo</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Date Format</label>
+                        <div class="select-wrapper">
+                            <select class="form-control">
+                                <option>YYYY-MM-DD</option>
+                                <option selected>DD/MM/YYYY</option>
+                                <option>MM/DD/YYYY</option>
+                                <option>Month Day, Year</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-card">
+                    <h3><i class="fas fa-user-cog"></i> Admin Preferences</h3>
+                    
+                    <div class="form-group">
+                        <label>Default Dashboard</label>
+                        <div class="select-wrapper">
+                            <select class="form-control">
+                                <option selected>Overview</option>
+                                <option>System Monitoring</option>
+                                <option>User Management</option>
+                                <option>Security Center</option>
+                            </select>
+                        </div>
+                        <p class="form-text">Which page should load when you log in</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Items Per Page</label>
+                        <input type="number" class="form-control" value="25" min="10" max="100">
+                        <p class="form-text">Number of items to show in tables and lists</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Appearance Settings -->
+            <div class="settings-content" id="appearance-settings">
+                <div class="settings-card">
+                    <h3><i class="fas fa-palette"></i> Theme Settings</h3>
+                    
+                    <div class="form-group">
+                        <label>Color Scheme</label>
+                        <div class="select-wrapper">
+                            <select class="form-control">
+                                <option selected>Dark (Default)</option>
+                                <option>Light</option>
+                                <option>Blue</option>
+                                <option>High Contrast</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Primary Color</label>
+                        <input type="color" class="form-control" value="#6a00ff" style="height: 50px; width: 100px; padding: 5px;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Accent Color</label>
+                        <input type="color" class="form-control" value="#ff00aa" style="height: 50px; width: 100px; padding: 5px;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>UI Density</label>
+                        <div class="select-wrapper">
+                            <select class="form-control">
+                                <option>Compact</option>
+                                <option selected>Normal</option>
+                                <option>Spacious</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-card">
+                    <h3><i class="fas fa-font"></i> Typography</h3>
+                    
+                    <div class="form-group">
+                        <label>Base Font Size</label>
+                        <input type="range" class="form-control" min="12" max="18" value="14">
+                        <p class="form-text">Adjusts the overall text size in the application</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Font Family</label>
+                        <div class="select-wrapper">
+                            <select class="form-control">
+                                <option selected>System Default</option>
+                                <option>Roboto</option>
+                                <option>Open Sans</option>
+                                <option>Montserrat</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notification Settings -->
+            <div class="settings-content" id="notification-settings">
+                <div class="settings-card">
+                    <h3><i class="fas fa-bell"></i> Notification Preferences</h3>
+                    
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <label>Enable Email Notifications</label>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <label>Enable Push Notifications</label>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <label>System Alerts</label>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="form-text">Critical system alerts and warnings</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <label>Security Events</label>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="form-text">Security-related notifications and alerts</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <label>User Activity</label>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="form-text">Notifications about user actions and changes</p>
+                    </div>
+                </div>
+                
+                <div class="settings-card">
+                    <h3><i class="fas fa-envelope"></i> Email Settings</h3>
+                    
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" class="form-control" value="admin@nebulaworks.space">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notification Frequency</label>
+                        <div class="select-wrapper">
+                            <select class="form-control">
+                                <option>Immediately</option>
+                                <option selected>Hourly Digest</option>
+                                <option>Daily Digest</option>
+                                <option>Weekly Summary</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Security Settings -->
+            <div class="settings-content" id="security-settings">
+                <div class="settings-card">
+                    <h3><i class="fas fa-user-shield"></i> Authentication</h3>
+                    
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <label>Two-Factor Authentication</label>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="form-text">Require a second authentication step for all users</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <label>Password Complexity</label>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="form-text">Require strong passwords (minimum 12 characters with mixed types)</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Session Timeout</label>
+                        <div class="select-wrapper">
+                            <select class="form-control">
+                                <option>15 minutes</option>
+                                <option>30 minutes</option>
+                                <option selected>1 hour</option>
+                                <option>4 hours</option>
+                                <option>Never (not recommended)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Failed Login Attempts</label>
+                        <input type="number" class="form-control" value="5" min="1" max="10">
+                        <p class="form-text">Number of failed attempts before account is locked</p>
+                    </div>
+                </div>
+                
+                <div class="settings-card">
+                    <h3><i class="fas fa-lock"></i> Password Policy</h3>
+                    
+                    <div class="form-group">
+                        <label>Minimum Password Length</label>
+                        <input type="number" class="form-control" value="12" min="8" max="32">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Password Expiration</label>
+                        <div class="select-wrapper">
+                            <select class="form-control">
+                                <option>30 days</option>
+                                <option selected>90 days</option>
+                                <option>180 days</option>
+                                <option>Never</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Password History</label>
+                        <input type="number" class="form-control" value="5" min="0" max="10">
+                        <p class="form-text">Number of previous passwords to remember (0 to disable)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Advanced Settings -->
+            <div class="settings-content" id="advanced-settings">
+                <div class="settings-card">
+                    <h3><i class="fas fa-database"></i> Database Settings</h3>
+                    
+                    <div class="form-group">
+                        <label>Backup Frequency</label>
+                        <div class="select-wrapper">
+                            <select class="form-control">
+                                <option>Daily</option>
+                                <option selected>Weekly</option>
+                                <option>Monthly</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Backup Retention</label>
+                        <div class="select-wrapper">
+                            <select class="form-control">
+                                <option>7 days</option>
+                                <option selected>30 days</option>
+                                <option>90 days</option>
+                                <option>1 year</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <label>Enable Automatic Backups</label>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <label>Enable Backup Encryption</label>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-card">
+                    <h3><i class="fas fa-tools"></i> Maintenance</h3>
+                    
+                    <div class="form-group">
+                        <label>System Log Retention</label>
+                        <div class="select-wrapper">
+                            <select class="form-control">
+                                <option>7 days</option>
+                                <option selected>30 days</option>
+                                <option>90 days</option>
+                                <option>1 year</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <label>Enable Automatic Updates</label>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="form-text">Automatically install security updates</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <label>Enable Error Reporting</label>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="form-text">Help improve NebulaWorks by sending anonymous error reports</p>
+                    </div>
+                </div>
+                
+                <div class="danger-zone">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
+                    
+                    <div class="form-group">
+                        <label>Reset All Settings</label>
+                        <p class="form-text">Restore all settings to their default values</p>
+                        <button class="btn btn-outline">
+                            <i class="fas fa-undo"></i> Reset Settings
+                        </button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Clear All Data</label>
+                        <p class="form-text">Permanently delete all data and restore to factory settings</p>
+                        <button class="btn btn-outline" style="color: var(--danger); border-color: var(--danger);">
+                            <i class="fas fa-trash"></i> Factory Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Admin Footer -->
+            <footer class="admin-footer">
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <p>Settings Version: <span id="settings-version">2.4.1</span></p>
+                        <p>Last Updated: <span id="last-updated">Today at 10:23 AM</span></p>
+                    </div>
+                    <div class="footer-right">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.opacity = '0';
+                    setTimeout(function() {
+                        loading.style.display = 'none';
+                    }, 500);
+                }
+            }, 1500);
+        });
+    
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (!menuToggle || !sidebar || !overlay) return;
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+    
+        // Header Scroll Effect
+        function setupHeaderScroll() {
+            const header = document.getElementById('header');
+            if (!header) return;
+            
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', function() {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll <= 0) {
+                    header.classList.remove('header-scrolled');
+                    return;
+                }
+                
+                if (currentScroll > lastScroll && !header.classList.contains('header-scrolled')) {
+                    header.classList.add('header-scrolled');
+                } 
+                
+                lastScroll = currentScroll;
+            });
+        }
+
+        // Update current date
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Admin Dropdown Toggle
+        function setupAdminDropdown() {
+            const adminAvatar = document.getElementById('admin-avatar');
+            const adminDropdown = document.getElementById('admin-dropdown');
+            const overlay = document.getElementById('overlay');
+            
+            if (!adminAvatar || !adminDropdown || !overlay) return;
+            
+            adminAvatar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                adminDropdown.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                adminDropdown.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!adminDropdown.contains(e.target) && e.target !== adminAvatar) {
+                    adminDropdown.classList.remove('active');
+                }
+            });
+        }
+
+        // Tab Switching Functionality
+        function setupTabs() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.settings-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-settings`).classList.add('active');
+                });
+            });
+        }
+
+        // Theme Toggle Functionality
+        function setupThemeToggle() {
+            const themeToggle = document.getElementById('theme-toggle');
+            if (!themeToggle) return;
+
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('nebulaTheme');
+            if (savedTheme) {
+                document.body.classList.add(savedTheme);
+                themeToggle.checked = savedTheme === 'light-theme';
+            }
+
+            themeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('light-theme');
+                    localStorage.setItem('nebulaTheme', 'light-theme');
+                } else {
+                    document.body.classList.remove('light-theme');
+                    localStorage.setItem('nebulaTheme', 'dark-theme');
+                }
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setupMobileMenu();
+            setupHeaderScroll();
+            updateCurrentDate();
+            setupAdminDropdown();
+            setupTabs();
+            setupThemeToggle();
+            
+            // Update time every minute
+            setInterval(updateCurrentDate, 60000);
+        });
+    </script>
+</body>
+</html>

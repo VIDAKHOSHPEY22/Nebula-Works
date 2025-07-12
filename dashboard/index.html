@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NebulaWorks Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="logo.png">
+    <style>
+        /* Dark Theme Variables */
+        :root {
+            --primary: #6a00ff;
+            --secondary: #00e5ff;
+            --accent: #ff00aa;
+            --dark: #0a0a20;
+            --darker: #050510;
+            --light: #e0f7fa;
+            --gray: #a0a0c0;
+            --success: #00ffaa;
+            --warning: #ffcc00;
+            --danger: #ff5555;
+            --dark-gray: #303050;
+            --medium-gray: #707090;
+            --light-gray: #c0c0e0;
+            --white: #ffffff;
+            
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --widget-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Light Theme Variables */
+        body.light-theme {
+            --dark: #f5f5ff;
+            --darker: #e0e0f0;
+            --light: #1a1a2e;
+            --gray: #606080;
+            --dark-gray: #d0d0e0;
+            --medium-gray: #9090b0;
+            --light-gray: #303050;
+            --white: #0a0a20;
+        }
+
+        body.light-theme .widget,
+        body.light-theme .system-status,
+        body.light-theme .welcome-section,
+        body.light-theme .quick-link-card,
+        body.light-theme .sidebar,
+        body.light-theme header,
+        body.light-theme .user-dropdown,
+        body.light-theme .modal-content {
+            background-color: var(--dark);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: var(--light);
+        }
+
+        body.light-theme .mission-item,
+        body.light-theme .resource-item {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .mission-item:hover,
+        body.light-theme .resource-item:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+        }
+
+        body.light-theme .gauge::before {
+            background-color: var(--dark);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--darker);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(106, 0, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: var(--white);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background-color: var(--dark);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            z-index: 100;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-scrolled {
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 36px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+            color: var(--medium-gray);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Theme Toggle Styles */
+        .theme-toggle {
+            margin-right: 15px;
+        }
+
+        .toggle-checkbox {
+            display: none;
+        }
+
+        .toggle-label {
+            position: relative;
+            display: block;
+            width: 60px;
+            height: 30px;
+            background-color: var(--dark-gray);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-label i {
+            position: absolute;
+            top: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .toggle-label .fa-sun {
+            left: 8px;
+            color: var(--warning);
+        }
+
+        .toggle-label .fa-moon {
+            right: 8px;
+            color: var(--light-gray);
+        }
+
+        .toggle-ball {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--white);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: var(--medium-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .toggle-ball {
+            transform: translateX(30px);
+            background-color: var(--white);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-sun {
+            color: var(--light-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-moon {
+            color: var(--primary);
+        }
+
+        /* User Dropdown */
+        .user-dropdown {
+            position: absolute;
+            top: calc(var(--header-height) + 10px);
+            right: 25px;
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 250px;
+            padding: 15px;
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .user-dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .user-dropdown-avatar {
+            width: 50px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .user-dropdown-info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .user-dropdown-info p {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .user-dropdown-menu {
+            list-style: none;
+        }
+
+        .user-dropdown-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: var(--light-gray);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .user-dropdown-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .user-dropdown-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .user-dropdown-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .user-dropdown-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn i {
+            margin-right: 8px;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin-top: var(--header-height);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--dark);
+            padding: 25px 0;
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            transition: var(--transition);
+            z-index: 98;
+            box-shadow: var(--box-shadow);
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-menu li a i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .nav-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a.active {
+            background-color: rgba(106, 0, 255, 0.2);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav-menu li a.active i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a span {
+            flex-grow: 1;
+        }
+
+        .company-news {
+            margin-top: 30px;
+            padding: 0 25px;
+        }
+
+        .company-news h3 {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-item {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            padding-left: 8px;
+            border-left: 2px solid var(--dark-gray);
+        }
+
+        .news-item a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .news-item a:hover {
+            color: var(--primary);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 30px;
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            background-color: var(--darker);
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            margin-bottom: 30px;
+            background-color: var(--dark);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--widget-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .welcome-text h1 span {
+            color: var(--primary);
+        }
+
+        .welcome-text p {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
+        .weather-widget {
+            display: flex;
+            align-items: center;
+            background-color: rgba(106, 0, 255, 0.1);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(106, 0, 255, 0.2);
+        }
+
+        .weather-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            color: var(--primary);
+        }
+
+        .weather-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 3px;
+            color: var(--white);
+        }
+
+        .weather-info p {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+        }
+
+        /* Widgets Grid */
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .widget {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .widget-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white);
+        }
+
+        .widget-header i {
+            color: var(--primary);
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            color: var(--medium-gray);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        /* Missions Widget */
+        .missions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mission-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            background-color: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mission-item:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .mission-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 12px;
+            background-color: var(--status-color);
+        }
+
+        .mission-item span {
+            flex: 1;
+            font-size: 0.95rem;
+            color: var(--white);
+        }
+
+        .mission-item .due-date {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+            margin-left: 10px;
+        }
+
+        /* Team Widget */
+        .team-status {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .team-member {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .team-member:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+        }
+
+        .team-member .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .team-member .avatar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--status-color);
+            border: 2px solid var(--dark);
+        }
+
+        .team-member .info {
+            flex: 1;
+        }
+
+        .team-member .info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+            color: var(--white);
+        }
+
+        .team-member .info p {
+            font-size: 0.85rem;
+            color: var(--medium-gray);
+            margin-bottom: 2px;
+        }
+
+        .team-member .status {
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .team-member .status.online {
+            color: var(--success);
+        }
+
+        .team-member .status.offline {
+            color: var(--danger);
+        }
+
+        /* Calendar Widget */
+        .calendar-events {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .event-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .event-item:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+        }
+
+        .event-date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background-color: rgba(106, 0, 255, 0.1);
+            border-radius: var(--border-radius);
+            color: var(--primary);
+        }
+
+        .event-date .day {
+            font-size: 1.2rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .event-date .month {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .event-info {
+            flex: 1;
+        }
+
+        .event-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 3px;
+            color: var(--white);
+        }
+
+        .event-info p {
+            font-size: 0.85rem;
+            color: var(--medium-gray);
+        }
+
+        /* Resources Widget */
+        .resources-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .resource-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            background-color: rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .resource-item:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .resource-icon {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(106, 0, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .resource-item span {
+            font-size: 0.85rem;
+            color: var(--white);
+            font-weight: 500;
+        }
+
+        /* System Status */
+        .system-status {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .system-status h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white);
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .system-status h2 i {
+            color: var(--danger);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .gauge {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: conic-gradient(var(--primary) 0%, var(--dark-gray) 0%);
+        }
+
+        .gauge::before {
+            content: '';
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background-color: var(--dark);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) inset;
+        }
+
+        .gauge-value {
+            position: relative;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--white);
+        }
+
+        .status-item h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--light-gray);
+        }
+
+        .alert {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: var(--danger);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .alert.active {
+            opacity: 1;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .quick-link-card {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--widget-shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quick-link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .quick-link-card i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .quick-link-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--white);
+        }
+
+        .quick-link-card p {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            margin-bottom: 15px;
+        }
+
+        .quick-link-card a {
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* User Profile Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--box-shadow);
+            transform: translateY(-20px);
+            transition: var(--transition);
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            color: var(--white);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--medium-gray);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .profile-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .profile-info p {
+            color: var(--medium-gray);
+            margin-bottom: 10px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 15px;
+        }
+
+        .stat-item {
+            background-color: rgba(106, 0, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .stat-item .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-item .stat-label {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .profile-details {
+            margin-top: 30px;
+        }
+
+        .detail-group {
+            margin-bottom: 20px;
+        }
+
+        .detail-group h4 {
+            font-size: 1rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            width: 120px;
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            flex: 1;
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #5a00e0;
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--light-gray);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .resources-list {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 60px;
+                --sidebar-width: 260px;
+            }
+            
+            .welcome-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .weather-widget {
+                width: 100%;
+            }
+            
+            .status-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .quick-links {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-stats {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            :root {
+                --header-height: 60px;
+            }
+            
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+            
+            .logo img {
+                height: 30px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-links {
+                grid-template-columns: 1fr;
+            }
+            
+            .gauge {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .gauge::before {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .gauge-value {
+                font-size: 1.2rem;
+            }
+
+            .detail-row {
+                flex-direction: column;
+            }
+
+            .detail-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Initializing Dashboard...</div>
+    </div>
+    
+    <!-- Header -->
+    <header id="header">
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="logo">
+            <img src="logo.png" alt="NebulaWorks">
+            <h1>NebulaWorks</h1>
+        </div>
+        
+        <div class="user-menu">
+            <div class="theme-toggle">
+                <input type="checkbox" id="theme-toggle" class="toggle-checkbox">
+                <label for="theme-toggle" class="toggle-label">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                    <span class="toggle-ball"></span>
+                </label>
+            </div>
+            <div class="notification">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="user-avatar" id="user-avatar">
+                U
+            </div>
+        </div>
+
+        <!-- User Dropdown -->
+        <div class="user-dropdown" id="user-dropdown">
+            <div class="user-dropdown-header">
+                <div class="user-dropdown-avatar" id="dropdown-avatar">U</div>
+                <div class="user-dropdown-info">
+                    <h3 id="dropdown-username">Commander</h3>
+                    <p id="dropdown-useremail">commander@nebulaworks.space</p>
+                </div>
+            </div>
+            <ul class="user-dropdown-menu">
+                <li><a href="#" id="profile-link"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="messages.html"><i class="fas fa-envelope"></i> Messages</a></li>
+                <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+            </ul>
+            <div class="user-dropdown-footer">
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="nav-menu">
+                <li><a href="#" class="active"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                <li><a href="project.html"><i class="fas fa-project-diagram"></i> <span>Projects</span></a></li>
+                <li><a href="team.html"><i class="fas fa-users"></i> <span>Team</span></a></li>
+                <li><a href="messages.html"><i class="fas fa-comments"></i> <span>Messages</span></a></li>
+                <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> <span>Calendar</span></a></li>
+                <li><a href="resources.html"><i class="fas fa-file-alt"></i> <span>Resources</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+            </ul>
+            
+            <div class="company-news">
+                <h3><i class="fas fa-newspaper"></i> Company News</h3>
+                <div class="news-item">
+                    <a href="#">Q3 Financial Results Announced</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">New Mars Colony Initiative</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">Employee Wellness Program Launched</a>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Welcome back, <span id="username">Commander</span></h1>
+                    <p id="current-date">Monday, July 15, 2023</p>
+                </div>
+                <div class="weather-widget" id="weather-widget">
+                    <div class="weather-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div class="weather-info">
+                        <h3 id="weather-temp">24°C</h3>
+                        <p id="weather-desc">Sunny, Mars Base Alpha</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Widgets Grid -->
+            <div class="widgets-grid">
+                <!-- Tasks Widget -->
+                <article class="widget">
+                    <div class="widget-header">
+                        <h2><i class="fas fa-rocket"></i> Active Missions</h2>
+                        <button class="btn-icon"><i class="fas fa-plus"></i></button>
+                    </div>
+                    <div class="missions-list" id="tasks-list">
+                        <div class="mission-item" style="--status-color: var(--warning)">
+                            <div class="mission-status status-pending"></div>
+                            <span>Complete Mars habitat inspection</span>
+                            <span class="due-date">Today</span>
+                        </div>
+                        <div class="mission-item" style="--status-color: var(--secondary)">
+                            <div class="mission-status status-in-progress"></div>
+                            <span>Review orbital calculations</span>
+                            <span class="due-date">Wed</span>
+                        </div>
+                        <div class="mission-item" style="--status-color: var(--success)">
+                            <div class="mission-status status-completed"></div>
+                            <span>Schedule crew meeting</span>
+                            <span class="due-date">Done</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Team Widget -->
+                <article class="widget">
+                    <div class="widget-header">
+                        <h2><i class="fas fa-user-astronaut"></i> Crew Status</h2>
+                    </div>
+                    <div class="team-status" id="team-status">
+                        <div class="team-member">
+                            <div class="avatar" style="--status-color: var(--success)" id="current-user-avatar">
+                                U
+                            </div>
+                            <div class="info">
+                                <h3 id="current-user-name">Commander</h3>
+                                <p id="current-user-position">Mission Commander</p>
+                                <span class="status online">Online</span>
+                            </div>
+                        </div>
+                        <div class="team-member">
+                            <div class="avatar" style="--status-color: var(--success)">S</div>
+                            <div class="info">
+                                <h3>Yalda</h3>
+                                <p>Chief Scientist</p>
+                                <span class="status online">Online</span>
+                            </div>
+                        </div>
+                        <div class="team-member">
+                            <div class="avatar" style="--status-color: var(--danger)">M</div>
+                            <div class="info">
+                                <h3>Vida</h3>
+                                <p>Systems Engineer</p>
+                                <span class="status offline">On EVA</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Calendar Widget -->
+                <article class="widget">
+                    <div class="widget-header">
+                        <h2><i class="fas fa-calendar-alt"></i> Upcoming Events</h2>
+                    </div>
+                    <div class="calendar-events" id="calendar-events">
+                        <div class="event-item">
+                            <div class="event-date">
+                                <span class="day">15</span>
+                                <span class="month">JUL</span>
+                            </div>
+                            <div class="event-info">
+                                <h3>Daily Briefing</h3>
+                                <p>08:00 - Command Center</p>
+                            </div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-date">
+                                <span class="day">17</span>
+                                <span class="month">JUL</span>
+                            </div>
+                            <div class="event-info">
+                                <h3>Supply Ship Arrival</h3>
+                                <p>10:00 - Docking Bay</p>
+                            </div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-date">
+                                <span class="day">20</span>
+                                <span class="month">JUL</span>
+                            </div>
+                            <div class="event-info">
+                                <h3>Solar Flare Watch</h3>
+                                <p>All crew on alert</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            
+            <!-- Resources Widget -->
+            <article class="widget">
+                <div class="widget-header">
+                    <h2><i class="fas fa-book"></i> Resources</h2>
+                </div>
+                <div class="resources-list">
+                    <div class="resource-item">
+                        <div class="resource-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <span>Mission Protocols</span>
+                    </div>
+                    <div class="resource-item">
+                        <div class="resource-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <span>Research Data</span>
+                    </div>
+                    <div class="resource-item">
+                        <div class="resource-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <span>Maintenance Logs</span>
+                    </div>
+                    <div class="resource-item">
+                        <div class="resource-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <span>Nutrition Plans</span>
+                    </div>
+                </div>
+            </article>
+            
+            <!-- System Status -->
+            <section class="system-status">
+                <h2><i class="fas fa-chart-bar"></i> Station Metrics</h2>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="gauge" id="projects-gauge">
+                            <span class="gauge-value">78%</span>
+                        </div>
+                        <h3>Oxygen Levels</h3>
+                        <div class="alert" id="projects-alert">!</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="gauge" id="revenue-gauge">
+                            <span class="gauge-value">98%</span>
+                        </div>
+                        <h3>Power Supply</h3>
+                    </div>
+                    <div class="status-item">
+                        <div class="gauge" id="satisfaction-gauge">
+                            <span class="gauge-value">92%</span>
+                        </div>
+                        <h3>Life Support</h3>
+                    </div>
+                    <div class="status-item">
+                        <div class="gauge" id="attendance-gauge">
+                            <span class="gauge-value">98%</span>
+                        </div>
+                        <h3>Shield Integrity</h3>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Quick Links -->
+            <div class="quick-links">
+                <div class="quick-link-card">
+                    <i class="fas fa-satellite-dish"></i>
+                    <h3>Communications</h3>
+                    <p>Access interplanetary comm systems</p>
+                    <a href="#">Open Comms <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="quick-link-card">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>Navigation</h3>
+                    <p>View orbital trajectories</p>
+                    <a href="#">Open Nav <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="quick-link-card">
+                    <i class="fas fa-flask"></i>
+                    <h3>Research</h3>
+                    <p>Access science database</p>
+                    <a href="#">Open Research <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="quick-link-card">
+                    <i class="fas fa-user-shield"></i>
+                    <h3>Security</h3>
+                    <p>Station security protocols</p>
+                    <a href="#">Open Security <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- User Profile Modal -->
+    <div class="modal" id="profile-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>User Profile</h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="modal-avatar">U</div>
+                    <div class="profile-info">
+                        <h3 id="modal-username">Commander</h3>
+                        <p id="modal-useremail">commander@nebulaworks.space</p>
+                        <p id="modal-userposition">Mission Commander</p>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">12</div>
+                                <div class="stat-label">Missions</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">3.8</div>
+                                <div class="stat-label">Years</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">98%</div>
+                                <div class="stat-label">Rating</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <div class="detail-group">
+                        <h4>Personal Information</h4>
+                        <div class="detail-row">
+                            <div class="detail-label">Full Name:</div>
+                            <div class="detail-value" id="modal-fullname">Commander User</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Email:</div>
+                            <div class="detail-value" id="modal-email">commander@nebulaworks.space</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Position:</div>
+                            <div class="detail-value" id="modal-position">Mission Commander</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Department:</div>
+                            <div class="detail-value" id="modal-department">Command</div>
+                        </div>
+                    </div>
+                    <div class="detail-group">
+                        <h4>Contact Information</h4>
+                        <div class="detail-row">
+                            <div class="detail-label">Station:</div>
+                            <div class="detail-value">Mars Base Alpha</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Comm ID:</div>
+                            <div class="detail-value">MA-CC-001</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Emergency Contact:</div>
+                            <div class="detail-value">Earth Central Command</div>
+                        </div>
+                    </div>
+                    <div class="detail-group">
+                        <h4>Account Information</h4>
+                        <div class="detail-row">
+                            <div class="detail-label">Member Since:</div>
+                            <div class="detail-value">January 15, 2022</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Last Login:</div>
+                            <div class="detail-value" id="modal-lastlogin">Today, 08:45</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Status:</div>
+                            <div class="detail-value"><span class="status online">Active</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="edit-profile">Edit Profile</button>
+                <button class="btn btn-primary" id="save-profile">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.opacity = '0';
+                    setTimeout(function() {
+                        loading.style.display = 'none';
+                    }, 500);
+                }
+            }, 1500);
+        });
+    
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (!menuToggle || !sidebar || !overlay) return;
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+    
+        // Header Scroll Effect
+        function setupHeaderScroll() {
+            const header = document.getElementById('header');
+            if (!header) return;
+            
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', function() {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll <= 0) {
+                    header.classList.remove('header-scrolled');
+                    return;
+                }
+                
+                if (currentScroll > lastScroll && !header.classList.contains('header-scrolled')) {
+                    header.classList.add('header-scrolled');
+                } 
+                
+                lastScroll = currentScroll;
+            });
+        }
+
+        // Update current date
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+            
+            // Update last login time in modal
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            const lastLogin = document.getElementById('modal-lastlogin');
+            if (lastLogin) {
+                lastLogin.textContent = `Today, ${now.toLocaleTimeString('en-US', timeOptions)}`;
+            }
+        }
+
+        // Get user data from URL or localStorage
+        function getUserData() {
+            // Check URL for user parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const userFromUrl = urlParams.get('user');
+            
+            if (userFromUrl) {
+                const userData = {
+                    fullname: decodeURIComponent(userFromUrl),
+                    email: "commander@nebulaworks.space",
+                    position: "Mission Commander",
+                    department: "Command",
+                    joinDate: "January 15, 2022"
+                };
+                
+                // Store in localStorage for future visits
+                localStorage.setItem('nebulaWorksUser', JSON.stringify(userData));
+                return userData;
+            }
+            
+            // Check localStorage for user data
+            const storedUser = localStorage.getItem('nebulaWorksUser');
+            if (storedUser) {
+                return JSON.parse(storedUser);
+            }
+            
+            // Default fallback
+            return {
+                fullname: "Commander",
+                email: "commander@nebulaworks.space",
+                position: "Mission Commander",
+                department: "Command",
+                joinDate: "January 15, 2022"
+            };
+        }
+
+        // Update user interface with user data
+        function updateUserInterface() {
+            const userData = getUserData();
+            
+            // Get first character of the name for avatar
+            const avatarChar = userData.fullname.charAt(0).toUpperCase();
+            
+            // Update welcome message
+            const usernameElement = document.getElementById('username');
+            if (usernameElement) {
+                usernameElement.textContent = userData.fullname;
+            }
+            
+            // Update user avatar in header
+            const userAvatar = document.getElementById('user-avatar');
+            if (userAvatar) {
+                userAvatar.textContent = avatarChar;
+            }
+            
+            // Update dropdown info
+            const dropdownAvatar = document.getElementById('dropdown-avatar');
+            const dropdownUsername = document.getElementById('dropdown-username');
+            const dropdownUseremail = document.getElementById('dropdown-useremail');
+            
+            if (dropdownAvatar) dropdownAvatar.textContent = avatarChar;
+            if (dropdownUsername) dropdownUsername.textContent = userData.fullname;
+            if (dropdownUseremail) dropdownUseremail.textContent = userData.email;
+            
+            // Update current user in team widget
+            const currentUserAvatar = document.getElementById('current-user-avatar');
+            const currentUserName = document.getElementById('current-user-name');
+            const currentUserPosition = document.getElementById('current-user-position');
+            
+            if (currentUserAvatar) currentUserAvatar.textContent = avatarChar;
+            if (currentUserName) currentUserName.textContent = userData.fullname;
+            if (currentUserPosition) currentUserPosition.textContent = userData.position;
+            
+            // Update modal info
+            const modalAvatar = document.getElementById('modal-avatar');
+            const modalUsername = document.getElementById('modal-username');
+            const modalUseremail = document.getElementById('modal-useremail');
+            const modalUserposition = document.getElementById('modal-position');
+            const modalFullname = document.getElementById('modal-fullname');
+            const modalEmail = document.getElementById('modal-email');
+            const modalPosition = document.getElementById('modal-position');
+            const modalDepartment = document.getElementById('modal-department');
+            
+            if (modalAvatar) modalAvatar.textContent = avatarChar;
+            if (modalUsername) modalUsername.textContent = userData.fullname;
+            if (modalUseremail) modalUseremail.textContent = userData.email;
+            if (modalUserposition) modalUserposition.textContent = userData.position;
+            if (modalFullname) modalFullname.textContent = userData.fullname;
+            if (modalEmail) modalEmail.textContent = userData.email;
+            if (modalPosition) modalPosition.textContent = userData.position;
+            if (modalDepartment) modalDepartment.textContent = userData.department;
+        }
+
+        // Initialize System Gauges
+        function initGauges() {
+            const gauges = [
+                { id: 'projects-gauge', value: 78, min: 0, max: 100 },
+                { id: 'revenue-gauge', value: 98, min: 0, max: 100 },
+                { id: 'satisfaction-gauge', value: 92, min: 0, max: 100 },
+                { id: 'attendance-gauge', value: 98, min: 0, max: 100 }
+            ];
+    
+            gauges.forEach(gauge => {
+                const element = document.getElementById(gauge.id);
+                if (!element) return;
+                
+                const percentage = ((gauge.value - gauge.min) / (gauge.max - gauge.min)) * 100;
+                element.querySelector('.gauge-value').textContent = `${gauge.value}%`;
+                
+                element.style.background = `conic-gradient(
+                    var(--primary) ${percentage}%, 
+                    var(--dark-gray) 0%
+                )`;
+                
+                // Set alert if value is critical
+                const alertId = `${gauge.id.replace('-gauge', '-alert')}`;
+                const alertElement = document.getElementById(alertId);
+                
+                if (alertElement && gauge.value <= 30) {
+                    alertElement.classList.add('active');
+                }
+            });
+        }
+
+        // Simulate real-time data updates
+        function simulateDataUpdates() {
+            setInterval(function() {
+                // Randomly update oxygen gauge
+                const oxygenGauge = document.getElementById('projects-gauge');
+                const oxygenValue = oxygenGauge ? oxygenGauge.querySelector('.gauge-value') : null;
+                const oxygenAlert = document.getElementById('projects-alert');
+                
+                if (!oxygenGauge || !oxygenValue || !oxygenAlert) return;
+                
+                let currentValue = parseInt(oxygenValue.textContent);
+                const change = Math.random() > 0.5 ? -1 : 1;
+                currentValue += change;
+                
+                if (currentValue < 0) currentValue = 0;
+                if (currentValue > 100) currentValue = 100;
+                
+                oxygenValue.textContent = `${currentValue}%`;
+                const percentage = ((currentValue - 0) / 100) * 100;
+                oxygenGauge.style.background = `conic-gradient(
+                    var(--primary) ${percentage}%, 
+                    var(--dark-gray) 0%
+                )`;
+                
+                if (currentValue <= 30) {
+                    oxygenAlert.classList.add('active');
+                } else {
+                    oxygenAlert.classList.remove('active');
+                }
+            }, 5000);
+        }
+
+        // User Dropdown Toggle
+        function setupUserDropdown() {
+            const userAvatar = document.getElementById('user-avatar');
+            const userDropdown = document.getElementById('user-dropdown');
+            const overlay = document.getElementById('overlay');
+            
+            if (!userAvatar || !userDropdown || !overlay) return;
+            
+            userAvatar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                userDropdown.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!userDropdown.contains(e.target)) {
+                    userDropdown.classList.remove('active');
+                }
+            });
+        }
+
+        // Profile Modal
+        function setupProfileModal() {
+            const profileLink = document.getElementById('profile-link');
+            const modal = document.getElementById('profile-modal');
+            const modalClose = document.getElementById('modal-close');
+            const overlay = document.getElementById('overlay');
+            
+            if (!profileLink || !modal || !modalClose || !overlay) return;
+            
+            profileLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                modal.classList.add('active');
+                overlay.classList.add('active');
+            });
+            
+            modalClose.addEventListener('click', function() {
+                modal.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                modal.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+
+        // Logout Functionality
+        function setupLogout() {
+            const logoutBtn = document.getElementById('logout-btn');
+            
+            if (!logoutBtn) return;
+            
+            logoutBtn.addEventListener('click', function() {
+                // Clear user data from localStorage
+                localStorage.removeItem('nebulaWorksUser');
+                
+                // Redirect to login page
+                window.location.href = 'index.html';
+            });
+        }
+
+ // Weather API Integration - Free tier with shared key
+async function fetchWeatherData() {
+    const city = 'Tehran'; // Default city
+    // Using a free testing endpoint with shared key (may have rate limits)
+    const url = `https://api.weatherapi.com/v1/current.json?key=3a9a8e0d3b5e4f5d9a922505242405&q=${city}`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (response.ok) {
+            updateWeatherWidget(data);
+        } else {
+            console.error('Weather API error:', data.error?.message);
+            // Fallback to default values
+            document.getElementById('weather-temp').textContent = '24°C';
+            document.getElementById('weather-desc').textContent = 'Sunny, Tehran';
+        }
+    } catch (error) {
+        console.error('Failed to fetch weather data:', error);
+        // Fallback to default values
+        document.getElementById('weather-temp').textContent = '24°C';
+        document.getElementById('weather-desc').textContent = 'Sunny, Tehran';
+    }
+}
+
+function updateWeatherWidget(data) {
+    const temp = Math.round(data.current.temp_c);
+    const description = data.current.condition.text;
+    const city = data.location.name;
+    const iconCode = data.current.condition.icon;
+    
+    document.getElementById('weather-temp').textContent = `${temp}°C`;
+    document.getElementById('weather-desc').textContent = `${description}, ${city}`;
+    
+    // Update weather icon based on condition
+    const weatherIcon = document.querySelector('.weather-icon i');
+    if (weatherIcon) {
+        // Map WeatherAPI conditions to Font Awesome icons
+        const conditionMap = {
+            'Sunny': 'sun',
+            'Clear': 'sun',
+            'Partly cloudy': 'cloud-sun',
+            'Cloudy': 'cloud',
+            'Overcast': 'cloud',
+            'Mist': 'smog',
+            'Rain': 'cloud-rain',
+            'Thunderstorm': 'bolt',
+            'Snow': 'snowflake',
+            'Fog': 'smog'
+        };
+        
+        // Find matching icon or default to sun
+        let faIcon = 'sun';
+        for (const [key, value] of Object.entries(conditionMap)) {
+            if (description.includes(key)) {
+                faIcon = value;
+                break;
+            }
+        }
+        
+        weatherIcon.className = `fas fa-${faIcon}`;
+    }
+}
+
+        // Theme Toggle Functionality
+        function setupThemeToggle() {
+            const themeToggle = document.getElementById('theme-toggle');
+            if (!themeToggle) return;
+
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('nebulaTheme');
+            if (savedTheme) {
+                document.body.classList.add(savedTheme);
+                themeToggle.checked = savedTheme === 'light-theme';
+            }
+
+            themeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('light-theme');
+                    localStorage.setItem('nebulaTheme', 'light-theme');
+                } else {
+                    document.body.classList.remove('light-theme');
+                    localStorage.setItem('nebulaTheme', 'dark-theme');
+                }
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setupMobileMenu();
+            setupHeaderScroll();
+            updateCurrentDate();
+            updateUserInterface();
+            initGauges();
+            simulateDataUpdates();
+            setupUserDropdown();
+            setupProfileModal();
+            setupLogout();
+            fetchWeatherData();
+            setupThemeToggle();
+            
+            // Add hover effect to widgets
+            const widgets = document.querySelectorAll('.widget, .quick-link-card');
+            widgets.forEach(widget => {
+                widget.addEventListener('mouseenter', () => {
+                    widget.style.transform = 'translateY(-5px)';
+                    widget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+                });
+                
+                widget.addEventListener('mouseleave', () => {
+                    widget.style.transform = '';
+                    widget.style.boxShadow = '';
+                });
+            });
+    
+            // Add click effect to interactive elements
+            const interactiveElements = document.querySelectorAll('.mission-item, .team-member, .event-item, .resource-item');
+            interactiveElements.forEach(el => {
+                el.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

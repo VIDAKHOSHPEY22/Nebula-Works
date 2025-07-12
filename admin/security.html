@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Center | NebulaWorks Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="logo.png">
+    <style>
+        /* Dark Theme Variables */
+        :root {
+            --primary: #6a00ff;
+            --secondary: #00e5ff;
+            --accent: #ff00aa;
+            --dark: #0a0a20;
+            --darker: #050510;
+            --light: #e0f7fa;
+            --gray: #a0a0c0;
+            --success: #00ffaa;
+            --warning: #ffcc00;
+            --danger: #ff5555;
+            --dark-gray: #303050;
+            --medium-gray: #707090;
+            --light-gray: #c0c0e0;
+            --white: #ffffff;
+            
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --widget-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Light Theme Variables */
+        body.light-theme {
+            --dark: #f5f5ff;
+            --darker: #e0e0f0;
+            --light: #1a1a2e;
+            --gray: #606080;
+            --dark-gray: #d0d0e0;
+            --medium-gray: #9090b0;
+            --light-gray: #303050;
+            --white: #0a0a20;
+        }
+
+        body.light-theme .widget,
+        body.light-theme .system-status,
+        body.light-theme .welcome-section,
+        body.light-theme .quick-link-card,
+        body.light-theme .sidebar,
+        body.light-theme header,
+        body.light-theme .user-dropdown,
+        body.light-theme .modal-content {
+            background-color: var(--dark);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: var(--light);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--darker);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(106, 0, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: var(--white);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background-color: var(--dark);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            z-index: 100;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 36px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+            color: var(--medium-gray);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            margin-right: 15px;
+        }
+
+        .toggle-checkbox {
+            display: none;
+        }
+
+        .toggle-label {
+            position: relative;
+            display: block;
+            width: 60px;
+            height: 30px;
+            background-color: var(--dark-gray);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-label i {
+            position: absolute;
+            top: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .toggle-label .fa-sun {
+            left: 8px;
+            color: var(--warning);
+        }
+
+        .toggle-label .fa-moon {
+            right: 8px;
+            color: var(--light-gray);
+        }
+
+        .toggle-ball {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--white);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: var(--medium-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .toggle-ball {
+            transform: translateX(30px);
+            background-color: var(--white);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-sun {
+            color: var(--light-gray);
+        }
+
+        .toggle-checkbox:checked + .toggle-label .fa-moon {
+            color: var(--primary);
+        }
+
+        /* Admin Dropdown */
+        .admin-dropdown {
+            position: absolute;
+            top: calc(var(--header-height) + 10px);
+            right: 25px;
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 300px;
+            padding: 15px;
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .admin-dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .admin-dropdown-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .admin-dropdown-info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .admin-dropdown-info p {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .admin-dropdown-info .admin-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: rgba(106, 0, 255, 0.2);
+            color: var(--primary);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        .admin-dropdown-menu {
+            list-style: none;
+        }
+
+        .admin-dropdown-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: var(--light-gray);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .admin-dropdown-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .admin-dropdown-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .admin-dropdown-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .admin-dropdown-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn i {
+            margin-right: 8px;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin-top: var(--header-height);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--dark);
+            padding: 25px 0;
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            transition: var(--transition);
+            z-index: 98;
+            box-shadow: var(--box-shadow);
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-menu li a i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .nav-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a.active {
+            background-color: rgba(106, 0, 255, 0.2);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav-menu li a.active i {
+            color: var(--primary);
+        }
+
+        .nav-menu li a span {
+            flex-grow: 1;
+        }
+
+        .admin-news {
+            margin-top: 30px;
+            padding: 0 25px;
+        }
+
+        .admin-news h3 {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-item {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            padding-left: 8px;
+            border-left: 2px solid var(--dark-gray);
+        }
+
+        .news-item a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .news-item a:hover {
+            color: var(--primary);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 30px;
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            background-color: var(--darker);
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            margin-bottom: 30px;
+            background-color: var(--dark);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--widget-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .welcome-text h1 span {
+            color: var(--primary);
+        }
+
+        .welcome-text p {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
+        .admin-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .emergency-btn {
+            background-color: rgba(255, 85, 85, 0.1);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 85, 85, 0.3);
+            color: var(--danger);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .emergency-btn:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        /* Widgets Grid */
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .widget {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .widget-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white);
+        }
+
+        .widget-header i {
+            color: var(--primary);
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            color: var(--medium-gray);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        /* Security Status */
+        .security-status {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .security-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+        }
+
+        .security-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .security-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .security-icon.secure {
+            background-color: rgba(0, 255, 170, 0.1);
+            color: var(--success);
+        }
+
+        .security-icon.warning {
+            background-color: rgba(255, 204, 0, 0.1);
+            color: var(--warning);
+        }
+
+        .security-icon.critical {
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+        }
+
+        .security-text h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .security-text p {
+            font-size: 0.85rem;
+            color: var(--medium-gray);
+        }
+
+        .security-value {
+            font-weight: bold;
+            color: var(--white);
+        }
+
+        /* Threat Level */
+        .threat-level {
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+            margin-top: 15px;
+        }
+
+        .threat-gauge {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 15px;
+            background: conic-gradient(
+                var(--success) 0% 25%,
+                var(--warning) 25% 75%,
+                var(--danger) 75% 100%
+            );
+        }
+
+        .threat-gauge::before {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background-color: var(--dark);
+            border-radius: 50%;
+        }
+
+        .threat-value {
+            position: relative;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--white);
+        }
+
+        .threat-label {
+            font-size: 1rem;
+            color: var(--white);
+            font-weight: 500;
+        }
+
+        /* Security Alerts */
+        .security-alerts {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .alert-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+            align-items: flex-start;
+        }
+
+        .alert-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .alert-icon.critical {
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+        }
+
+        .alert-icon.warning {
+            background-color: rgba(255, 204, 0, 0.1);
+            color: var(--warning);
+        }
+
+        .alert-icon.secure {
+            background-color: rgba(0, 255, 170, 0.1);
+            color: var(--success);
+        }
+
+        .alert-content h4 {
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .alert-content p {
+            font-size: 0.85rem;
+            color: var(--medium-gray);
+            margin-bottom: 5px;
+        }
+
+        .alert-time {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        /* Firewall Rules */
+        .firewall-rules {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .firewall-rules th {
+            text-align: left;
+            padding: 12px 15px;
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .firewall-rules td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--light-gray);
+        }
+
+        .firewall-rules tr:last-child td {
+            border-bottom: none;
+        }
+
+        .firewall-rules tr:hover td {
+            background-color: rgba(106, 0, 255, 0.05);
+        }
+
+        .rule-status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .rule-status.active {
+            background-color: var(--success);
+        }
+
+        .rule-status.inactive {
+            background-color: var(--danger);
+        }
+
+        /* Security Checklist */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+        }
+
+        .checklist-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid var(--medium-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .checklist-checkbox.checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .checklist-text {
+            flex: 1;
+            font-size: 0.9rem;
+            color: var(--light-gray);
+        }
+
+        .checklist-text.checked {
+            text-decoration: line-through;
+            color: var(--medium-gray);
+        }
+
+        /* Admin Footer */
+        .admin-footer {
+            background-color: var(--dark);
+            padding: 15px 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 30px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--medium-gray);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .resources-list {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 60px;
+                --sidebar-width: 260px;
+            }
+            
+            .welcome-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .security-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            :root {
+                --header-height: 60px;
+            }
+            
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+            
+            .logo img {
+                height: 30px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .security-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .firewall-rules {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Security Center...</div>
+    </div>
+    
+    <!-- Header -->
+    <header id="header">
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="logo">
+            <img src="logo.png" alt="NebulaWorks">
+            <h1>NebulaWorks <span style="color: var(--secondary); font-size: 0.8rem;">Security</span></h1>
+        </div>
+        
+        <div class="user-menu">
+            <div class="theme-toggle">
+                <input type="checkbox" id="theme-toggle" class="toggle-checkbox">
+                <label for="theme-toggle" class="toggle-label">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                    <span class="toggle-ball"></span>
+                </label>
+            </div>
+            <div class="notification">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="user-avatar" id="admin-avatar">
+                A
+            </div>
+        </div>
+
+        <!-- Admin Dropdown -->
+        <div class="admin-dropdown" id="admin-dropdown">
+            <div class="admin-dropdown-header">
+                <div class="admin-dropdown-avatar">A</div>
+                <div class="admin-dropdown-info">
+                    <h3>Admin User</h3>
+                    <p>admin@nebulaworks.space</p>
+                    <span class="admin-badge">Security Admin</span>
+                </div>
+            </div>
+            <ul class="admin-dropdown-menu">
+                <li><a href="#"><i class="fas fa-user-shield"></i> Admin Profile</a></li>
+                <li><a href="system.html"><i class="fas fa-cog"></i> System Settings</a></li>
+                <li><a href="user.html"><i class="fas fa-users-cog"></i> User Management</a></li>
+                <li><a href="security.html" class="active"><i class="fas fa-shield-alt"></i> Security Center</a></li>
+            </ul>
+            <div class="admin-dropdown-footer">
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                <li><a href="user.html"><i class="fas fa-users-cog"></i> <span>User Management</span></a></li>
+                <li><a href="system.html"><i class="fas fa-server"></i> <span>System Controls</span></a></li>
+                <li><a href="network.html"><i class="fas fa-chart-network"></i> <span>Network Analytics</span></a></li>
+                <li><a href="security.html" class="active"><i class="fas fa-shield-alt"></i> <span>Security</span></a></li>
+                <li><a href="event.html"><i class="fas fa-calendar-star"></i> <span>Event Logs</span></a></li>
+                <li><a href="settings-admin.html"><i class="fas fa-cogs"></i> <span>Settings</span></a></li>
+            </ul>
+            
+            <div class="admin-news">
+                <h3><i class="fas fa-newspaper"></i> Security Alerts</h3>
+                <div class="news-item">
+                    <a href="#">2 critical vulnerabilities detected</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">Security scan required</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">New security policy available</a>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Security <span>Center</span></h1>
+                    <p id="current-date">Monitoring and protecting your systems</p>
+                </div>
+                <div class="admin-actions">
+                    <button class="emergency-btn">
+                        <i class="fas fa-shield-alt"></i> Run Security Scan
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Widgets Grid -->
+            <div class="widgets-grid">
+                <!-- Security Status Widget -->
+                <article class="widget">
+                    <div class="widget-header">
+                        <h2><i class="fas fa-shield-alt"></i> Security Status</h2>
+                        <div class="widget-actions">
+                            <button class="btn-icon"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="security-status">
+                        <div class="security-item">
+                            <div class="security-info">
+                                <div class="security-icon secure">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <div class="security-text">
+                                    <h3>Authentication</h3>
+                                    <p>2FA enabled for all users</p>
+                                </div>
+                            </div>
+                            <span class="security-value">Secure</span>
+                        </div>
+                        
+                        <div class="security-item">
+                            <div class="security-info">
+                                <div class="security-icon warning">
+                                    <i class="fas fa-bug"></i>
+                                </div>
+                                <div class="security-text">
+                                    <h3>Vulnerabilities</h3>
+                                    <p>3 unpatched issues</p>
+                                </div>
+                            </div>
+                            <span class="security-value">Warning</span>
+                        </div>
+                        
+                        <div class="security-item">
+                            <div class="security-info">
+                                <div class="security-icon critical">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <div class="security-text">
+                                    <h3>Firewall</h3>
+                                    <p>2 ports unexpectedly open</p>
+                                </div>
+                            </div>
+                            <span class="security-value">Critical</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Threat Level Widget -->
+                <article class="widget">
+                    <div class="widget-header">
+                        <h2><i class="fas fa-radiation"></i> Threat Level</h2>
+                        <select class="filter-select">
+                            <option>Real-time</option>
+                            <option>24 Hours</option>
+                            <option>7 Days</option>
+                        </select>
+                    </div>
+                    <div class="threat-level">
+                        <div class="threat-gauge">
+                            <div class="threat-value">38%</div>
+                        </div>
+                        <div class="threat-label">Moderate Threat</div>
+                    </div>
+                </article>
+                
+                <!-- Security Checklist Widget -->
+                <article class="widget">
+                    <div class="widget-header">
+                        <h2><i class="fas fa-clipboard-check"></i> Security Checklist</h2>
+                        <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+                    </div>
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <div class="checklist-checkbox checked">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="checklist-text checked">Enable Two-Factor Authentication</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checklist-checkbox checked">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="checklist-text checked">Run Weekly Security Scans</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checklist-checkbox">
+                            </div>
+                            <div class="checklist-text">Update Firewall Rules</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checklist-checkbox">
+                            </div>
+                            <div class="checklist-text">Review Admin Permissions</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checklist-checkbox checked">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="checklist-text checked">Backup Encryption Enabled</div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            
+            <!-- Firewall Rules Table -->
+            <section class="widget">
+                <div class="widget-header">
+                    <h2><i class="fas fa-fire"></i> Firewall Rules</h2>
+                    <div class="widget-actions">
+                        <button class="btn-icon"><i class="fas fa-plus"></i></button>
+                        <button class="btn-icon"><i class="fas fa-filter"></i></button>
+                    </div>
+                </div>
+                
+                <table class="firewall-rules">
+                    <thead>
+                        <tr>
+                            <th>Rule ID</th>
+                            <th>Name</th>
+                            <th>Protocol</th>
+                            <th>Port Range</th>
+                            <th>Source</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>FW-001</td>
+                            <td>HTTP Access</td>
+                            <td>TCP</td>
+                            <td>80</td>
+                            <td>Any</td>
+                            <td><span class="rule-status active"></span> Active</td>
+                            <td>
+                                <button class="btn-icon"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon"><i class="fas fa-toggle-on"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>FW-002</td>
+                            <td>HTTPS Access</td>
+                            <td>TCP</td>
+                            <td>443</td>
+                            <td>Any</td>
+                            <td><span class="rule-status active"></span> Active</td>
+                            <td>
+                                <button class="btn-icon"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon"><i class="fas fa-toggle-on"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>FW-003</td>
+                            <td>SSH Access</td>
+                            <td>TCP</td>
+                            <td>22</td>
+                            <td>Admin IPs</td>
+                            <td><span class="rule-status active"></span> Active</td>
+                            <td>
+                                <button class="btn-icon"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon"><i class="fas fa-toggle-on"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>FW-004</td>
+                            <td>Database Port</td>
+                            <td>TCP</td>
+                            <td>3306</td>
+                            <td>Internal</td>
+                            <td><span class="rule-status inactive"></span> Inactive</td>
+                            <td>
+                                <button class="btn-icon"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon"><i class="fas fa-toggle-off"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <!-- Security Alerts -->
+            <section class="widget">
+                <div class="widget-header">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Recent Security Alerts</h2>
+                    <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+                </div>
+                
+                <div class="security-alerts">
+                    <div class="alert-item">
+                        <div class="alert-icon critical">
+                            <i class="fas fa-skull-crossbones"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h4>Critical Vulnerability Detected</h4>
+                            <p>Library libssl1.1 has critical CVE-2023-1234 vulnerability</p>
+                            <small class="alert-time">2 hours ago</small>
+                        </div>
+                    </div>
+                    
+                    <div class="alert-item">
+                        <div class="alert-icon warning">
+                            <i class="fas fa-user-secret"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h4>Suspicious Login Attempt</h4>
+                            <p>Multiple failed attempts from IP 192.168.1.105</p>
+                            <small class="alert-time">5 hours ago</small>
+                        </div>
+                    </div>
+                    
+                    <div class="alert-item">
+                        <div class="alert-icon secure">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h4>Security Scan Completed</h4>
+                            <p>No new threats detected in latest scan</p>
+                            <small class="alert-time">Yesterday</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Admin Footer -->
+            <footer class="admin-footer">
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <p>Security Status: <span id="security-status">Protected</span></p>
+                        <p>Last Scan: <span id="last-scan">2 hours ago</span></p>
+                    </div>
+                    <div class="footer-right">
+                        <p>Security Portal v2.4.1</p>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.opacity = '0';
+                    setTimeout(function() {
+                        loading.style.display = 'none';
+                    }, 500);
+                }
+            }, 1500);
+        });
+    
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (!menuToggle || !sidebar || !overlay) return;
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+    
+        // Header Scroll Effect
+        function setupHeaderScroll() {
+            const header = document.getElementById('header');
+            if (!header) return;
+            
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', function() {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll <= 0) {
+                    header.classList.remove('header-scrolled');
+                    return;
+                }
+                
+                if (currentScroll > lastScroll && !header.classList.contains('header-scrolled')) {
+                    header.classList.add('header-scrolled');
+                } 
+                
+                lastScroll = currentScroll;
+            });
+        }
+
+        // Update current date
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+            
+            // Update security time in footer
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            const securityTime = document.getElementById('security-time');
+            if (securityTime) {
+                securityTime.textContent = now.toLocaleTimeString('en-US', timeOptions);
+            }
+        }
+
+        // Admin Dropdown Toggle
+        function setupAdminDropdown() {
+            const adminAvatar = document.getElementById('admin-avatar');
+            const adminDropdown = document.getElementById('admin-dropdown');
+            const overlay = document.getElementById('overlay');
+            
+            if (!adminAvatar || !adminDropdown || !overlay) return;
+            
+            adminAvatar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                adminDropdown.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                adminDropdown.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!adminDropdown.contains(e.target) && e.target !== adminAvatar) {
+                    adminDropdown.classList.remove('active');
+                }
+            });
+        }
+
+        // Toggle checklist items
+        function setupChecklist() {
+            const checklistItems = document.querySelectorAll('.checklist-item');
+            checklistItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const checkbox = this.querySelector('.checklist-checkbox');
+                    const text = this.querySelector('.checklist-text');
+                    
+                    checkbox.classList.toggle('checked');
+                    text.classList.toggle('checked');
+                    
+                    if (checkbox.classList.contains('checked')) {
+                        checkbox.innerHTML = '<i class="fas fa-check"></i>';
+                    } else {
+                        checkbox.innerHTML = '';
+                    }
+                });
+            });
+        }
+
+        // Theme Toggle Functionality
+        function setupThemeToggle() {
+            const themeToggle = document.getElementById('theme-toggle');
+            if (!themeToggle) return;
+
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('nebulaTheme');
+            if (savedTheme) {
+                document.body.classList.add(savedTheme);
+                themeToggle.checked = savedTheme === 'light-theme';
+            }
+
+            themeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('light-theme');
+                    localStorage.setItem('nebulaTheme', 'light-theme');
+                } else {
+                    document.body.classList.remove('light-theme');
+                    localStorage.setItem('nebulaTheme', 'dark-theme');
+                }
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setupMobileMenu();
+            setupHeaderScroll();
+            updateCurrentDate();
+            setupAdminDropdown();
+            setupChecklist();
+            setupThemeToggle();
+            
+            // Update time every minute
+            setInterval(updateCurrentDate, 60000);
+            
+            // Add hover effect to widgets
+            const widgets = document.querySelectorAll('.widget');
+            widgets.forEach(widget => {
+                widget.addEventListener('mouseenter', () => {
+                    widget.style.transform = 'translateY(-5px)';
+                    widget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+                });
+                
+                widget.addEventListener('mouseleave', () => {
+                    widget.style.transform = '';
+                    widget.style.boxShadow = '';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
