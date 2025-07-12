@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img src="https://github.com/VIDAKHOSHPEY22/Nebula-Works/assets/your-screenshot.png" alt="NebulaWorks Demo" width="80%">
+  <img src="![Signup](https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/0367949e5698d76b91e1cb960868d3e865e309f5/assets/signup-preview.png)" alt="NebulaWorks Demo" width="80%">
 </p>
 
 <p align="center">
@@ -18,7 +18,6 @@
 
 > ⚙️ [Live GitHub Page](https://vidakhoshpey22.github.io/Nebula-Works)  
 > 🎥 [Watch Demo Video on YouTube](https://youtube.com/your-demo-link) 
->    ![Signup](https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/0367949e5698d76b91e1cb960868d3e865e309f5/assets/signup-preview.png)
 
 ---
 
