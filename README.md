@@ -1,3 +1,14 @@
+<p align="center">
+  <a href="README.md">
+    <img src="https://img.shields.io/badge/🇬🇧 English-0d6efd?style=for-the-badge&logo=googletranslate&logoColor=white" alt="English Version">
+  </a>
+  <a href="README.fa.md">
+    <img src="https://img.shields.io/badge/🇮🇷 Persian-198754?style=for-the-badge&logo=googletranslate&logoColor=white" alt="Persian Version">
+  </a>
+</p>
+
+---
+
 <h1 align="center">🌌 Nebula Works - Galactic Admin Dashboard</h1>
 
 <p align="center">
