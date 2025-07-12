@@ -17,7 +17,8 @@
 ## 🚀 Live Demo
 
 > ⚙️ [Live GitHub Page](https://vidakhoshpey22.github.io/Nebula-Works)  
-> 🎥 [Watch Demo Video on YouTube](https://youtube.com/your-demo-link) *(optional)*
+> 🎥 [Watch Demo Video on YouTube](https://youtube.com/your-demo-link) 
+>    ![Signup](https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/9f5c25b9737ab8b055d45cb25cfaf84d9979c12e/assets/home-preview.png)
 
 ---
 
