@@ -13,6 +13,7 @@
 
 <p align="center">
   A futuristic, responsive, and beautifully animated admin dashboard created with pure HTML, CSS, and JavaScript.
+ 📌⚠️ If the link doesn't open , try with VPN⚠️📌
 </p>
 
 <p align="center">
