@@ -21,7 +21,7 @@
 
 <p align="center">
   🌠 Submission for the <a href="https://dev.to/page/fontend-challenge-axero-contest-rules">Frontend Challenge by Dev.to x Axero</a>
-  📌⚠️ If the link doesn't open , try with VPN⚠️📌
+  📌⚠️👇(If the link for Demo doesn't open , try with VPN)⚠️📌👇
 </p>
 
 ---
