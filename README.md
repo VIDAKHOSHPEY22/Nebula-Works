@@ -25,7 +25,7 @@
 
 ---
 
-## 🚀 Live Demo📌👇(If the link for Demo doesn't open , try with VPN)⚠️📌👇
+## 🚀 Live Demo📌👇(If the link for Demo doesn't open , try with VPN)⚠️📌
 
 > ⚙️ [Live GitHub Page](https://vidakhoshpey22.github.io/Nebula-Works)  
 > 🎥 [Watch Demo Video on YouTube](https://youtube.com/your-demo-link) 
