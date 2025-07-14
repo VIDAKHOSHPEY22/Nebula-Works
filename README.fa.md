@@ -25,7 +25,7 @@
 
 ---
 
-## 🚀 نسخه‌ی زنده
+## 🚀 نسخه‌ی زنده (لطفا با وی پی ان باز کنید )
 
 > ⚙️ [صفحه زنده در گیت‌هاب](https://vidakhoshpey22.github.io/Nebula-Works)  
 > 🎥 [تماشای ویدیو دمو در یوتیوب](https://youtube.com/your-demo-link)
