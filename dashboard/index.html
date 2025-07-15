@@ -173,6 +173,17 @@
             font-size: 1.4rem;
             cursor: pointer;
             display: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .menu-toggle.active {
+            background: rgba(106, 0, 255, 0.2);
+            transform: rotate(90deg);
         }
 
         .user-menu {
@@ -323,7 +334,7 @@
 
         .user-dropdown-avatar {
             width: 50px;
-            height: 20px;
+            height: 50px;
             border-radius: 50%;
             background-color: var(--primary);
             color: white;
@@ -441,7 +452,7 @@
             position: fixed;
             left: 0;
             top: var(--header-height);
-            transition: var(--transition);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             z-index: 98;
             box-shadow: var(--box-shadow);
             overflow-y: auto;
@@ -1222,10 +1233,13 @@
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: 280px;
+                z-index: 1000;
             }
             
             .sidebar.active {
                 transform: translateX(0);
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             }
             
             .content {
@@ -1233,7 +1247,7 @@
             }
             
             .menu-toggle {
-                display: block;
+                display: flex;
             }
         }
 
@@ -1274,6 +1288,10 @@
         @media (max-width: 576px) {
             :root {
                 --header-height: 60px;
+            }
+            
+            header {
+                padding: 0 15px;
             }
             
             .logo h1 {
@@ -1317,6 +1335,11 @@
             .detail-label {
                 width: 100%;
                 margin-bottom: 5px;
+            }
+            
+            .user-dropdown {
+                width: 90%;
+                right: 5%;
             }
         }
     </style>
@@ -1738,14 +1761,43 @@
             
             if (!menuToggle || !sidebar || !overlay) return;
             
-            menuToggle.addEventListener('click', function() {
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+                
+                // Change hamburger icon to X when menu is open
+                const icon = menuToggle.querySelector('i');
+                if (sidebar.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
             });
             
             overlay.addEventListener('click', function() {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
+                menuToggle.classList.remove('active');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+            
+            // Close menu when clicking on nav links
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
             });
         }
     
@@ -1971,8 +2023,9 @@
             
             // Close dropdown when clicking outside
             document.addEventListener('click', function(e) {
-                if (!userDropdown.contains(e.target)) {
+                if (!userDropdown.contains(e.target) && e.target !== userAvatar) {
                     userDropdown.classList.remove('active');
+                    overlay.classList.remove('active');
                 }
             });
         }
@@ -2018,70 +2071,70 @@
             });
         }
 
- // Weather API Integration - Free tier with shared key
-async function fetchWeatherData() {
-    const city = 'Tehran'; // Default city
-    // Using a free testing endpoint with shared key (may have rate limits)
-    const url = `https://api.weatherapi.com/v1/current.json?key=3a9a8e0d3b5e4f5d9a922505242405&q=${city}`;
-    
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        
-        if (response.ok) {
-            updateWeatherWidget(data);
-        } else {
-            console.error('Weather API error:', data.error?.message);
-            // Fallback to default values
-            document.getElementById('weather-temp').textContent = '24°C';
-            document.getElementById('weather-desc').textContent = 'Sunny, Tehran';
-        }
-    } catch (error) {
-        console.error('Failed to fetch weather data:', error);
-        // Fallback to default values
-        document.getElementById('weather-temp').textContent = '24°C';
-        document.getElementById('weather-desc').textContent = 'Sunny, Tehran';
-    }
-}
-
-function updateWeatherWidget(data) {
-    const temp = Math.round(data.current.temp_c);
-    const description = data.current.condition.text;
-    const city = data.location.name;
-    const iconCode = data.current.condition.icon;
-    
-    document.getElementById('weather-temp').textContent = `${temp}°C`;
-    document.getElementById('weather-desc').textContent = `${description}, ${city}`;
-    
-    // Update weather icon based on condition
-    const weatherIcon = document.querySelector('.weather-icon i');
-    if (weatherIcon) {
-        // Map WeatherAPI conditions to Font Awesome icons
-        const conditionMap = {
-            'Sunny': 'sun',
-            'Clear': 'sun',
-            'Partly cloudy': 'cloud-sun',
-            'Cloudy': 'cloud',
-            'Overcast': 'cloud',
-            'Mist': 'smog',
-            'Rain': 'cloud-rain',
-            'Thunderstorm': 'bolt',
-            'Snow': 'snowflake',
-            'Fog': 'smog'
-        };
-        
-        // Find matching icon or default to sun
-        let faIcon = 'sun';
-        for (const [key, value] of Object.entries(conditionMap)) {
-            if (description.includes(key)) {
-                faIcon = value;
-                break;
+        // Weather API Integration
+        async function fetchWeatherData() {
+            const city = 'Tehran'; // Default city
+            // Using a free testing endpoint with shared key (may have rate limits)
+            const url = `https://api.weatherapi.com/v1/current.json?key=3a9a8e0d3b5e4f5d9a922505242405&q=${city}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateWeatherWidget(data);
+                } else {
+                    console.error('Weather API error:', data.error?.message);
+                    // Fallback to default values
+                    document.getElementById('weather-temp').textContent = '24°C';
+                    document.getElementById('weather-desc').textContent = 'Sunny, Tehran';
+                }
+            } catch (error) {
+                console.error('Failed to fetch weather data:', error);
+                // Fallback to default values
+                document.getElementById('weather-temp').textContent = '24°C';
+                document.getElementById('weather-desc').textContent = 'Sunny, Tehran';
             }
         }
-        
-        weatherIcon.className = `fas fa-${faIcon}`;
-    }
-}
+
+        function updateWeatherWidget(data) {
+            const temp = Math.round(data.current.temp_c);
+            const description = data.current.condition.text;
+            const city = data.location.name;
+            const iconCode = data.current.condition.icon;
+            
+            document.getElementById('weather-temp').textContent = `${temp}°C`;
+            document.getElementById('weather-desc').textContent = `${description}, ${city}`;
+            
+            // Update weather icon based on condition
+            const weatherIcon = document.querySelector('.weather-icon i');
+            if (weatherIcon) {
+                // Map WeatherAPI conditions to Font Awesome icons
+                const conditionMap = {
+                    'Sunny': 'sun',
+                    'Clear': 'sun',
+                    'Partly cloudy': 'cloud-sun',
+                    'Cloudy': 'cloud',
+                    'Overcast': 'cloud',
+                    'Mist': 'smog',
+                    'Rain': 'cloud-rain',
+                    'Thunderstorm': 'bolt',
+                    'Snow': 'snowflake',
+                    'Fog': 'smog'
+                };
+                
+                // Find matching icon or default to sun
+                let faIcon = 'sun';
+                for (const [key, value] of Object.entries(conditionMap)) {
+                    if (description.includes(key)) {
+                        faIcon = value;
+                        break;
+                    }
+                }
+                
+                weatherIcon.className = `fas fa-${faIcon}`;
+            }
+        }
 
         // Theme Toggle Functionality
         function setupThemeToggle() {
