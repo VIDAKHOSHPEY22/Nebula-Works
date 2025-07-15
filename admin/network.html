@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Analytics | NebulaWorks Admin</title>
+    <title>Network Analytics | NebulaWorks</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="logo.png">
     <style>
@@ -155,6 +155,16 @@
             font-size: 1.4rem;
             cursor: pointer;
             display: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .menu-toggle:hover {
+            background: rgba(106, 0, 255, 0.2);
         }
 
         .user-menu {
@@ -434,7 +444,7 @@
             position: fixed;
             left: 0;
             top: var(--header-height);
-            transition: var(--transition);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             z-index: 98;
             box-shadow: var(--box-shadow);
             overflow-y: auto;
@@ -565,7 +575,25 @@
             gap: 15px;
         }
 
-        .emergency-btn {
+        .btn-primary {
+            background-color: rgba(106, 0, 255, 0.1);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(106, 0, 255, 0.3);
+            color: var(--primary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            background-color: rgba(106, 0, 255, 0.2);
+        }
+
+        .btn-danger {
             background-color: rgba(255, 85, 85, 0.1);
             padding: 12px 20px;
             border-radius: var(--border-radius);
@@ -579,11 +607,11 @@
             transition: var(--transition);
         }
 
-        .emergency-btn:hover {
+        .btn-danger:hover {
             background-color: rgba(255, 85, 85, 0.2);
         }
 
-        /* Widgets Grid */
+        /* Network Widgets Grid */
         .widgets-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -591,6 +619,7 @@
             margin-bottom: 30px;
         }
 
+        /* Widget */
         .widget {
             background-color: var(--dark);
             border-radius: var(--border-radius);
@@ -899,10 +928,13 @@
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: 280px;
+                z-index: 1000;
             }
             
             .sidebar.active {
                 transform: translateX(0);
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             }
             
             .content {
@@ -910,7 +942,7 @@
             }
             
             .menu-toggle {
-                display: block;
+                display: flex;
             }
         }
 
@@ -926,14 +958,18 @@
                 gap: 20px;
             }
             
-            .status-grid {
-                grid-template-columns: 1fr 1fr;
+            .widgets-grid {
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 576px) {
             :root {
                 --header-height: 60px;
+            }
+            
+            header {
+                padding: 0 15px;
             }
             
             .logo h1 {
@@ -948,8 +984,14 @@
                 padding: 20px 15px;
             }
             
-            .status-grid {
-                grid-template-columns: 1fr;
+            .admin-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn-primary, .btn-danger {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -968,7 +1010,7 @@
         </button>
         
         <div class="logo">
-            <img src="logo.png" alt="NebulaWorks">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNmEwMGZmIiBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHptMCA0NDhjLTExMC41IDAtMjAwLTg5LjUtMjAwLTIwMFMxNDUuNSA1NiAyNTYgNTZzMjAwIDg5LjUgMjAwIDIwMC04OS41IDIwMC0yMDAgMjAweiIvPjxwYXRoIGZpbGw9IiMwMGU1ZmYiIGQ9Ik0yNTYgMzIwYzM1LjMgMCA2NC0yOC43IDY0LTY0cy0yOC43LTY0LTY0LTY0LTY0IDI4LjctNjQgNjQgMjguNyA2NCA2NCA2NHptOTYtMTYwaDMydjY0aC0zMlYxNjB6bS0xOTIgMEgxMjh2NjRoMzJWMTYweiIvPjwvc3ZnPg==" alt="NebulaWorks">
             <h1>NebulaWorks <span style="color: var(--secondary); font-size: 0.8rem;">Network</span></h1>
         </div>
         
@@ -1054,8 +1096,11 @@
                     <p id="current-date">Monitoring all network activities and devices</p>
                 </div>
                 <div class="admin-actions">
-                    <button class="emergency-btn">
-                        <i class="fas fa-network-wired"></i> Network Scan
+                    <button class="btn-primary" id="scan-network-btn">
+                        <i class="fas fa-network-wired"></i> Scan Network
+                    </button>
+                    <button class="btn-danger" id="emergency-stop-btn">
+                        <i class="fas fa-power-off"></i> Emergency Stop
                     </button>
                 </div>
             </section>
@@ -1274,6 +1319,7 @@
         </main>
     </div>
 
+
     <script>
         // Loading Screen
         window.addEventListener('load', function() {
@@ -1296,14 +1342,44 @@
             
             if (!menuToggle || !sidebar || !overlay) return;
             
-            menuToggle.addEventListener('click', function() {
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
+                
+                // Change hamburger icon to X
+                const icon = menuToggle.querySelector('i');
+                if (sidebar.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                    menuToggle.style.backgroundColor = 'rgba(106, 0, 255, 0.2)';
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    menuToggle.style.backgroundColor = '';
+                }
             });
             
             overlay.addEventListener('click', function() {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                menuToggle.style.backgroundColor = '';
+            });
+            
+            // Close menu when clicking on nav links
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    menuToggle.style.backgroundColor = '';
+                });
             });
         }
     
@@ -1339,12 +1415,18 @@
                 month: 'long',
                 day: 'numeric'
             };
-            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+            
+            // Only update if element exists
+            const dateElement = document.getElementById('current-date');
+            if (dateElement) {
+                dateElement.textContent = now.toLocaleDateString('en-US', options);
+            }
             
             // Update network time in footer
             const timeOptions = {
                 hour: '2-digit',
-                minute: '2-digit'
+                minute: '2-digit',
+                second: '2-digit'
             };
             const networkTime = document.getElementById('network-time');
             if (networkTime) {
@@ -1402,6 +1484,72 @@
             });
         }
 
+        // Emergency Stop Modal
+        function setupEmergencyModal() {
+            const emergencyBtn = document.getElementById('emergency-stop-btn');
+            const modal = document.getElementById('emergency-modal');
+            const closeModal = document.getElementById('close-emergency-modal');
+            const cancelBtn = document.getElementById('cancel-emergency');
+            
+            if (!emergencyBtn || !modal || !closeModal || !cancelBtn) return;
+            
+            // Open modal
+            emergencyBtn.addEventListener('click', function() {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Close modal
+            function closeEmergencyModal() {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            closeModal.addEventListener('click', closeEmergencyModal);
+            cancelBtn.addEventListener('click', closeEmergencyModal);
+            
+            // Confirm emergency stop
+            const confirmBtn = document.getElementById('confirm-emergency');
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', function() {
+                    alert('EMERGENCY STOP INITIATED! All network services will be shut down.');
+                    closeEmergencyModal();
+                });
+            }
+            
+            // Close when clicking outside modal
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeEmergencyModal();
+                }
+            });
+        }
+
+        // Network Scan Functionality
+        function setupNetworkScan() {
+            const scanBtn = document.getElementById('scan-network-btn');
+            if (!scanBtn) return;
+            
+            scanBtn.addEventListener('click', function() {
+                // Show loading state
+                scanBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Scanning...';
+                
+                // Simulate network scan
+                setTimeout(function() {
+                    scanBtn.innerHTML = '<i class="fas fa-network-wired"></i> Scan Network';
+                    alert('Network scan completed successfully! Found 12 active devices.');
+                    
+                    // Update last scan time
+                    const now = new Date();
+                    const timeOptions = {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    };
+                    document.getElementById('last-scan').textContent = 'just now';
+                }, 3000);
+            });
+        }
+
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             setupMobileMenu();
@@ -1409,6 +1557,8 @@
             updateCurrentDate();
             setupAdminDropdown();
             setupThemeToggle();
+            setupEmergencyModal();
+            setupNetworkScan();
             
             // Update time every minute
             setInterval(updateCurrentDate, 60000);
@@ -1426,6 +1576,16 @@
                     widget.style.boxShadow = '';
                 });
             });
+            
+            // Logout functionality
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    alert('Admin session ended. Logging out...');
+                    // Redirect to login page
+                    window.location.href = 'login.html';
+                });
+            }
         });
     </script>
 </body>

@@ -155,6 +155,16 @@
             font-size: 1.4rem;
             cursor: pointer;
             display: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .menu-toggle:hover {
+            background: rgba(106, 0, 255, 0.2);
         }
 
         .user-menu {
@@ -434,7 +444,7 @@
             position: fixed;
             left: 0;
             top: var(--header-height);
-            transition: var(--transition);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             z-index: 98;
             box-shadow: var(--box-shadow);
             overflow-y: auto;
@@ -601,14 +611,7 @@
             background-color: rgba(255, 85, 85, 0.2);
         }
 
-        /* Widgets Grid */
-        .widgets-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
+        /* Widget */
         .widget {
             background-color: var(--dark);
             border-radius: var(--border-radius);
@@ -1004,10 +1007,13 @@
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: 280px;
+                z-index: 1000;
             }
             
             .sidebar.active {
                 transform: translateX(0);
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             }
             
             .content {
@@ -1015,7 +1021,7 @@
             }
             
             .menu-toggle {
-                display: block;
+                display: flex;
             }
         }
 
@@ -1055,6 +1061,10 @@
                 --header-height: 60px;
             }
             
+            header {
+                padding: 0 15px;
+            }
+            
             .logo h1 {
                 font-size: 1.2rem;
             }
@@ -1070,6 +1080,16 @@
             .admin-table td:nth-child(6),
             .admin-table th:nth-child(6) {
                 display: none;
+            }
+            
+            .admin-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn-primary, .btn-danger {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -1088,7 +1108,7 @@
         </button>
         
         <div class="logo">
-            <img src="logo.png" alt="NebulaWorks">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNmEwMGZmIiBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHptMCA0NDhjLTExMC41IDAtMjAwLTg5LjUtMjAwLTIwMFMxNDUuNSA1NiAyNTYgNTZzMjAwIDg5LjUgMjAwIDIwMC04OS41IDIwMC0yMDAgMjAweiIvPjxwYXRoIGZpbGw9IiMwMGU1ZmYiIGQ9Ik0yNTYgMzIwYzM1LjMgMCA2NC0yOC43IDY0LTY0cy0yOC43LTY0LTY0LTY0LTY0IDI4LjctNjQgNjQgMjguNyA2NCA2NCA2NHptOTYtMTYwaDMydjY0aC0zMlYxNjB6bS0xOTIgMEgxMjh2NjRoMzJWMTYweiIvPjwvc3ZnPg==" alt="NebulaWorks">
             <h1>NebulaWorks <span style="color: var(--secondary); font-size: 0.8rem;">User Management</span></h1>
         </div>
         
@@ -1122,7 +1142,7 @@
             </div>
             <ul class="admin-dropdown-menu">
                 <li><a href="#"><i class="fas fa-user-shield"></i> Admin Profile</a></li>
-                <li><a href="system.html"><i class="fas fa-cog"></i> System Controls</a></li>
+                <li><a href="system.html"><i class="fas fa-cog"></i> System Settings</a></li>
                 <li><a href="user.html"><i class="fas fa-users-cog"></i> User Management</a></li>
                 <li><a href="security.html"><i class="fas fa-shield-alt"></i> Security Center</a></li>
             </ul>
@@ -1386,14 +1406,44 @@
             
             if (!menuToggle || !sidebar || !overlay) return;
             
-            menuToggle.addEventListener('click', function() {
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
+                
+                // Change hamburger icon to X
+                const icon = menuToggle.querySelector('i');
+                if (sidebar.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                    menuToggle.style.backgroundColor = 'rgba(106, 0, 255, 0.2)';
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    menuToggle.style.backgroundColor = '';
+                }
             });
             
             overlay.addEventListener('click', function() {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                menuToggle.style.backgroundColor = '';
+            });
+            
+            // Close menu when clicking on nav links
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    menuToggle.style.backgroundColor = '';
+                });
             });
         }
     
@@ -1430,11 +1480,22 @@
                 day: 'numeric'
             };
             
+            // Only update if element exists
+            const dateElement = document.getElementById('current-date');
+            if (dateElement) {
+                dateElement.textContent = now.toLocaleDateString('en-US', options);
+            }
+            
             // Update admin time in footer
             const timeOptions = {
                 hour: '2-digit',
-                minute: '2-digit'
+                minute: '2-digit',
+                second: '2-digit'
             };
+            const adminTime = document.getElementById('admin-time');
+            if (adminTime) {
+                adminTime.textContent = now.toLocaleTimeString('en-US', timeOptions);
+            }
         }
 
         // Admin Dropdown Toggle
@@ -1600,6 +1661,16 @@
                     widget.style.boxShadow = '';
                 });
             });
+            
+            // Logout functionality
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    alert('Admin session ended. Logging out...');
+                    // Redirect to login page
+                    window.location.href = 'login.html';
+                });
+            }
         });
     </script>
 </body>

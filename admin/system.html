@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Controls | NebulaWorks</title>
-    <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="./logo.png">
+    <link rel="icon" href="logo.png">
     <style>
         /* Dark Theme Variables */
         :root {
@@ -156,6 +155,16 @@
             font-size: 1.4rem;
             cursor: pointer;
             display: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .menu-toggle:hover {
+            background: rgba(106, 0, 255, 0.2);
         }
 
         .user-menu {
@@ -435,7 +444,7 @@
             position: fixed;
             left: 0;
             top: var(--header-height);
-            transition: var(--transition);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             z-index: 98;
             box-shadow: var(--box-shadow);
             overflow-y: auto;
@@ -602,32 +611,7 @@
             background-color: rgba(255, 85, 85, 0.2);
         }
 
-        .btn-warning {
-            background-color: rgba(255, 204, 0, 0.1);
-            padding: 12px 20px;
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(255, 204, 0, 0.3);
-            color: var(--warning);
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .btn-warning:hover {
-            background-color: rgba(255, 204, 0, 0.2);
-        }
-
-        /* Widgets Grid */
-        .widgets-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
+        /* Widget */
         .widget {
             background-color: var(--dark);
             border-radius: var(--border-radius);
@@ -684,384 +668,271 @@
             color: var(--primary);
         }
 
-        /* Control Panel Widget */
-        .control-panel {
-            display: flex;
-            flex-direction: column;
+        /* System Status Cards */
+        .status-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
+            margin-bottom: 30px;
         }
 
-        .control-item {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .control-item label {
-            font-size: 0.85rem;
-            color: var(--light-gray);
-        }
-
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .slider {
-            flex: 1;
-            -webkit-appearance: none;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            outline: none;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--primary);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .slider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        .slider-value {
-            font-size: 0.85rem;
-            min-width: 40px;
-            text-align: right;
-            color: var(--light-gray);
-        }
-
-        .toggle-switch {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .toggle-switch input[type="checkbox"] {
-            height: 0;
-            width: 0;
-            visibility: hidden;
-        }
-
-        .toggle-switch label {
-            cursor: pointer;
-            text-indent: -9999px;
-            width: 46px;
-            height: 24px;
-            background: rgba(255, 255, 255, 0.1);
-            display: block;
-            border-radius: 12px;
-            position: relative;
-            transition: var(--transition);
-        }
-
-        .toggle-switch label:after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background: var(--light-gray);
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-
-        .toggle-switch input:checked + label {
-            background: var(--primary);
-        }
-
-        .toggle-switch input:checked + label:after {
-            left: calc(100% - 2px);
-            transform: translateX(-100%);
-            background: var(--white);
-        }
-
-        .toggle-switch span {
-            font-size: 0.85rem;
-            color: var(--light-gray);
-        }
-
-        /* System Status Widget */
-        .system-status-widget {
+        .status-card {
             background-color: var(--dark);
             border-radius: var(--border-radius);
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
             box-shadow: var(--widget-shadow);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 25px;
+        .status-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .status-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .gauge {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            background: conic-gradient(var(--primary) 0%, var(--dark-gray) 0%);
-        }
-
-        .gauge::before {
-            content: '';
-            position: absolute;
-            width: 90px;
-            height: 90px;
-            background-color: var(--dark);
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) inset;
-        }
-
-        .gauge-value {
-            position: relative;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--white);
-        }
-
-        .status-item h3 {
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--light-gray);
-        }
-
-        .alert {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background-color: var(--danger);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .alert.active {
-            opacity: 1;
-        }
-
-        /* Resources Widget */
-        .resources-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-        }
-
-        .resource-item {
-            background-color: rgba(0, 0, 0, 0.2);
-            border-radius: var(--border-radius);
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition);
-        }
-
-        .resource-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .resource-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: rgba(106, 0, 255, 0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.2rem;
-            color: var(--primary);
-        }
-
-        .resource-info {
-            text-align: center;
-        }
-
-        .resource-info h4 {
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            color: var(--white);
-        }
-
-        .resource-info p {
-            font-size: 0.8rem;
-            color: var(--medium-gray);
-        }
-
-        /* Services Widget */
-        .services-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .service-item {
+        .status-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 15px;
-            background-color: rgba(0, 0, 0, 0.2);
-            border-radius: var(--border-radius);
-            transition: var(--transition);
+            margin-bottom: 15px;
         }
 
-        .service-item:hover {
-            background-color: rgba(106, 0, 255, 0.1);
-        }
-
-        .service-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .service-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: rgba(106, 0, 255, 0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .status-card-title {
             font-size: 0.9rem;
-            color: var(--primary);
+            color: var(--medium-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .service-name {
-            font-size: 0.9rem;
+        .status-card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 10px 0;
             color: var(--white);
         }
 
-        .service-status {
+        .status-card-footer {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            margin-top: auto;
         }
 
-        .status-indicator {
-            width: 10px;
-            height: 10px;
+        .status-card-change {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-card-change.positive {
+            color: var(--success);
+        }
+
+        .status-card-change.negative {
+            color: var(--danger);
+        }
+
+        .status-card-change.neutral {
+            color: var(--medium-gray);
+        }
+
+        .status-card-icon {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-        }
-
-        .status-indicator.online {
-            background-color: var(--success);
-            box-shadow: 0 0 10px var(--success);
-        }
-
-        .status-indicator.offline {
-            background-color: var(--danger);
-            box-shadow: 0 0 10px var(--danger);
-        }
-
-        .status-indicator.warning {
-            background-color: var(--warning);
-            box-shadow: 0 0 10px var(--warning);
-        }
-
-        .service-actions {
             display: flex;
-            gap: 8px;
-        }
-
-        /* Logs Widget */
-        .log-items {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .log-item {
-            display: flex;
-            gap: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .log-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .log-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: rgba(106, 0, 255, 0.1);
-            display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: center;
-            font-size: 0.9rem;
-            flex-shrink: 0;
+            font-size: 1.2rem;
+        }
+
+        .status-card.cpu .status-card-icon {
+            background-color: rgba(106, 0, 255, 0.1);
             color: var(--primary);
         }
 
-        .log-icon.success {
+        .status-card.memory .status-card-icon {
+            background-color: rgba(0, 229, 255, 0.1);
+            color: var(--secondary);
+        }
+
+        .status-card.storage .status-card-icon {
             background-color: rgba(0, 255, 170, 0.1);
             color: var(--success);
         }
 
-        .log-icon.warning {
+        .status-card.network .status-card-icon {
             background-color: rgba(255, 204, 0, 0.1);
             color: var(--warning);
         }
 
-        .log-icon.danger {
-            background-color: rgba(255, 85, 85, 0.1);
-            color: var(--danger);
+        /* System Controls */
+        .control-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
-        .log-details p {
-            font-size: 0.9rem;
-            margin-bottom: 4px;
-            color: var(--light-gray);
-        }
-
-        .log-details small {
-            font-size: 0.75rem;
-            color: var(--medium-gray);
-        }
-
-        /* Admin Footer */
-        .admin-footer {
+        .control-card {
             background-color: var(--dark);
-            padding: 15px 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 30px;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .footer-content {
+        .control-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .control-card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .control-card-body {
+            margin: 15px 0;
+        }
+
+        .control-card-description {
+            font-size: 0.9rem;
             color: var(--medium-gray);
+            margin-bottom: 15px;
+        }
+
+        .control-card-footer {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--dark-gray);
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--white);
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* System Logs */
+        .log-container {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .log-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .log-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .log-content {
+            background-color: var(--darker);
+            border-radius: calc(var(--border-radius) - 2px);
+            padding: 15px;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 0.85rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .log-entry:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: var(--medium-gray);
+            margin-right: 10px;
+        }
+
+        .log-message {
+            color: var(--light-gray);
+        }
+
+        .log-message.info {
+            color: var(--secondary);
+        }
+
+        .log-message.warning {
+            color: var(--warning);
+        }
+
+        .log-message.error {
+            color: var(--danger);
         }
 
         /* Modal */
@@ -1172,10 +1043,13 @@
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: 280px;
+                z-index: 1000;
             }
             
             .sidebar.active {
                 transform: translateX(0);
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             }
             
             .content {
@@ -1183,7 +1057,7 @@
             }
             
             .menu-toggle {
-                display: block;
+                display: flex;
             }
         }
 
@@ -1199,14 +1073,22 @@
                 gap: 20px;
             }
             
-            .status-grid {
-                grid-template-columns: 1fr 1fr;
+            .status-cards {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .control-cards {
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 576px) {
             :root {
                 --header-height: 60px;
+            }
+            
+            header {
+                padding: 0 15px;
             }
             
             .logo h1 {
@@ -1221,22 +1103,18 @@
                 padding: 20px 15px;
             }
             
-            .status-grid {
+            .status-cards {
                 grid-template-columns: 1fr;
             }
             
-            .gauge {
-                width: 100px;
-                height: 100px;
+            .admin-actions {
+                flex-direction: column;
+                width: 100%;
             }
             
-            .gauge::before {
-                width: 70px;
-                height: 70px;
-            }
-            
-            .gauge-value {
-                font-size: 1.2rem;
+            .btn-primary, .btn-danger {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -1245,7 +1123,7 @@
     <!-- Loading Screen -->
     <div class="loading" id="loading">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Initializing System Controls...</div>
+        <div class="loading-text">Loading System Controls...</div>
     </div>
     
     <!-- Header -->
@@ -1255,7 +1133,7 @@
         </button>
         
         <div class="logo">
-            <img src="logo.png" alt="NebulaWorks">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNmEwMGZmIiBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHptMCA0NDhjLTExMC41IDAtMjAwLTg5LjUtMjAwLTIwMFMxNDUuNSA1NiAyNTYgNTZzMjAwIDg5LjUgMjAwIDIwMC04OS41IDIwMC0yMDAgMjAweiIvPjxwYXRoIGZpbGw9IiMwMGU1ZmYiIGQ9Ik0yNTYgMzIwYzM1LjMgMCA2NC0yOC43IDY0LTY0cy0yOC43LTY0LTY0LTY0LTY0IDI4LjctNjQgNjQgMjguNyA2NCA2NCA2NHptOTYtMTYwaDMydjY0aC0zMlYxNjB6bS0xOTIgMEgxMjh2NjRoMzJWMTYweiIvPjwvc3ZnPg==" alt="NebulaWorks">
             <h1>NebulaWorks <span style="color: var(--secondary); font-size: 0.8rem;">System Controls</span></h1>
         </div>
         
@@ -1270,7 +1148,7 @@
             </div>
             <div class="notification">
                 <i class="fas fa-bell"></i>
-                <span class="notification-badge">7</span>
+                <span class="notification-badge">3</span>
             </div>
             <div class="user-avatar" id="admin-avatar">
                 A
@@ -1289,9 +1167,9 @@
             </div>
             <ul class="admin-dropdown-menu">
                 <li><a href="#"><i class="fas fa-user-shield"></i> Admin Profile</a></li>
-                <li><a href="system.html"><i class="fas fa-server"></i> System Controls</a></li>
+                <li><a href="system.html" class="active"><i class="fas fa-cog"></i> System Settings</a></li>
                 <li><a href="user.html"><i class="fas fa-users-cog"></i> User Management</a></li>
-                <li><a href="#"><i class="fas fa-shield-alt"></i> Security Center</a></li>
+                <li><a href="security.html"><i class="fas fa-shield-alt"></i> Security Center</a></li>
             </ul>
             <div class="admin-dropdown-footer">
                 <button class="logout-btn" id="logout-btn">
@@ -1338,315 +1216,295 @@
             <section class="welcome-section">
                 <div class="welcome-text">
                     <h1>System <span>Controls</span></h1>
-                    <p>Monitor and manage all core system functions</p>
+                    <p>Monitor and manage your system resources and settings</p>
                 </div>
                 <div class="admin-actions">
-                    <button class="btn-warning" id="maintenance-btn">
-                        <i class="fas fa-tools"></i> Maintenance Mode
+                    <button class="btn-danger" id="restart-btn">
+                        <i class="fas fa-sync-alt"></i> Restart System
                     </button>
-                    <button class="btn-danger" id="reboot-btn">
-                        <i class="fas fa-power-off"></i> Reboot System
+                    <button class="btn-primary" id="backup-btn">
+                        <i class="fas fa-database"></i> Create Backup
                     </button>
                 </div>
             </section>
             
-            <!-- Widgets Grid -->
-            <div class="widgets-grid">
-                <!-- System Controls Widget -->
-                <article class="widget">
-                    <div class="widget-header">
-                        <h2><i class="fas fa-sliders-h"></i> Core Controls</h2>
-                    </div>
-                    <div class="control-panel">
-                        <div class="control-item">
-                            <label>Gravity Generator</label>
-                            <div class="slider-container">
-                                <input type="range" min="0" max="100" value="92" class="slider" id="gravity-slider">
-                                <span class="slider-value">92%</span>
-                            </div>
-                        </div>
-                        
-                        <div class="control-item">
-                            <label>Oxygen Production</label>
-                            <div class="slider-container">
-                                <input type="range" min="0" max="100" value="85" class="slider" id="oxygen-slider">
-                                <span class="slider-value">85%</span>
-                            </div>
-                        </div>
-                        
-                        <div class="control-item">
-                            <label>Energy Distribution</label>
-                            <div class="toggle-switch">
-                                <input type="checkbox" id="energy-toggle" checked>
-                                <label for="energy-toggle"></label>
-                                <span>Auto-balance</span>
-                            </div>
-                        </div>
-                        
-                        <div class="control-item">
-                            <label>Temperature Control</label>
-                            <div class="slider-container">
-                                <input type="range" min="15" max="30" value="22" class="slider" id="temp-slider">
-                                <span class="slider-value">22°C</span>
-                            </div>
+            <!-- Status Cards -->
+            <div class="status-cards">
+                <div class="status-card cpu">
+                    <div class="status-card-header">
+                        <div class="status-card-title">CPU Usage</div>
+                        <div class="status-card-icon">
+                            <i class="fas fa-microchip"></i>
                         </div>
                     </div>
-                </article>
+                    <div class="status-card-value">72%</div>
+                    <div class="status-card-footer">
+                        <div class="status-card-change positive">
+                            <i class="fas fa-arrow-up"></i> 5% from last hour
+                        </div>
+                    </div>
+                </div>
                 
-                <!-- System Status Widget -->
-                <article class="widget">
-                    <div class="widget-header">
-                        <h2><i class="fas fa-heartbeat"></i> System Status</h2>
-                        <button class="btn-icon"><i class="fas fa-sync-alt"></i></button>
-                    </div>
-                    <div class="status-grid">
-                        <div class="status-item">
-                            <div class="gauge" id="cpu-gauge">
-                                <span class="gauge-value">78%</span>
-                            </div>
-                            <h3>CPU Load</h3>
-                        </div>
-                        <div class="status-item">
-                            <div class="gauge" id="memory-gauge">
-                                <span class="gauge-value">64%</span>
-                            </div>
-                            <h3>Memory</h3>
-                        </div>
-                        <div class="status-item">
-                            <div class="gauge" id="storage-gauge">
-                                <span class="gauge-value">42%</span>
-                            </div>
-                            <h3>Storage</h3>
-                        </div>
-                        <div class="status-item">
-                            <div class="gauge" id="network-gauge">
-                                <span class="gauge-value">89%</span>
-                            </div>
-                            <h3>Network</h3>
-                            <div class="alert active">!</div>
+                <div class="status-card memory">
+                    <div class="status-card-header">
+                        <div class="status-card-title">Memory Usage</div>
+                        <div class="status-card-icon">
+                            <i class="fas fa-memory"></i>
                         </div>
                     </div>
-                </article>
+                    <div class="status-card-value">4.2/8 GB</div>
+                    <div class="status-card-footer">
+                        <div class="status-card-change negative">
+                            <i class="fas fa-arrow-down"></i> 10% from last hour
+                        </div>
+                    </div>
+                </div>
                 
-                <!-- Resources Widget -->
-                <article class="widget">
-                    <div class="widget-header">
-                        <h2><i class="fas fa-microchip"></i> Hardware Resources</h2>
-                    </div>
-                    <div class="resources-list">
-                        <div class="resource-item">
-                            <div class="resource-icon">
-                                <i class="fas fa-microchip"></i>
-                            </div>
-                            <div class="resource-info">
-                                <h4>CPU Cores</h4>
-                                <p>16 Cores @ 3.2GHz</p>
-                            </div>
-                        </div>
-                        <div class="resource-item">
-                            <div class="resource-icon">
-                                <i class="fas fa-memory"></i>
-                            </div>
-                            <div class="resource-info">
-                                <h4>Memory</h4>
-                                <p>64GB DDR4</p>
-                            </div>
-                        </div>
-                        <div class="resource-item">
-                            <div class="resource-icon">
-                                <i class="fas fa-database"></i>
-                            </div>
-                            <div class="resource-info">
-                                <h4>Storage</h4>
-                                <p>4TB NVMe SSD</p>
-                            </div>
-                        </div>
-                        <div class="resource-item">
-                            <div class="resource-icon">
-                                <i class="fas fa-network-wired"></i>
-                            </div>
-                            <div class="resource-info">
-                                <h4>Network</h4>
-                                <p>10Gbps Fiber</p>
-                            </div>
+                <div class="status-card storage">
+                    <div class="status-card-header">
+                        <div class="status-card-title">Storage Usage</div>
+                        <div class="status-card-icon">
+                            <i class="fas fa-hdd"></i>
                         </div>
                     </div>
-                </article>
+                    <div class="status-card-value">65%</div>
+                    <div class="status-card-footer">
+                        <div class="status-card-change neutral">
+                            <i class="fas fa-equals"></i> No change
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="status-card network">
+                    <div class="status-card-header">
+                        <div class="status-card-title">Network Traffic</div>
+                        <div class="status-card-icon">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                    </div>
+                    <div class="status-card-value">12.5 Mbps</div>
+                    <div class="status-card-footer">
+                        <div class="status-card-change positive">
+                            <i class="fas fa-arrow-up"></i> 15% from last hour
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            <!-- Services Widget -->
-            <section class="widget">
-                <div class="widget-header">
-                    <h2><i class="fas fa-cogs"></i> System Services</h2>
-                    <div class="widget-actions">
-                        <button class="btn-icon"><i class="fas fa-plus"></i></button>
-                        <button class="btn-icon"><i class="fas fa-sync-alt"></i></button>
+            <!-- Control Cards -->
+            <div class="control-cards">
+                <div class="control-card">
+                    <div class="control-card-header">
+                        <div class="control-card-title">Maintenance Mode</div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="maintenance-toggle">
+                            <span class="slider"></span>
+                        </label>
                     </div>
-                </div>
-                <div class="services-list">
-                    <div class="service-item">
-                        <div class="service-info">
-                            <div class="service-icon">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <span class="service-name">Security Daemon</span>
-                        </div>
-                        <div class="service-status">
-                            <div class="status-indicator online"></div>
-                            <span>Running</span>
-                        </div>
-                        <div class="service-actions">
-                            <button class="btn-icon"><i class="fas fa-redo"></i></button>
-                            <button class="btn-icon"><i class="fas fa-stop"></i></button>
-                        </div>
-                    </div>
-                    <div class="service-item">
-                        <div class="service-info">
-                            <div class="service-icon">
-                                <i class="fas fa-database"></i>
-                            </div>
-                            <span class="service-name">Database Service</span>
-                        </div>
-                        <div class="service-status">
-                            <div class="status-indicator online"></div>
-                            <span>Running</span>
-                        </div>
-                        <div class="service-actions">
-                            <button class="btn-icon"><i class="fas fa-redo"></i></button>
-                            <button class="btn-icon"><i class="fas fa-stop"></i></button>
-                        </div>
-                    </div>
-                    <div class="service-item">
-                        <div class="service-info">
-                            <div class="service-icon">
-                                <i class="fas fa-cloud"></i>
-                            </div>
-                            <span class="service-name">Cloud Sync</span>
-                        </div>
-                        <div class="service-status">
-                            <div class="status-indicator warning"></div>
-                            <span>Syncing</span>
-                        </div>
-                        <div class="service-actions">
-                            <button class="btn-icon"><i class="fas fa-redo"></i></button>
-                            <button class="btn-icon"><i class="fas fa-stop"></i></button>
-                        </div>
-                    </div>
-                    <div class="service-item">
-                        <div class="service-info">
-                            <div class="service-icon">
-                                <i class="fas fa-bell"></i>
-                            </div>
-                            <span class="service-name">Notification Service</span>
-                        </div>
-                        <div class="service-status">
-                            <div class="status-indicator offline"></div>
-                            <span>Stopped</span>
-                        </div>
-                        <div class="service-actions">
-                            <button class="btn-icon"><i class="fas fa-play"></i></button>
+                    <div class="control-card-body">
+                        <div class="control-card-description">
+                            Enable maintenance mode to restrict access to the system while performing updates or maintenance tasks.
                         </div>
                     </div>
                 </div>
-            </section>
+                
+                <div class="control-card">
+                    <div class="control-card-header">
+                        <div class="control-card-title">Automatic Updates</div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="updates-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="control-card-body">
+                        <div class="control-card-description">
+                            Allow the system to automatically download and install security updates during low-usage periods.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-card">
+                    <div class="control-card-header">
+                        <div class="control-card-title">Backup Schedule</div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="backup-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="control-card-body">
+                        <div class="control-card-description">
+                            Enable daily automated backups of system configuration and critical data.
+                        </div>
+                        <div class="control-card-footer">
+                            <button class="btn-icon" title="Configure Backup">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-card">
+                    <div class="control-card-header">
+                        <div class="control-card-title">Performance Monitoring</div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="monitoring-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="control-card-body">
+                        <div class="control-card-description">
+                            Continuously monitor system performance and send alerts when thresholds are exceeded.
+                        </div>
+                        <div class="control-card-footer">
+                            <button class="btn-icon" title="View Metrics">
+                                <i class="fas fa-chart-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-card">
+                    <div class="control-card-header">
+                        <div class="control-card-title">API Access</div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="api-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="control-card-body">
+                        <div class="control-card-description">
+                            Enable external API access for system integration with third-party services.
+                        </div>
+                        <div class="control-card-footer">
+                            <button class="btn-icon" title="API Documentation">
+                                <i class="fas fa-book"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-card">
+                    <div class="control-card-header">
+                        <div class="control-card-title">Debug Mode</div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="debug-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="control-card-body">
+                        <div class="control-card-description">
+                            Enable detailed logging for troubleshooting purposes. Not recommended for production.
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <!-- System Logs -->
-            <section class="widget">
-                <div class="widget-header">
-                    <h2><i class="fas fa-clipboard-list"></i> System Logs</h2>
-                    <select class="filter-select" id="log-level">
-                        <option value="all">All Levels</option>
-                        <option value="info">Info</option>
-                        <option value="warning">Warning</option>
-                        <option value="error">Error</option>
-                    </select>
-                </div>
-                <div class="log-items">
-                    <div class="log-item">
-                        <div class="log-icon">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                        <div class="log-details">
-                            <p>System backup completed successfully</p>
-                            <small>2 minutes ago by AutoSys</small>
-                        </div>
-                    </div>
-                    
-                    <div class="log-item">
-                        <div class="log-icon warning">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="log-details">
-                            <p>High CPU usage detected on Node 3</p>
-                            <small>17 minutes ago</small>
-                        </div>
-                    </div>
-                    
-                    <div class="log-item">
-                        <div class="log-icon danger">
-                            <i class="fas fa-times-circle"></i>
-                        </div>
-                        <div class="log-details">
-                            <p>Notification service failed to start</p>
-                            <small>1 hour ago</small>
-                        </div>
-                    </div>
-                    
-                    <div class="log-item">
-                        <div class="log-icon">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                        <div class="log-details">
-                            <p>Security patches applied successfully</p>
-                            <small>3 hours ago</small>
-                        </div>
+            <div class="log-container">
+                <div class="log-header">
+                    <div class="log-title">System Logs</div>
+                    <div class="log-actions">
+                        <button class="btn-icon" title="Refresh Logs">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="btn-icon" title="Clear Logs">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="btn-icon" title="Download Logs">
+                            <i class="fas fa-download"></i>
+                        </button>
                     </div>
                 </div>
-            </section>
-            
-            <!-- Admin Footer -->
-            <footer class="admin-footer">
-                <div class="footer-content">
-                    <div class="footer-left">
-                        <p>System Uptime: <span id="uptime">14 days, 7:32:18</span></p>
-                        <p>Last System Check: <span id="last-check">15 minutes ago</span></p>
+                <div class="log-content">
+                    <div class="log-entry">
+                        <span class="log-time">[2023-06-15 14:32:45]</span>
+                        <span class="log-message info">System check completed successfully</span>
                     </div>
-                    <div class="footer-right">
-                        <p>System Controls v2.4.1</p>
+                    <div class="log-entry">
+                        <span class="log-time">[2023-06-15 14:30:12]</span>
+                        <span class="log-message">User 'admin' logged in from 192.168.1.5</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">[2023-06-15 14:28:33]</span>
+                        <span class="log-message warning">CPU usage reached 85% threshold</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">[2023-06-15 14:25:07]</span>
+                        <span class="log-message">Database backup completed successfully</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">[2023-06-15 14:20:56]</span>
+                        <span class="log-message">Security scan initiated</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">[2023-06-15 14:18:21]</span>
+                        <span class="log-message error">Failed to connect to external API service</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">[2023-06-15 14:15:42]</span>
+                        <span class="log-message">System time synchronized with NTP server</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">[2023-06-15 14:10:18]</span>
+                        <span class="log-message">New device connected to network</span>
                     </div>
                 </div>
-            </footer>
+            </div>
         </main>
     </div>
-
-    <!-- Reboot Confirmation Modal -->
-    <div class="modal" id="reboot-modal">
+    
+    <!-- Restart System Modal -->
+    <div class="modal" id="restart-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2><i class="fas fa-power-off"></i> Confirm System Reboot</h2>
-                <button class="close-modal" id="close-reboot-modal">&times;</button>
+                <h2><i class="fas fa-sync-alt"></i> Restart System</h2>
+                <button class="close-modal" id="close-restart-modal">&times;</button>
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to reboot the system? This will temporarily interrupt all services.</p>
+            <div class="form-group">
+                <p>Are you sure you want to restart the system? This will temporarily interrupt all services.</p>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-danger" id="cancel-restart">Cancel</button>
+                <button type="button" class="btn-primary" id="confirm-restart">Confirm Restart</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Backup System Modal -->
+    <div class="modal" id="backup-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-database"></i> Create System Backup</h2>
+                <button class="close-modal" id="close-backup-modal">&times;</button>
+            </div>
+            <form id="backup-form">
                 <div class="form-group">
-                    <label for="reboot-reason">Reason for reboot:</label>
-                    <select id="reboot-reason" class="form-control">
-                        <option value="">Select a reason</option>
-                        <option value="maintenance">Maintenance</option>
-                        <option value="update">System Update</option>
-                        <option value="performance">Performance Issues</option>
-                        <option value="other">Other</option>
+                    <label for="backup-name">Backup Name</label>
+                    <input type="text" id="backup-name" class="form-control" placeholder="SystemBackup_20230615" required>
+                </div>
+                <div class="form-group">
+                    <label for="backup-type">Backup Type</label>
+                    <select id="backup-type" class="form-control" required>
+                        <option value="">Select Backup Type</option>
+                        <option value="full">Full System Backup</option>
+                        <option value="config">Configuration Only</option>
+                        <option value="database">Database Only</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="reboot-comment">Additional comments:</label>
-                    <textarea id="reboot-comment" class="form-control" rows="3"></textarea>
+                    <label for="backup-location">Storage Location</label>
+                    <select id="backup-location" class="form-control" required>
+                        <option value="">Select Storage Location</option>
+                        <option value="local">Local Server</option>
+                        <option value="cloud">Cloud Storage</option>
+                        <option value="external">External Drive</option>
+                    </select>
                 </div>
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn-danger" id="cancel-reboot">Cancel</button>
-                <button type="button" class="btn-primary" id="confirm-reboot">Confirm Reboot</button>
-            </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-danger" id="cancel-backup">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Backup</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -1672,14 +1530,44 @@
             
             if (!menuToggle || !sidebar || !overlay) return;
             
-            menuToggle.addEventListener('click', function() {
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
+                
+                // Change hamburger icon to X
+                const icon = menuToggle.querySelector('i');
+                if (sidebar.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                    menuToggle.style.backgroundColor = 'rgba(106, 0, 255, 0.2)';
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    menuToggle.style.backgroundColor = '';
+                }
             });
             
             overlay.addEventListener('click', function() {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                menuToggle.style.backgroundColor = '';
+            });
+            
+            // Close menu when clicking on nav links
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    menuToggle.style.backgroundColor = '';
+                });
             });
         }
     
@@ -1716,11 +1604,22 @@
                 day: 'numeric'
             };
             
+            // Only update if element exists
+            const dateElement = document.getElementById('current-date');
+            if (dateElement) {
+                dateElement.textContent = now.toLocaleDateString('en-US', options);
+            }
+            
             // Update admin time in footer
             const timeOptions = {
                 hour: '2-digit',
-                minute: '2-digit'
+                minute: '2-digit',
+                second: '2-digit'
             };
+            const adminTime = document.getElementById('admin-time');
+            if (adminTime) {
+                adminTime.textContent = now.toLocaleTimeString('en-US', timeOptions);
+            }
         }
 
         // Admin Dropdown Toggle
@@ -1750,144 +1649,6 @@
             });
         }
 
-        // Initialize System Gauges
-        function initGauges() {
-            const gauges = [
-                { id: 'cpu-gauge', value: 78 },
-                { id: 'memory-gauge', value: 64 },
-                { id: 'storage-gauge', value: 42 },
-                { id: 'network-gauge', value: 89 }
-            ];
-    
-            gauges.forEach(gauge => {
-                const element = document.getElementById(gauge.id);
-                if (!element) return;
-                
-                element.style.background = `conic-gradient(
-                    var(--primary) ${gauge.value}%, 
-                    var(--dark-gray) 0%
-                )`;
-                
-                // Set alert if value is critical
-                if (gauge.value >= 85) {
-                    const alertElement = document.createElement('div');
-                    alertElement.className = 'alert active';
-                    alertElement.textContent = '!';
-                    element.parentNode.appendChild(alertElement);
-                }
-            });
-        }
-
-        // Slider functionality
-        function setupSliders() {
-            const sliders = document.querySelectorAll('.slider');
-            sliders.forEach(slider => {
-                const valueDisplay = slider.nextElementSibling;
-                slider.addEventListener('input', function() {
-                    if (this.id === 'temp-slider') {
-                        valueDisplay.textContent = `${this.value}°C`;
-                    } else {
-                        valueDisplay.textContent = `${this.value}%`;
-                    }
-                });
-            });
-        }
-
-        // Reboot Modal
-        function setupRebootModal() {
-            const rebootBtn = document.getElementById('reboot-btn');
-            const modal = document.getElementById('reboot-modal');
-            const closeModal = document.getElementById('close-reboot-modal');
-            const cancelBtn = document.getElementById('cancel-reboot');
-            
-            if (!rebootBtn || !modal || !closeModal || !cancelBtn) return;
-            
-            // Open modal
-            rebootBtn.addEventListener('click', function() {
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-            
-            // Close modal
-            function closeRebootModal() {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-            
-            closeModal.addEventListener('click', closeRebootModal);
-            cancelBtn.addEventListener('click', closeRebootModal);
-            
-            // Close when clicking outside modal
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeRebootModal();
-                }
-            });
-            
-            // Confirm reboot
-            const confirmBtn = document.getElementById('confirm-reboot');
-            if (confirmBtn) {
-                confirmBtn.addEventListener('click', function() {
-                    const reason = document.getElementById('reboot-reason').value;
-                    if (!reason) {
-                        alert('Please select a reason for the reboot.');
-                        return;
-                    }
-                    
-                    // Here you would typically send the reboot command to your backend
-                    alert('System reboot initiated!');
-                    closeRebootModal();
-                });
-            }
-        }
-
-        // Service controls
-        function setupServiceControls() {
-            const serviceItems = document.querySelectorAll('.service-item');
-            serviceItems.forEach(item => {
-                const stopBtn = item.querySelector('.fa-stop');
-                const restartBtn = item.querySelector('.fa-redo');
-                const playBtn = item.querySelector('.fa-play');
-                
-                if (stopBtn) {
-                    stopBtn.closest('.btn-icon').addEventListener('click', function() {
-                        const serviceName = item.querySelector('.service-name').textContent;
-                        if (confirm(`Are you sure you want to stop ${serviceName}?`)) {
-                            // Here you would typically send the stop command to your backend
-                            const statusIndicator = item.querySelector('.status-indicator');
-                            statusIndicator.classList.remove('online', 'warning');
-                            statusIndicator.classList.add('offline');
-                            item.querySelector('.service-status span').textContent = 'Stopped';
-                        }
-                    });
-                }
-                
-                if (restartBtn) {
-                    restartBtn.closest('.btn-icon').addEventListener('click', function() {
-                        const serviceName = item.querySelector('.service-name').textContent;
-                        if (confirm(`Are you sure you want to restart ${serviceName}?`)) {
-                            // Here you would typically send the restart command to your backend
-                            const statusIndicator = item.querySelector('.status-indicator');
-                            statusIndicator.classList.remove('offline', 'warning');
-                            statusIndicator.classList.add('online');
-                            item.querySelector('.service-status span').textContent = 'Running';
-                        }
-                    });
-                }
-                
-                if (playBtn) {
-                    playBtn.closest('.btn-icon').addEventListener('click', function() {
-                        const serviceName = item.querySelector('.service-name').textContent;
-                        // Here you would typically send the start command to your backend
-                        const statusIndicator = item.querySelector('.status-indicator');
-                        statusIndicator.classList.remove('offline', 'warning');
-                        statusIndicator.classList.add('online');
-                        item.querySelector('.service-status span').textContent = 'Running';
-                    });
-                }
-            });
-        }
-
         // Theme Toggle Functionality
         function setupThemeToggle() {
             const themeToggle = document.getElementById('theme-toggle');
@@ -1911,23 +1672,107 @@
             });
         }
 
+        // Restart Modal Functionality
+        function setupRestartModal() {
+            const restartBtn = document.getElementById('restart-btn');
+            const modal = document.getElementById('restart-modal');
+            const closeModal = document.getElementById('close-restart-modal');
+            const cancelBtn = document.getElementById('cancel-restart');
+            
+            if (!restartBtn || !modal || !closeModal || !cancelBtn) return;
+            
+            // Open modal
+            restartBtn.addEventListener('click', function() {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Close modal
+            function closeRestartModal() {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            closeModal.addEventListener('click', closeRestartModal);
+            cancelBtn.addEventListener('click', closeRestartModal);
+            
+            // Confirm restart
+            const confirmBtn = document.getElementById('confirm-restart');
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', function() {
+                    alert('System restart initiated. All services will be temporarily unavailable.');
+                    closeRestartModal();
+                });
+            }
+            
+            // Close when clicking outside modal
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeRestartModal();
+                }
+            });
+        }
+
+        // Backup Modal Functionality
+        function setupBackupModal() {
+            const backupBtn = document.getElementById('backup-btn');
+            const modal = document.getElementById('backup-modal');
+            const closeModal = document.getElementById('close-backup-modal');
+            const cancelBtn = document.getElementById('cancel-backup');
+            
+            if (!backupBtn || !modal || !closeModal || !cancelBtn) return;
+            
+            // Open modal
+            backupBtn.addEventListener('click', function() {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Close modal
+            function closeBackupModal() {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            closeModal.addEventListener('click', closeBackupModal);
+            cancelBtn.addEventListener('click', closeBackupModal);
+            
+            // Form submission
+            const backupForm = document.getElementById('backup-form');
+            if (backupForm) {
+                backupForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // Here you would typically send the backup request to your backend
+                    const backupName = document.getElementById('backup-name').value;
+                    alert(`Backup "${backupName}" created successfully!`);
+                    closeBackupModal();
+                    backupForm.reset();
+                });
+            }
+            
+            // Close when clicking outside modal
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeBackupModal();
+                }
+            });
+        }
+
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             setupMobileMenu();
             setupHeaderScroll();
             updateCurrentDate();
             setupAdminDropdown();
-            initGauges();
-            setupSliders();
-            setupRebootModal();
-            setupServiceControls();
             setupThemeToggle();
+            setupRestartModal();
+            setupBackupModal();
             
             // Update time every minute
             setInterval(updateCurrentDate, 60000);
             
             // Add hover effect to widgets
-            const widgets = document.querySelectorAll('.widget');
+            const widgets = document.querySelectorAll('.widget, .status-card, .control-card');
             widgets.forEach(widget => {
                 widget.addEventListener('mouseenter', () => {
                     widget.style.transform = 'translateY(-5px)';
@@ -1939,6 +1784,42 @@
                     widget.style.boxShadow = '';
                 });
             });
+            
+            // Log refresh button
+            const refreshLogBtn = document.querySelector('.log-actions .fa-sync-alt').closest('button');
+            if (refreshLogBtn) {
+                refreshLogBtn.addEventListener('click', function() {
+                    alert('Logs refreshed successfully!');
+                });
+            }
+            
+            // Log clear button
+            const clearLogBtn = document.querySelector('.log-actions .fa-trash').closest('button');
+            if (clearLogBtn) {
+                clearLogBtn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to clear all system logs?')) {
+                        alert('System logs cleared successfully!');
+                    }
+                });
+            }
+            
+            // Log download button
+            const downloadLogBtn = document.querySelector('.log-actions .fa-download').closest('button');
+            if (downloadLogBtn) {
+                downloadLogBtn.addEventListener('click', function() {
+                    alert('Downloading system logs...');
+                });
+            }
+            
+            // Logout functionality
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    alert('Admin session ended. Logging out...');
+                    // Redirect to login page
+                    window.location.href = 'login.html';
+                });
+            }
         });
     </script>
 </body>
