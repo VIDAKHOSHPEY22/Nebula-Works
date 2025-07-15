@@ -155,6 +155,16 @@
             font-size: 1.4rem;
             cursor: pointer;
             display: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .menu-toggle:hover {
+            background: rgba(106, 0, 255, 0.2);
         }
 
         .user-menu {
@@ -434,7 +444,7 @@
             position: fixed;
             left: 0;
             top: var(--header-height);
-            transition: var(--transition);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             z-index: 98;
             box-shadow: var(--box-shadow);
             overflow-y: auto;
@@ -652,11 +662,20 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.9rem;
+            table-layout: fixed;
+        }
+
+        .admin-table th, 
+        .admin-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .admin-table th {
-            text-align: left;
-            padding: 12px 15px;
             background-color: rgba(106, 0, 255, 0.1);
             color: var(--primary);
             font-weight: 500;
@@ -665,14 +684,30 @@
             letter-spacing: 0.5px;
         }
 
-        .admin-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: var(--light-gray);
+        .admin-table th:nth-child(1),
+        .admin-table td:nth-child(1) {
+            width: 15%;
         }
 
-        .admin-table tr:last-child td {
-            border-bottom: none;
+        .admin-table th:nth-child(2),
+        .admin-table td:nth-child(2) {
+            width: 30%;
+        }
+
+        .admin-table th:nth-child(3),
+        .admin-table td:nth-child(3) {
+            width: 25%;
+        }
+
+        .admin-table th:nth-child(4),
+        .admin-table td:nth-child(4) {
+            width: 15%;
+        }
+
+        .admin-table th:nth-child(5),
+        .admin-table td:nth-child(5) {
+            width: 15%;
+            text-align: center;
         }
 
         .admin-table tr:hover td {
@@ -1059,10 +1094,13 @@
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: 280px;
+                z-index: 1000;
             }
             
             .sidebar.active {
                 transform: translateX(0);
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             }
             
             .content {
@@ -1070,7 +1108,7 @@
             }
             
             .menu-toggle {
-                display: block;
+                display: flex;
             }
         }
 
@@ -1086,14 +1124,33 @@
                 gap: 20px;
             }
             
+            .admin-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
             .status-grid {
                 grid-template-columns: 1fr 1fr;
+            }
+
+            .admin-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .admin-table th, 
+            .admin-table td {
+                min-width: 100px;
             }
         }
 
         @media (max-width: 576px) {
             :root {
                 --header-height: 60px;
+            }
+            
+            header {
+                padding: 0 15px;
             }
             
             .logo h1 {
@@ -1126,75 +1183,6 @@
                 font-size: 1.2rem;
             }
         }
-        .admin-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.9rem;
-        table-layout: fixed; /* اضافه شده */
-    }
-
-    .admin-table th, 
-    .admin-table td {
-        padding: 12px 10px; /* کاهش پدینگ */
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        text-align: left;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .admin-table th {
-        background-color: rgba(106, 0, 255, 0.1);
-        color: var(--primary);
-        font-weight: 500;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.5px;
-    }
-
-    /* تنظیم عرض ستون‌ها */
-    .admin-table th:nth-child(1),
-    .admin-table td:nth-child(1) {
-        width: 15%; /* ID */
-    }
-
-    .admin-table th:nth-child(2),
-    .admin-table td:nth-child(2) {
-        width: 30%; /* User */
-    }
-
-    .admin-table th:nth-child(3),
-    .admin-table td:nth-child(3) {
-        width: 25%; /* Role */
-    }
-
-    .admin-table th:nth-child(4),
-    .admin-table td:nth-child(4) {
-        width: 15%; /* Status */
-    }
-
-    .admin-table th:nth-child(5),
-    .admin-table td:nth-child(5) {
-        width: 15%; /* Actions */
-        text-align: center;
-    }
-
-    .admin-table tr:hover td {
-        background-color: rgba(106, 0, 255, 0.05);
-    }
-
-    /* برای نمایش بهتر در موبایل */
-    @media (max-width: 768px) {
-        .admin-table {
-            display: block;
-            overflow-x: auto;
-        }
-        
-        .admin-table th, 
-        .admin-table td {
-            min-width: 100px;
-        }
-    }
     </style>
 </head>
 <body>
@@ -1211,7 +1199,7 @@
         </button>
         
         <div class="logo">
-            <img src="logo.png" alt="NebulaWorks">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNmEwMGZmIiBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHptMCA0NDhjLTExMC41IDAtMjAwLTg5LjUtMjAwLTIwMFMxNDUuNSA1NiAyNTYgNTZzMjAwIDg5LjUgMjAwIDIwMC04OS41IDIwMC0yMDAgMjAweiIvPjxwYXRoIGZpbGw9IiMwMGU1ZmYiIGQ9Ik0yNTYgMzIwYzM1LjMgMCA2NC0yOC43IDY0LTY0cy0yOC43LTY0LTY0LTY0LTY0IDI4LjctNjQgNjQgMjguNyA2NCA2NCA2NHptOTYtMTYwaDMydjY0aC0zMlYxNjB6bS0xOTIgMEgxMjh2NjRoMzJWMTYweiIvPjwvc3ZnPg==" alt="NebulaWorks">
             <h1>NebulaWorks <span style="color: var(--secondary); font-size: 0.8rem;">Admin Portal</span></h1>
         </div>
         
@@ -1536,14 +1524,44 @@
             
             if (!menuToggle || !sidebar || !overlay) return;
             
-            menuToggle.addEventListener('click', function() {
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
+                
+                // Change hamburger icon to X
+                const icon = menuToggle.querySelector('i');
+                if (sidebar.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                    menuToggle.style.backgroundColor = 'rgba(106, 0, 255, 0.2)';
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    menuToggle.style.backgroundColor = '';
+                }
             });
             
             overlay.addEventListener('click', function() {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                menuToggle.style.backgroundColor = '';
+            });
+            
+            // Close menu when clicking on nav links
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    menuToggle.style.backgroundColor = '';
+                });
             });
         }
     
@@ -1584,7 +1602,8 @@
             // Update admin time in footer
             const timeOptions = {
                 hour: '2-digit',
-                minute: '2-digit'
+                minute: '2-digit',
+                second: '2-digit'
             };
             const adminTime = document.getElementById('admin-time');
             if (adminTime) {
@@ -1636,14 +1655,6 @@
                     var(--primary) ${gauge.value}%, 
                     var(--dark-gray) 0%
                 )`;
-                
-                // Set alert if value is critical
-                if (gauge.value <= 30) {
-                    const alertElement = document.createElement('div');
-                    alertElement.className = 'alert active';
-                    alertElement.textContent = '!';
-                    element.parentNode.appendChild(alertElement);
-                }
             });
         }
 
@@ -1691,8 +1702,8 @@
             setupSliders();
             setupThemeToggle();
             
-            // Update time every minute
-            setInterval(updateCurrentDate, 60000);
+            // Update time every second
+            setInterval(updateCurrentDate, 1000);
             
             // Add hover effect to widgets
             const widgets = document.querySelectorAll('.widget');
@@ -1707,6 +1718,14 @@
                     widget.style.boxShadow = '';
                 });
             });
+            
+            // Logout functionality
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    alert('Admin session ended. Logging out...');
+                });
+            }
         });
     </script>
 </body>
