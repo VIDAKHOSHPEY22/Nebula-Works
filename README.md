@@ -25,10 +25,10 @@
 
 ---
 
-## 🚀 Live Demo📌👇(If the link for Demo doesn't open , try with VPN)⚠️📌
+## 🚀 Live Demo📌👇 (If the link for Demo doesn't open, try using a VPN) ⚠️
 
-> ⚙️ [Live GitHub Page](https://vidakhoshpey22.github.io/Nebula-Works)  
-> 🎥 [Watch Demo Video on YouTube](https://youtube.com/your-demo-link) 
+> 🌐 [Live GitHub Page](https://vidakhoshpey22.github.io/Nebula-Works)  
+> 🎥 [Watch Demo Video on YouTube](https://youtube.com/your-demo-link) *(optional)*
 
 ---
 
@@ -40,19 +40,35 @@
 | 🔐 Authentication | `signup.html` + custom admin login                                          |
 | 📊 Dashboard      | Multiple linked pages: messages, projects, calendar, team, settings, etc.   |
 | 👩‍🚀 Admin Section  | Independent area for admin configuration and network/security settings      |
-| 🌍 3D Models       | Earth, Mars, and Jupiter models in `.glb` for space-themed visual effect   |
+| 🌍 3D Models       | Earth, Mars, and Jupiter models in `.glb` for space-themed visual effects  |
 | 🎨 Theming        | Light/Dark theme toggle for user experience                                 |
 | 📱 Responsive     | Optimized for mobile, tablet, and desktop                                   |
+| 🔔 Notifications  | Currently visual only (not connected to backend logic yet)                  |
+| 📂 Modular Design | Well-structured files and pages with future extensibility in mind           |
+
+> ⚠️ **Note**: Some features like notification systems, user persistence, and weather data are currently designed as visual simulations or mockups, and not yet wired to real APIs or backends. However, the logic and structure have been built in a way to allow seamless integration later.
+
+---
+
+## 🎯 Project Goal
+
+Nebula Works was created as an entry for a frontend development challenge with a focus on originality, responsiveness, and aesthetic experience. The dashboard reimagines admin panels through a **space-themed UI/UX**, where even typical panels like calendar or projects feel futuristic.
+
+While remaining in pure vanilla technologies (no libraries/frameworks), I strived to make:
+- Each page functional and meaningful,
+- Each effect smooth and realistic,
+- Each user action feel responsive and immersive.
 
 ---
 
 ## 🧠 Technologies Used
 
-- HTML5
-- CSS3 (custom styling & transitions)
-- Vanilla JavaScript (for interactivity)
-- `.glb` 3D assets (Three.js-ready)
-- No frameworks or libraries used
+- ✅ HTML5
+- ✅ CSS3 (custom styling, transitions, animations)
+- ✅ JavaScript (for DOM interactivity, logic)
+- ✅ `.glb` 3D assets (compatible with Three.js)
+- ❌ No frameworks or UI libraries used
+- ⚙️ Future ready: Easy to extend with APIs, Firebase, or backend frameworks
 
 ---
 
@@ -63,52 +79,19 @@
 | **Vida Khoshpey** | Full Project Developer (Task 1) | [@VIDAKHOSHPEY22](https://github.com/VIDAKHOSHPEY22) |
 | **Yalda Khoshpey**| CSS Design & Styling (Task 2)   | [@YALDAKHOSHPEY](https://github.com/YALDAKHOSHPEY)   |
 
-Task 1 (Functionality, Logic, Design, Structure): Vida  
-Task 2 (CSS, Theme Animation): Yalda  
-Each submitted under their own GitHub accounts per challenge rules.
+**Task Breakdown:**
+- Vida: Complete project logic, structure, design system, dashboard functionalities
+- Yalda: Styling, layout enhancement, theming animation and design polishing
+
+Each submitted under separate GitHub accounts for transparency.
 
 ---
 
 ## 🗂 Folder Structure
 
 ```
-
-nebula-works/
-│
-├── index.html                → Home page with greeting + mock weather API
-├── signup.html               → User signup form
-├── style.css                 → All custom styling
-├── script.js                 → Interactivity
-├── LICENCE                   → MIT License
-├── README.md                 → You're reading it!
-│
-├── /admin                    → Admin-only pages (login, settings, system)
-│   ├── index.html
-│   ├── user.html
-│   ├── system.html
-│   ├── security.html
-│   ├── network.html
-│   ├── event.html
-│   ├── settings-admin.html
-│
-├── /dashboard                → Dashboard core
-│   ├── index.html
-│   ├── project.html
-│   ├── team.html
-│   ├── calendar.html
-│   ├── messages.html
-│   ├── resources.html
-│   ├── settings.html
-│
-└── /assets
-├── logo.png
-└── /3d/
-├── earth.glb
-├── mars.glb
-└── jupiter.glb
-
+nebula-works/ │ ├── index.html                → Home page with greeting + mock weather API ├── signup.html               → User signup form ├── style.css                 → All custom styling ├── script.js                 → Interactivity ├── LICENCE                   → MIT License ├── README.md                 → You're reading it! │ ├── /admin                    → Admin-only pages (login, settings, system) │   ├── index.html │   ├── user.html │   ├── system.html │   ├── security.html │   ├── network.html │   ├── event.html │   ├── settings-admin.html │ ├── /dashboard                → Dashboard core │   ├── index.html │   ├── project.html │   ├── team.html │   ├── calendar.html │   ├── messages.html │   ├── resources.html │   ├── settings.html │ └── /assets ├── logo.png └── /3d/ ├── earth.glb ├── mars.glb └── jupiter.glb
 ```
-
 ---
 
 ## 🖼 Preview Gallery
@@ -142,6 +125,16 @@ nebula-works/
 
 ---
 
+## 💡 What’s Next?
+
+- [ ] Replace mock APIs (weather & messages) with real-time API integration
+- [ ] Add database and user session (auth, data persistence)
+- [ ] Convert to full-stack (Node.js/Firebase backend)
+- [ ] Refactor for component-based frameworks (React or Vue)
+- [ ] Optimize 3D model performance with lazy loading
+
+---
+
 ## 📜 License
 
 This project is licensed under the [MIT License](./LICENCE).
@@ -150,11 +143,13 @@ This project is licensed under the [MIT License](./LICENCE).
 
 ## ✨ Acknowledgments
 
-- Special thanks to **Axero** and **Dev.to** for organizing the challenge.
-- Space 3D models inspired by NASA Open Assets.
-- UI/UX design fully handcrafted with ❤️
+- 💫 Inspired by space and technology, driven by design
+- 🎨 3D models based on NASA Open Assets
+- 🛠 Built for the Dev.to x Axero Frontend Challenge
+- ❤️ Handcrafted with passion and creativity
 
 ---
 
 Made with 💫 by **Vida Khoshpey**  
 and styled with ⭐ by **Yalda Khoshpey**
+
