@@ -87,10 +87,46 @@ Each submitted under separate GitHub accounts for transparency.
 
 ---
 
-## 🗂 Folder Structure
+## 📂 Folder Structure
 
-```
-nebula-works/ │ ├── index.html                → Home page with greeting + mock weather API ├── signup.html               → User signup form ├── style.css                 → All custom styling ├── script.js                 → Interactivity ├── LICENCE                   → MIT License ├── README.md                 → You're reading it! │ ├── /admin                    → Admin-only pages (login, settings, system) │   ├── index.html │   ├── user.html │   ├── system.html │   ├── security.html │   ├── network.html │   ├── event.html │   ├── settings-admin.html │ ├── /dashboard                → Dashboard core │   ├── index.html │   ├── project.html │   ├── team.html │   ├── calendar.html │   ├── messages.html │   ├── resources.html │   ├── settings.html │ └── /assets ├── logo.png └── /3d/ ├── earth.glb ├── mars.glb └── jupiter.glb
+```text
+nebula-works/
+│
+├── index.html                → Home page with greeting + mock weather API
+├── signup.html               → User signup form
+├── style.css                 → All custom styling (including animations and theming)
+├── script.js                 → Core interactivity (weather, toggle, greeting logic)
+├── LICENCE                   → MIT License
+├── README.md                 → You're reading it!
+│
+├── /admin                    → Admin-only section
+│   ├── index.html            → Admin dashboard main
+│   ├── user.html             → User management
+│   ├── system.html           → System overview
+│   ├── security.html         → Security settings
+│   ├── network.html          → Network configurations
+│   ├── event.html            → Admin events log
+│   ├── settings-admin.html   → Admin-specific settings
+│
+├── /dashboard                → User dashboard pages
+│   ├── index.html            → Dashboard overview
+│   ├── project.html          → Projects area
+│   ├── team.html             → Team management
+│   ├── calendar.html         → Calendar & scheduling
+│   ├── messages.html         → Messaging area
+│   ├── resources.html        → Learning/resources panel
+│   ├── settings.html         → User settings
+│
+└── /assets
+    ├── logo.png              → Project logo
+    ├── home-preview.png      → Image preview for home
+    ├── dashboard-preview.png → Image preview for dashboard
+    ├── calendar-preview.png  → Preview for calendar
+    ├── team-preview.png      → Preview for team
+    └── /3d                   → 3D space models
+        ├── earth.glb
+        ├── mars.glb
+        └── jupiter.glb
 ```
 ---
 
