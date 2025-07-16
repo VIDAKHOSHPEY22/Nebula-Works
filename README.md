@@ -32,6 +32,14 @@
 
 ---
 
+## 🌠 Animated Demo Preview
+
+<p align="center">
+  <img src="https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/f718306289a17abffcfd32cdd805586c61b9425a/assets/Nebula.gif?raw=true" width="700" alt="NebulaWorks Demo Animation">
+</p>
+
+---
+
 ## 📦 Project Features
 
 | Category         | Description                                                                 |
