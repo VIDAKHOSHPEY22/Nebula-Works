@@ -575,25 +575,7 @@
             gap: 15px;
         }
 
-        .btn-primary {
-            background-color: rgba(106, 0, 255, 0.1);
-            padding: 12px 20px;
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(106, 0, 255, 0.3);
-            color: var(--primary);
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .btn-primary:hover {
-            background-color: rgba(106, 0, 255, 0.2);
-        }
-
-        .btn-danger {
+        .emergency-btn {
             background-color: rgba(255, 85, 85, 0.1);
             padding: 12px 20px;
             border-radius: var(--border-radius);
@@ -607,11 +589,11 @@
             transition: var(--transition);
         }
 
-        .btn-danger:hover {
+        .emergency-btn:hover {
             background-color: rgba(255, 85, 85, 0.2);
         }
 
-        /* Network Widgets Grid */
+        /* Widgets Grid */
         .widgets-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -619,7 +601,6 @@
             margin-bottom: 30px;
         }
 
-        /* Widget */
         .widget {
             background-color: var(--dark);
             border-radius: var(--border-radius);
@@ -676,79 +657,274 @@
             color: var(--primary);
         }
 
-        /* Network Status Widget */
-        .network-status {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        /* Network Topology Styles */
+        .network-topology {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
         }
 
-        .status-item {
+        .topology-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .topology-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .topology-header h2 i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .topology-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .topology-canvas {
+            height: 400px;
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: var(--border-radius);
-        }
-
-        .status-info {
+            position: relative;
+            overflow: hidden;
             display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .status-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            align-items: center;
         }
 
-        .status-icon.online {
-            background-color: rgba(0, 255, 170, 0.1);
+        .topology-placeholder {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .topology-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .topology-placeholder p {
+            font-size: 1rem;
+        }
+
+        /* Network Nodes */
+        .network-node {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--dark-gray);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+        }
+
+        .network-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .network-node i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .network-node span {
+            font-size: 0.7rem;
+            color: var(--light-gray);
+        }
+
+        .network-node.core {
+            background-color: rgba(106, 0, 255, 0.2);
+            border: 2px solid var(--primary);
+        }
+
+        .network-node.core i {
+            color: var(--primary);
+        }
+
+        .network-node.edge {
+            background-color: rgba(0, 229, 255, 0.2);
+            border: 2px solid var(--secondary);
+        }
+
+        .network-node.edge i {
+            color: var(--secondary);
+        }
+
+        .network-node.client {
+            background-color: rgba(255, 0, 170, 0.2);
+            border: 2px solid var(--accent);
+        }
+
+        .network-node.client i {
+            color: var(--accent);
+        }
+
+        /* Connection Lines */
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background-color: var(--medium-gray);
+            transform-origin: 0 0;
+            z-index: 1;
+        }
+
+        /* Network Stats */
+        .network-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--widget-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-header h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--light-gray);
+        }
+
+        .stat-header i {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 5px;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .stat-change.positive {
             color: var(--success);
         }
 
-        .status-icon.warning {
-            background-color: rgba(255, 204, 0, 0.1);
-            color: var(--warning);
-        }
-
-        .status-icon.offline {
-            background-color: rgba(255, 85, 85, 0.1);
+        .stat-change.negative {
             color: var(--danger);
         }
 
-        .status-text h3 {
-            font-size: 1rem;
-            margin-bottom: 5px;
-            color: var(--white);
+        .stat-change i {
+            margin-right: 5px;
+            font-size: 0.8rem;
         }
 
-        .status-text p {
-            font-size: 0.85rem;
+        /* Traffic Table */
+        .traffic-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            table-layout: fixed;
+        }
+
+        .traffic-table th, 
+        .traffic-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .traffic-table th {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .traffic-table tr:hover td {
+            background-color: rgba(106, 0, 255, 0.05);
+        }
+
+        .traffic-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .traffic-type i {
+            font-size: 0.9rem;
+        }
+
+        .traffic-type.http i {
+            color: var(--primary);
+        }
+
+        .traffic-type.https i {
+            color: var(--success);
+        }
+
+        .traffic-type.ftp i {
+            color: var(--warning);
+        }
+
+        .traffic-type.other i {
             color: var(--medium-gray);
         }
 
-        .status-value {
-            font-weight: bold;
-            color: var(--white);
+        .traffic-volume {
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
         }
 
-        /* Network Traffic Widget */
+        /* Traffic Chart */
+        .traffic-chart-container {
+            margin-top: 30px;
+        }
+
         .traffic-chart {
-            height: 250px;
+            height: 300px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: rgba(0, 0, 0, 0.2);
-            border-radius: var(--border-radius);
             margin-top: 15px;
-            position: relative;
         }
 
         .chart-placeholder {
@@ -765,141 +941,15 @@
             font-size: 0.9rem;
         }
 
-        /* Network Devices Table */
-        .devices-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-
-        .devices-table th {
-            text-align: left;
-            padding: 12px 15px;
-            background-color: rgba(106, 0, 255, 0.1);
-            color: var(--primary);
-            font-weight: 500;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-        }
-
-        .devices-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: var(--light-gray);
-        }
-
-        .devices-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .devices-table tr:hover td {
-            background-color: rgba(106, 0, 255, 0.05);
-        }
-
-        .device-status {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .device-status.online {
-            background-color: var(--success);
-        }
-
-        .device-status.warning {
-            background-color: var(--warning);
-        }
-
-        .device-status.offline {
-            background-color: var(--danger);
-        }
-
-        /* Network Map */
-        .network-map {
-            height: 300px;
-            background-color: rgba(0, 0, 0, 0.2);
-            border-radius: var(--border-radius);
-            margin-top: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .map-placeholder {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .map-placeholder i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-
-        .map-placeholder p {
-            font-size: 1rem;
-        }
-
-        /* Network Alerts */
-        .network-alerts {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .alert-item {
-            display: flex;
-            gap: 15px;
-            padding: 15px;
-            background-color: rgba(0, 0, 0, 0.2);
-            border-radius: var(--border-radius);
-            align-items: flex-start;
-        }
-
-        .alert-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .alert-icon.critical {
-            background-color: rgba(255, 85, 85, 0.1);
-            color: var(--danger);
-        }
-
-        .alert-icon.warning {
-            background-color: rgba(255, 204, 0, 0.1);
-            color: var(--warning);
-        }
-
-        .alert-icon.info {
-            background-color: rgba(0, 229, 255, 0.1);
-            color: var(--secondary);
-        }
-
-        .alert-content h4 {
-            font-size: 0.95rem;
-            margin-bottom: 5px;
+        /* Time Selector */
+        .time-selector {
+            background-color: rgba(255, 255, 255, 0.1);
             color: var(--white);
-        }
-
-        .alert-content p {
-            font-size: 0.85rem;
-            color: var(--medium-gray);
-            margin-bottom: 5px;
-        }
-
-        .alert-time {
-            font-size: 0.75rem;
-            color: var(--gray);
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
         }
 
         /* Admin Footer */
@@ -920,8 +970,8 @@
 
         /* Responsive Styles */
         @media (max-width: 1200px) {
-            .resources-list {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            .network-stats {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
         }
 
@@ -958,8 +1008,18 @@
                 gap: 20px;
             }
             
-            .widgets-grid {
-                grid-template-columns: 1fr;
+            .admin-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .topology-canvas {
+                height: 300px;
+            }
+
+            .traffic-table {
+                display: block;
+                overflow-x: auto;
             }
         }
 
@@ -984,14 +1044,23 @@
                 padding: 20px 15px;
             }
             
-            .admin-actions {
+            .topology-header {
                 flex-direction: column;
-                width: 100%;
+                align-items: flex-start;
+                gap: 15px;
             }
             
-            .btn-primary, .btn-danger {
+            .topology-controls {
                 width: 100%;
-                justify-content: center;
+                justify-content: space-between;
+            }
+            
+            .topology-canvas {
+                height: 250px;
+            }
+            
+            .network-stats {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1039,7 +1108,7 @@
                 <div class="admin-dropdown-info">
                     <h3>Admin User</h3>
                     <p>admin@nebulaworks.space</p>
-                    <span class="admin-badge">Network Admin</span>
+                    <span class="admin-badge">Administrator</span>
                 </div>
             </div>
             <ul class="admin-dropdown-menu">
@@ -1076,13 +1145,13 @@
             <div class="admin-news">
                 <h3><i class="fas fa-newspaper"></i> Network Alerts</h3>
                 <div class="news-item">
-                    <a href="#">High traffic on Node-12</a>
+                    <a href="#">High traffic on Node NW-247</a>
                 </div>
                 <div class="news-item">
-                    <a href="#">2 devices offline</a>
+                    <a href="#">2 unauthorized access attempts</a>
                 </div>
                 <div class="news-item">
-                    <a href="#">Security scan required</a>
+                    <a href="#">Backup network scheduled</a>
                 </div>
             </div>
         </nav>
@@ -1093,212 +1162,224 @@
             <section class="welcome-section">
                 <div class="welcome-text">
                     <h1>Network <span>Analytics</span></h1>
-                    <p id="current-date">Monitoring all network activities and devices</p>
+                    <p id="current-date">Monday, July 15, 2023</p>
                 </div>
                 <div class="admin-actions">
-                    <button class="btn-primary" id="scan-network-btn">
-                        <i class="fas fa-network-wired"></i> Scan Network
-                    </button>
-                    <button class="btn-danger" id="emergency-stop-btn">
-                        <i class="fas fa-power-off"></i> Emergency Stop
+                    <button class="emergency-btn">
+                        <i class="fas fa-network-wired"></i> Network Scan
                     </button>
                 </div>
             </section>
             
-            <!-- Widgets Grid -->
-            <div class="widgets-grid">
-                <!-- Network Status Widget -->
-                <article class="widget">
-                    <div class="widget-header">
-                        <h2><i class="fas fa-signal"></i> Network Status</h2>
-                        <div class="widget-actions">
-                            <button class="btn-icon"><i class="fas fa-sync-alt"></i></button>
-                        </div>
-                    </div>
-                    
-                    <div class="network-status">
-                        <div class="status-item">
-                            <div class="status-info">
-                                <div class="status-icon online">
-                                    <i class="fas fa-server"></i>
-                                </div>
-                                <div class="status-text">
-                                    <h3>Main Server</h3>
-                                    <p>Primary Data Center</p>
-                                </div>
-                            </div>
-                            <span class="status-value">98%</span>
-                        </div>
-                        
-                        <div class="status-item">
-                            <div class="status-info">
-                                <div class="status-icon online">
-                                    <i class="fas fa-database"></i>
-                                </div>
-                                <div class="status-text">
-                                    <h3>Database Cluster</h3>
-                                    <p>3 Nodes Active</p>
-                                </div>
-                            </div>
-                            <span class="status-value">95%</span>
-                        </div>
-                        
-                        <div class="status-item">
-                            <div class="status-info">
-                                <div class="status-icon warning">
-                                    <i class="fas fa-cloud"></i>
-                                </div>
-                                <div class="status-text">
-                                    <h3>Cloud Gateway</h3>
-                                    <p>High Latency</p>
-                                </div>
-                            </div>
-                            <span class="status-value">72%</span>
-                        </div>
-                    </div>
-                </article>
-                
-                <!-- Traffic Analytics Widget -->
-                <article class="widget">
-                    <div class="widget-header">
-                        <h2><i class="fas fa-chart-line"></i> Traffic Analytics</h2>
+            <!-- Network Topology -->
+            <section class="network-topology">
+                <div class="topology-header">
+                    <h2><i class="fas fa-project-diagram"></i> Network Topology</h2>
+                    <div class="topology-controls">
                         <select class="time-selector">
-                            <option>24 Hours</option>
-                            <option>7 Days</option>
-                            <option>30 Days</option>
+                            <option>Real-time</option>
+                            <option>Last Hour</option>
+                            <option>Last 24 Hours</option>
                         </select>
-                    </div>
-                    <div class="traffic-chart">
-                        <div class="chart-placeholder">
-                            <i class="fas fa-chart-network"></i>
-                            <p>Network Traffic Visualization</p>
-                        </div>
-                    </div>
-                </article>
-                
-                <!-- Network Map Widget -->
-                <article class="widget">
-                    <div class="widget-header">
-                        <h2><i class="fas fa-sitemap"></i> Network Map</h2>
+                        <button class="btn-icon"><i class="fas fa-sync-alt"></i></button>
                         <button class="btn-icon"><i class="fas fa-expand"></i></button>
                     </div>
-                    <div class="network-map">
-                        <div class="map-placeholder">
-                            <i class="fas fa-project-diagram"></i>
-                            <p>Interactive Network Topology</p>
-                        </div>
+                </div>
+                <div class="topology-canvas" id="topology-canvas">
+                    <div class="topology-placeholder">
+                        <i class="fas fa-project-diagram"></i>
+                        <p>Interactive Network Visualization</p>
                     </div>
-                </article>
-            </div>
+                    
+                    <!-- These would be dynamically generated in a real app -->
+                    <div class="network-node core" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        <i class="fas fa-server"></i>
+                        <span>Core NW-001</span>
+                    </div>
+                    
+                    <div class="network-node edge" style="top: 30%; left: 30%;">
+                        <i class="fas fa-network-wired"></i>
+                        <span>Edge NW-101</span>
+                    </div>
+                    
+                    <div class="network-node edge" style="top: 30%; left: 70%;">
+                        <i class="fas fa-network-wired"></i>
+                        <span>Edge NW-102</span>
+                    </div>
+                    
+                    <div class="network-node client" style="top: 70%; left: 20%;">
+                        <i class="fas fa-desktop"></i>
+                        <span>Client-247</span>
+                    </div>
+                    
+                    <div class="network-node client" style="top: 70%; left: 40%;">
+                        <i class="fas fa-desktop"></i>
+                        <span>Client-248</span>
+                    </div>
+                    
+                    <div class="network-node client" style="top: 70%; left: 60%;">
+                        <i class="fas fa-desktop"></i>
+                        <span>Client-249</span>
+                    </div>
+                    
+                    <div class="network-node client" style="top: 70%; left: 80%;">
+                        <i class="fas fa-desktop"></i>
+                        <span>Client-250</span>
+                    </div>
+                    
+                    <!-- Connection lines would be drawn with JavaScript in a real app -->
+                    <div class="connection-line" style="width: 141px; top: 50%; left: 50%; transform: rotate(-45deg);"></div>
+                    <div class="connection-line" style="width: 141px; top: 50%; left: 50%; transform: rotate(45deg);"></div>
+                    <div class="connection-line" style="width: 100px; top: 30%; left: 30%; transform: rotate(90deg);"></div>
+                    <div class="connection-line" style="width: 100px; top: 30%; left: 70%; transform: rotate(90deg);"></div>
+                </div>
+            </section>
             
-            <!-- Network Devices Table -->
-            <section class="widget">
-                <div class="widget-header">
-                    <h2><i class="fas fa-network-wired"></i> Connected Devices</h2>
-                    <div class="widget-actions">
-                        <button class="btn-icon"><i class="fas fa-plus"></i></button>
-                        <button class="btn-icon"><i class="fas fa-filter"></i></button>
+            <!-- Network Stats -->
+            <div class="network-stats">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3>Total Traffic</h3>
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="stat-value">4.7 TB</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 12.5% from last week
                     </div>
                 </div>
                 
-                <table class="devices-table">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3>Active Connections</h3>
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <div class="stat-value">1,247</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 8.3% from last hour
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3>Average Latency</h3>
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="stat-value">47 ms</div>
+                    <div class="stat-change negative">
+                        <i class="fas fa-arrow-down"></i> 2.1% from yesterday
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3>Threats Blocked</h3>
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="stat-value">24</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 4 from last hour
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Traffic Table -->
+            <section class="widget">
+                <div class="widget-header">
+                    <h2><i class="fas fa-exchange-alt"></i> Traffic Summary</h2>
+                    <select class="time-selector">
+                        <option>Last Hour</option>
+                        <option>Today</option>
+                        <option>This Week</option>
+                    </select>
+                </div>
+                
+                <table class="traffic-table">
                     <thead>
                         <tr>
-                            <th>Device ID</th>
-                            <th>Name</th>
-                            <th>IP Address</th>
-                            <th>Type</th>
+                            <th>Protocol</th>
+                            <th>Source</th>
+                            <th>Destination</th>
+                            <th>Volume</th>
                             <th>Status</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>NW-DV-001</td>
-                            <td>Main Server</td>
-                            <td>192.168.1.1</td>
-                            <td>Server</td>
-                            <td><span class="device-status online"></span> Online</td>
                             <td>
-                                <button class="btn-icon"><i class="fas fa-cog"></i></button>
-                                <button class="btn-icon"><i class="fas fa-chart-line"></i></button>
+                                <div class="traffic-type https">
+                                    <i class="fas fa-lock"></i>
+                                    <span>HTTPS</span>
+                                </div>
                             </td>
+                            <td>Client-247</td>
+                            <td>Core NW-001</td>
+                            <td class="traffic-volume">1.2 GB</td>
+                            <td><span class="status-badge online">Active</span></td>
                         </tr>
                         <tr>
-                            <td>NW-DV-002</td>
-                            <td>Database Node 1</td>
-                            <td>192.168.1.2</td>
-                            <td>Database</td>
-                            <td><span class="device-status online"></span> Online</td>
                             <td>
-                                <button class="btn-icon"><i class="fas fa-cog"></i></button>
-                                <button class="btn-icon"><i class="fas fa-chart-line"></i></button>
+                                <div class="traffic-type http">
+                                    <i class="fas fa-globe"></i>
+                                    <span>HTTP</span>
+                                </div>
                             </td>
+                            <td>Edge NW-101</td>
+                            <td>External API</td>
+                            <td class="traffic-volume">845 MB</td>
+                            <td><span class="status-badge online">Active</span></td>
                         </tr>
                         <tr>
-                            <td>NW-DV-003</td>
-                            <td>Security Gateway</td>
-                            <td>192.168.1.3</td>
-                            <td>Firewall</td>
-                            <td><span class="device-status warning"></span> Warning</td>
                             <td>
-                                <button class="btn-icon"><i class="fas fa-cog"></i></button>
-                                <button class="btn-icon"><i class="fas fa-chart-line"></i></button>
+                                <div class="traffic-type ftp">
+                                    <i class="fas fa-file-upload"></i>
+                                    <span>FTP</span>
+                                </div>
                             </td>
+                            <td>Backup Server</td>
+                            <td>Storage NW-002</td>
+                            <td class="traffic-volume">3.7 GB</td>
+                            <td><span class="status-badge warning">Slow</span></td>
                         </tr>
                         <tr>
-                            <td>NW-DV-004</td>
-                            <td>Backup Storage</td>
-                            <td>192.168.1.4</td>
-                            <td>NAS</td>
-                            <td><span class="device-status offline"></span> Offline</td>
                             <td>
-                                <button class="btn-icon"><i class="fas fa-cog"></i></button>
-                                <button class="btn-icon"><i class="fas fa-power-off"></i></button>
+                                <div class="traffic-type other">
+                                    <i class="fas fa-question"></i>
+                                    <span>SSH</span>
+                                </div>
                             </td>
+                            <td>Admin Terminal</td>
+                            <td>Core NW-001</td>
+                            <td class="traffic-volume">42 MB</td>
+                            <td><span class="status-badge online">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="traffic-type https">
+                                    <i class="fas fa-lock"></i>
+                                    <span>HTTPS</span>
+                                </div>
+                            </td>
+                            <td>Client-248</td>
+                            <td>External Service</td>
+                            <td class="traffic-volume">567 MB</td>
+                            <td><span class="status-badge danger">Blocked</span></td>
                         </tr>
                     </tbody>
                 </table>
-            </section>
-            
-            <!-- Network Alerts -->
-            <section class="widget">
-                <div class="widget-header">
-                    <h2><i class="fas fa-exclamation-triangle"></i> Recent Alerts</h2>
-                    <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
-                </div>
                 
-                <div class="network-alerts">
-                    <div class="alert-item">
-                        <div class="alert-icon critical">
-                            <i class="fas fa-times"></i>
-                        </div>
-                        <div class="alert-content">
-                            <h4>Backup Storage Offline</h4>
-                            <p>Device NW-DV-004 has been offline for 2 hours</p>
-                            <small class="alert-time">15 minutes ago</small>
-                        </div>
+                <div class="traffic-chart-container">
+                    <div class="widget-header">
+                        <h2><i class="fas fa-chart-line"></i> Traffic Over Time</h2>
+                        <select class="time-selector">
+                            <option>Last Hour</option>
+                            <option>Last 24 Hours</option>
+                            <option>Last 7 Days</option>
+                        </select>
                     </div>
-                    
-                    <div class="alert-item">
-                        <div class="alert-icon warning">
-                            <i class="fas fa-exclamation"></i>
-                        </div>
-                        <div class="alert-content">
-                            <h4>High CPU Usage</h4>
-                            <p>Security Gateway CPU at 95% for 10 minutes</p>
-                            <small class="alert-time">42 minutes ago</small>
-                        </div>
-                    </div>
-                    
-                    <div class="alert-item">
-                        <div class="alert-icon info">
-                            <i class="fas fa-info"></i>
-                        </div>
-                        <div class="alert-content">
-                            <h4>Network Scan Complete</h4>
-                            <p>Scheduled security scan completed with 2 warnings</p>
-                            <small class="alert-time">2 hours ago</small>
+                    <div class="traffic-chart">
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-line"></i>
+                            <p>Network Traffic Visualization</p>
                         </div>
                     </div>
                 </div>
@@ -1308,8 +1389,8 @@
             <footer class="admin-footer">
                 <div class="footer-content">
                     <div class="footer-left">
-                        <p>Network Status: <span id="network-status">All systems operational</span></p>
-                        <p>Last Scan: <span id="last-scan">15 minutes ago</span></p>
+                        <p>Station Time: <span id="admin-time"></span></p>
+                        <p>Last Network Scan: <span id="last-check">5 minutes ago</span></p>
                     </div>
                     <div class="footer-right">
                         <p>Network Portal v2.4.1</p>
@@ -1318,7 +1399,6 @@
             </footer>
         </main>
     </div>
-
 
     <script>
         // Loading Screen
@@ -1415,22 +1495,17 @@
                 month: 'long',
                 day: 'numeric'
             };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
             
-            // Only update if element exists
-            const dateElement = document.getElementById('current-date');
-            if (dateElement) {
-                dateElement.textContent = now.toLocaleDateString('en-US', options);
-            }
-            
-            // Update network time in footer
+            // Update admin time in footer
             const timeOptions = {
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit'
             };
-            const networkTime = document.getElementById('network-time');
-            if (networkTime) {
-                networkTime.textContent = now.toLocaleTimeString('en-US', timeOptions);
+            const adminTime = document.getElementById('admin-time');
+            if (adminTime) {
+                adminTime.textContent = now.toLocaleTimeString('en-US', timeOptions);
             }
         }
 
@@ -1461,6 +1536,17 @@
             });
         }
 
+        // Network Node Interactions
+        function setupNetworkNodes() {
+            const nodes = document.querySelectorAll('.network-node');
+            nodes.forEach(node => {
+                node.addEventListener('click', function() {
+                    // In a real app, this would show detailed node information
+                    alert(`Node ${this.querySelector('span').textContent} selected`);
+                });
+            });
+        }
+
         // Theme Toggle Functionality
         function setupThemeToggle() {
             const themeToggle = document.getElementById('theme-toggle');
@@ -1484,87 +1570,20 @@
             });
         }
 
-        // Emergency Stop Modal
-        function setupEmergencyModal() {
-            const emergencyBtn = document.getElementById('emergency-stop-btn');
-            const modal = document.getElementById('emergency-modal');
-            const closeModal = document.getElementById('close-emergency-modal');
-            const cancelBtn = document.getElementById('cancel-emergency');
-            
-            if (!emergencyBtn || !modal || !closeModal || !cancelBtn) return;
-            
-            // Open modal
-            emergencyBtn.addEventListener('click', function() {
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-            
-            // Close modal
-            function closeEmergencyModal() {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-            
-            closeModal.addEventListener('click', closeEmergencyModal);
-            cancelBtn.addEventListener('click', closeEmergencyModal);
-            
-            // Confirm emergency stop
-            const confirmBtn = document.getElementById('confirm-emergency');
-            if (confirmBtn) {
-                confirmBtn.addEventListener('click', function() {
-                    alert('EMERGENCY STOP INITIATED! All network services will be shut down.');
-                    closeEmergencyModal();
-                });
-            }
-            
-            // Close when clicking outside modal
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeEmergencyModal();
-                }
-            });
-        }
-
-        // Network Scan Functionality
-        function setupNetworkScan() {
-            const scanBtn = document.getElementById('scan-network-btn');
-            if (!scanBtn) return;
-            
-            scanBtn.addEventListener('click', function() {
-                // Show loading state
-                scanBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Scanning...';
-                
-                // Simulate network scan
-                setTimeout(function() {
-                    scanBtn.innerHTML = '<i class="fas fa-network-wired"></i> Scan Network';
-                    alert('Network scan completed successfully! Found 12 active devices.');
-                    
-                    // Update last scan time
-                    const now = new Date();
-                    const timeOptions = {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    };
-                    document.getElementById('last-scan').textContent = 'just now';
-                }, 3000);
-            });
-        }
-
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             setupMobileMenu();
             setupHeaderScroll();
             updateCurrentDate();
             setupAdminDropdown();
+            setupNetworkNodes();
             setupThemeToggle();
-            setupEmergencyModal();
-            setupNetworkScan();
             
-            // Update time every minute
-            setInterval(updateCurrentDate, 60000);
+            // Update time every second
+            setInterval(updateCurrentDate, 1000);
             
             // Add hover effect to widgets
-            const widgets = document.querySelectorAll('.widget');
+            const widgets = document.querySelectorAll('.widget, .stat-card');
             widgets.forEach(widget => {
                 widget.addEventListener('mouseenter', () => {
                     widget.style.transform = 'translateY(-5px)';
@@ -1582,8 +1601,6 @@
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', function() {
                     alert('Admin session ended. Logging out...');
-                    // Redirect to login page
-                    window.location.href = 'login.html';
                 });
             }
         });
