@@ -28,11 +28,17 @@
 ## 🚀 Live Demo📌👇 (If the link for Demo doesn't open, try using a VPN) ⚠️
 
 > 🌐 [Live GitHub Page](https://vidakhoshpey22.github.io/Nebula-Works)  
-> 🎥 [Watch Demo Video on YouTube](https://youtube.com/your-demo-link) *(optional)*
+
+---
+## 🎬 Video Demo
+
+[![Watch on YouTube](https://img.youtube.com/vi/vqaofcqFgxI/0.jpg)](https://youtu.be/vqaofcqFgxI?si=m4uVayaTMVpTCxKr)
+
+> 📺 Click the image above to watch the full demo on YouTube!
 
 ---
 
-## 🌠 Animated Demo Preview
+## 🌠 Animated Demo Preview(Please wait a bit to Load👇)
 
 <p align="center">
   <img src="https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/e9f0da09c6584da709b3af9da9aa338ebe5f2a3c/assets/Nebula-gif.gif" width="700" alt="NebulaWorks Demo Animation">
