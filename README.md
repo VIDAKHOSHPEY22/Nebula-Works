@@ -35,7 +35,7 @@
 ## 🌠 Animated Demo Preview
 
 <p align="center">
-  <img src="https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/f718306289a17abffcfd32cdd805586c61b9425a/assets/Nebula.gif?raw=true" width="700" alt="NebulaWorks Demo Animation">
+  <img src="https://github.com/VIDAKHOSHPEY22/Nebula-Works/blob/e9f0da09c6584da709b3af9da9aa338ebe5f2a3c/assets/Nebula-gif.gif" width="700" alt="NebulaWorks Demo Animation">
 </p>
 
 ---
