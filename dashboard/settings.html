@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings | NebulaWorks</title>
+    <title>Settings | NebulaWorks Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="logo.png">
     <style>
@@ -44,12 +44,31 @@
             --white: #0a0a20;
         }
 
-        body.light-theme .settings-card,
+        body.light-theme .widget,
+        body.light-theme .system-status,
+        body.light-theme .welcome-section,
+        body.light-theme .quick-link-card,
         body.light-theme .sidebar,
         body.light-theme header,
-        body.light-theme .user-dropdown {
+        body.light-theme .user-dropdown,
+        body.light-theme .modal-content {
             background-color: var(--dark);
             border-color: rgba(0, 0, 0, 0.1);
+            color: var(--light);
+        }
+
+        body.light-theme .mission-item,
+        body.light-theme .resource-item {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .mission-item:hover,
+        body.light-theme .resource-item:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+        }
+
+        body.light-theme .gauge::before {
+            background-color: var(--dark);
         }
 
         * {
@@ -124,6 +143,10 @@
             z-index: 100;
             transition: var(--transition);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-scrolled {
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
         }
 
         .logo {
@@ -311,7 +334,7 @@
 
         .user-dropdown-avatar {
             width: 50px;
-            height: 50px;
+            height: 20px;
             border-radius: 50%;
             background-color: var(--primary);
             color: white;
@@ -483,6 +506,39 @@
             flex-grow: 1;
         }
 
+        .company-news {
+            margin-top: 30px;
+            padding: 0 25px;
+        }
+
+        .company-news h3 {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-item {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            padding-left: 8px;
+            border-left: 2px solid var(--dark-gray);
+        }
+
+        .news-item a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .news-item a:hover {
+            color: var(--primary);
+        }
+
         /* Content Area */
         .content {
             flex: 1;
@@ -521,86 +577,125 @@
             font-size: 0.95rem;
         }
 
+        .weather-widget {
+            display: flex;
+            align-items: center;
+            background-color: rgba(106, 0, 255, 0.1);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(106, 0, 255, 0.2);
+        }
+
+        .weather-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            color: var(--primary);
+        }
+
+        .weather-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 3px;
+            color: var(--white);
+        }
+
+        .weather-info p {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+        }
+
         /* Settings Section */
-        .settings-section {
+        .settings-container {
             background-color: var(--dark);
             border-radius: var(--border-radius);
-            padding: 25px;
-            margin-bottom: 30px;
+            padding: 30px;
             box-shadow: var(--widget-shadow);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .settings-section h2 {
+        .settings-header {
+            margin-bottom: 30px;
+        }
+
+        .settings-header h2 {
             font-size: 1.5rem;
-            margin-bottom: 25px;
             color: var(--white);
+            margin-bottom: 10px;
+        }
+
+        .settings-header p {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
+        .settings-tabs {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
         }
 
-        .settings-section h2 i {
-            color: var(--primary);
-        }
-
-        .settings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        .settings-card {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: var(--border-radius);
-            padding: 20px;
+        .settings-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            color: var(--medium-gray);
+            font-weight: 500;
             transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
         }
 
-        .settings-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            border-color: var(--primary);
-        }
-
-        .settings-card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .settings-card-header i {
-            font-size: 1.5rem;
+        .settings-tab.active {
             color: var(--primary);
-            margin-right: 15px;
         }
 
-        .settings-card-header h3 {
+        .settings-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .settings-tab:hover:not(.active) {
+            color: var(--light-gray);
+        }
+
+        .settings-content {
+            display: none;
+        }
+
+        .settings-content.active {
+            display: block;
+        }
+
+        .settings-group {
+            margin-bottom: 30px;
+        }
+
+        .settings-group h3 {
             font-size: 1.2rem;
             color: var(--white);
-        }
-
-        .settings-card-body {
-            margin-top: 15px;
-        }
-
-        .form-group {
             margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
+        .form-row {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .form-label {
+            width: 200px;
             color: var(--light-gray);
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 0.95rem;
         }
 
         .form-control {
-            width: 100%;
+            flex: 1;
             padding: 10px 15px;
-            background-color: var(--dark-gray);
+            background-color: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: var(--border-radius);
             color: var(--white);
@@ -611,35 +706,40 @@
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(106, 0, 255, 0.2);
+            box-shadow: 0 0 0 2px rgba(106, 0, 255, 0.2);
         }
 
         .form-select {
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23a0a0c0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23707090' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 16px 12px;
+            background-position: right 10px center;
+            background-size: 1em;
+        }
+
+        .form-text {
+            font-size: 0.85rem;
+            color: var(--medium-gray);
+            margin-top: 5px;
         }
 
         .form-check {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
             cursor: pointer;
+            user-select: none;
         }
 
         .form-check-input {
             appearance: none;
-            width: 20px;
-            height: 20px;
-            background-color: var(--dark-gray);
+            width: 18px;
+            height: 18px;
+            background-color: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             margin-right: 10px;
             position: relative;
             transition: var(--transition);
-            cursor: pointer;
         }
 
         .form-check-input:checked {
@@ -656,12 +756,12 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
 
         .form-check-label {
             color: var(--light-gray);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .btn {
@@ -692,37 +792,58 @@
             background-color: rgba(255, 255, 255, 0.2);
         }
 
-        .settings-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Danger Zone */
-        .danger-zone {
+        .btn-danger {
             background-color: rgba(255, 85, 85, 0.1);
-            border-radius: var(--border-radius);
-            padding: 25px;
-            margin-top: 30px;
-            border: 1px solid rgba(255, 85, 85, 0.2);
+            color: var(--danger);
         }
 
-        .danger-zone h3 {
-            font-size: 1.3rem;
-            color: var(--danger);
-            margin-bottom: 15px;
+        .btn-danger:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        .avatar-upload {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 20px;
         }
 
-        .danger-zone p {
-            color: var(--light-gray);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-upload-btn {
+            position: relative;
+        }
+
+        .avatar-upload-btn input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 30px 0;
         }
 
         /* Responsive Styles */
@@ -753,8 +874,24 @@
                 --sidebar-width: 260px;
             }
             
-            .settings-grid {
-                grid-template-columns: 1fr;
+            .welcome-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .weather-widget {
+                width: 100%;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .form-label {
+                width: 100%;
+                margin-bottom: 8px;
             }
         }
 
@@ -779,12 +916,24 @@
                 padding: 20px 15px;
             }
             
-            .settings-footer {
-                flex-direction: column;
+            .settings-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 5px;
             }
             
-            .btn {
-                width: 100%;
+            .settings-tab {
+                padding: 10px 15px;
+            }
+            
+            .avatar-upload {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .user-dropdown {
+                width: 90%;
+                right: 5%;
             }
         }
     </style>
@@ -830,12 +979,12 @@
             <div class="user-dropdown-header">
                 <div class="user-dropdown-avatar" id="dropdown-avatar">U</div>
                 <div class="user-dropdown-info">
-                    <h3 id="dropdown-username">User</h3>
-                    <p id="dropdown-useremail">user@nebulaworks.space</p>
+                    <h3 id="dropdown-username">Commander</h3>
+                    <p id="dropdown-useremail">commander@nebulaworks.space</p>
                 </div>
             </div>
             <ul class="user-dropdown-menu">
-                <li><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="#" id="profile-link"><i class="fas fa-user"></i> My Profile</a></li>
                 <li><a href="settings.html" class="active"><i class="fas fa-cog"></i> Settings</a></li>
                 <li><a href="messages.html"><i class="fas fa-envelope"></i> Messages</a></li>
                 <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
@@ -864,6 +1013,19 @@
                 <li><a href="resources.html"><i class="fas fa-file-alt"></i> <span>Resources</span></a></li>
                 <li><a href="settings.html" class="active"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
             </ul>
+            
+            <div class="company-news">
+                <h3><i class="fas fa-newspaper"></i> Company News</h3>
+                <div class="news-item">
+                    <a href="#">Q3 Financial Results Announced</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">New Mars Colony Initiative</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">Employee Wellness Program Launched</a>
+                </div>
+            </div>
         </nav>
         
         <!-- Content Area -->
@@ -871,162 +1033,305 @@
             <!-- Welcome Section -->
             <section class="welcome-section">
                 <div class="welcome-text">
-                    <h1>Settings <span>Panel</span></h1>
-                    <p>Customize your NebulaWorks experience</p>
+                    <h1>Settings, <span id="username">Commander</span></h1>
+                    <p id="current-date">Monday, July 15, 2023</p>
                 </div>
-            </section>
-            
-            <!-- Account Settings -->
-            <section class="settings-section">
-                <h2><i class="fas fa-user-cog"></i> Account Settings</h2>
-                <div class="settings-grid">
-                    <!-- Profile Settings -->
-                    <div class="settings-card">
-                        <div class="settings-card-header">
-                            <i class="fas fa-user"></i>
-                            <h3>Profile Information</h3>
-                        </div>
-                        <div class="settings-card-body">
-                            <div class="form-group">
-                                <label for="username">Username</label>
-                                <input type="text" id="username" class="form-control" value="twin_dev">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email Address</label>
-                                <input type="email" id="email" class="form-control" value="twin@nebulaworks.space">
-                            </div>
-                            <div class="form-group">
-                                <label for="bio">Bio</label>
-                                <textarea id="bio" class="form-control" rows="3">Twin developers creating cosmic web experiences</textarea>
-                            </div>
-                        </div>
+                <div class="weather-widget" id="weather-widget">
+                    <div class="weather-icon">
+                        <i class="fas fa-sun"></i>
                     </div>
-                    
-                    <!-- Security Settings -->
-                    <div class="settings-card">
-                        <div class="settings-card-header">
-                            <i class="fas fa-shield-alt"></i>
-                            <h3>Security</h3>
-                        </div>
-                        <div class="settings-card-body">
-                            <div class="form-group">
-                                <label for="current-password">Current Password</label>
-                                <input type="password" id="current-password" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="new-password">New Password</label>
-                                <input type="password" id="new-password" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="confirm-password">Confirm Password</label>
-                                <input type="password" id="confirm-password" class="form-control">
-                            </div>
-                        </div>
+                    <div class="weather-info">
+                        <h3 id="weather-temp">24°C</h3>
+                        <p id="weather-desc">Sunny, Mars Base Alpha</p>
                     </div>
                 </div>
             </section>
             
-            <!-- Preferences -->
-            <section class="settings-section">
-                <h2><i class="fas fa-sliders-h"></i> Preferences</h2>
-                <div class="settings-grid">
-                    <!-- Display Settings -->
-                    <div class="settings-card">
-                        <div class="settings-card-header">
-                            <i class="fas fa-palette"></i>
-                            <h3>Display</h3>
+            <!-- Settings Container -->
+            <div class="settings-container">
+                <div class="settings-header">
+                    <h2>Account Settings</h2>
+                    <p>Manage your account preferences and security settings</p>
+                </div>
+                
+                <div class="settings-tabs">
+                    <div class="settings-tab active" data-tab="profile">Profile</div>
+                    <div class="settings-tab" data-tab="security">Security</div>
+                    <div class="settings-tab" data-tab="notifications">Notifications</div>
+                    <div class="settings-tab" data-tab="preferences">Preferences</div>
+                </div>
+                
+                <!-- Profile Settings -->
+                <div class="settings-content active" id="profile-content">
+                    <div class="settings-group">
+                        <h3>Personal Information</h3>
+                        <div class="form-row">
+                            <label class="form-label">Avatar</label>
+                            <div class="avatar-upload">
+                                <div class="avatar-preview" id="avatar-preview">
+                                    U
+                                </div>
+                                <div class="avatar-upload-btn">
+                                    <button class="btn btn-secondary">Change Avatar</button>
+                                    <input type="file" id="avatar-upload" accept="image/*">
+                                </div>
+                            </div>
                         </div>
-                        <div class="settings-card-body">
-                            <div class="form-group">
-                                <label for="theme">Theme</label>
-                                <select id="theme" class="form-control form-select">
-                                    <option value="dark">Dark Mode</option>
-                                    <option value="light">Light Mode</option>
-                                    <option value="system">System Default</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="accent-color">Accent Color</label>
-                                <select id="accent-color" class="form-control form-select">
-                                    <option value="purple">Purple</option>
-                                    <option value="blue">Blue</option>
-                                    <option value="green">Green</option>
-                                    <option value="red">Red</option>
-                                    <option value="orange">Orange</option>
-                                </select>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" id="animations" class="form-check-input" checked>
-                                <label for="animations" class="form-check-label">Enable Animations</label>
-                            </div>
+                        <div class="form-row">
+                            <label for="full-name" class="form-label">Full Name</label>
+                            <input type="text" id="full-name" class="form-control" value="Commander User">
+                        </div>
+                        <div class="form-row">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" id="email" class="form-control" value="commander@nebulaworks.space">
+                        </div>
+                        <div class="form-row">
+                            <label for="position" class="form-label">Position</label>
+                            <input type="text" id="position" class="form-control" value="Mission Commander">
+                        </div>
+                        <div class="form-row">
+                            <label for="department" class="form-label">Department</label>
+                            <select id="department" class="form-control form-select">
+                                <option>Command</option>
+                                <option>Science</option>
+                                <option>Engineering</option>
+                                <option>Medical</option>
+                                <option>Operations</option>
+                            </select>
                         </div>
                     </div>
                     
-                    <!-- Notification Settings -->
-                    <div class="settings-card">
-                        <div class="settings-card-header">
-                            <i class="fas fa-bell"></i>
-                            <h3>Notifications</h3>
+                    <div class="divider"></div>
+                    
+                    <div class="settings-group">
+                        <h3>Contact Information</h3>
+                        <div class="form-row">
+                            <label for="station" class="form-label">Station</label>
+                            <input type="text" id="station" class="form-control" value="Mars Base Alpha">
                         </div>
-                        <div class="settings-card-body">
-                            <div class="form-check">
-                                <input type="checkbox" id="email-notifications" class="form-check-input" checked>
-                                <label for="email-notifications" class="form-check-label">Email Notifications</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" id="push-notifications" class="form-check-input" checked>
-                                <label for="push-notifications" class="form-check-label">Push Notifications</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" id="message-notifications" class="form-check-input" checked>
-                                <label for="message-notifications" class="form-check-label">Message Alerts</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" id="project-updates" class="form-check-input">
-                                <label for="project-updates" class="form-check-label">Project Updates</label>
-                            </div>
+                        <div class="form-row">
+                            <label for="comm-id" class="form-label">Comm ID</label>
+                            <input type="text" id="comm-id" class="form-control" value="MA-CC-001">
                         </div>
+                        <div class="form-row">
+                            <label for="emergency-contact" class="form-label">Emergency Contact</label>
+                            <input type="text" id="emergency-contact" class="form-control" value="Earth Central Command">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row" style="justify-content: flex-end; margin-top: 30px;">
+                        <button class="btn btn-secondary" style="margin-right: 10px;">Cancel</button>
+                        <button class="btn btn-primary">Save Changes</button>
                     </div>
                 </div>
                 
-                <div class="settings-footer">
-                    <button class="btn btn-secondary">Cancel</button>
-                    <button class="btn btn-primary">Save Changes</button>
-                </div>
-            </section>
-            
-            <!-- Danger Zone -->
-            <section class="danger-zone">
-                <h3><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
-                <p>These actions are irreversible. Please proceed with caution.</p>
-                <div class="settings-grid">
-                    <div class="settings-card">
-                        <div class="settings-card-header">
-                            <i class="fas fa-trash-alt"></i>
-                            <h3>Delete Account</h3>
+                <!-- Security Settings -->
+                <div class="settings-content" id="security-content">
+                    <div class="settings-group">
+                        <h3>Password</h3>
+                        <div class="form-row">
+                            <label for="current-password" class="form-label">Current Password</label>
+                            <input type="password" id="current-password" class="form-control">
                         </div>
-                        <div class="settings-card-body">
-                            <p>Permanently delete your account and all associated data.</p>
-                            <button class="btn btn-secondary" style="background-color: rgba(255, 85, 85, 0.1); color: var(--danger);">
-                                <i class="fas fa-trash-alt"></i> Delete Account
-                            </button>
+                        <div class="form-row">
+                            <label for="new-password" class="form-label">New Password</label>
+                            <input type="password" id="new-password" class="form-control">
+                            <p class="form-text">Password must be at least 8 characters long</p>
+                        </div>
+                        <div class="form-row">
+                            <label for="confirm-password" class="form-label">Confirm Password</label>
+                            <input type="password" id="confirm-password" class="form-control">
                         </div>
                     </div>
                     
-                    <div class="settings-card">
-                        <div class="settings-card-header">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <h3>Logout Everywhere</h3>
+                    <div class="divider"></div>
+                    
+                    <div class="settings-group">
+                        <h3>Two-Factor Authentication</h3>
+                        <div class="form-row">
+                            <label class="form-label">Status</label>
+                            <div class="form-check">
+                                <input type="checkbox" id="two-factor" class="form-check-input" checked>
+                                <label for="two-factor" class="form-check-label">Enabled</label>
+                            </div>
                         </div>
-                        <div class="settings-card-body">
-                            <p>Log out of all devices and revoke all active sessions.</p>
-                            <button class="btn btn-secondary">
-                                <i class="fas fa-sign-out-alt"></i> Logout Everywhere
-                            </button>
+                        <div class="form-row">
+                            <label class="form-label">Recovery Codes</label>
+                            <button class="btn btn-secondary">View Recovery Codes</button>
+                            <p class="form-text">Generate new codes if you've used all of them</p>
                         </div>
                     </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="settings-group">
+                        <h3>Active Sessions</h3>
+                        <div class="formLog Out Other Devices</button>
+                                <p class="form-text">This will log you out from all other devices</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row" style="justify-content: flex-end; margin-top: 30px;">
+                        <button class="btn btn-primary">Update Security Settings</button>
+                    </div>
                 </div>
-            </section>
+                
+                <!-- Notification Settings -->
+                <div class="settings-content" id="notifications-content">
+                    <div class="settings-group">
+                        <h3>Notification Preferences</h3>
+                        <div class="form-row">
+                            <label class="form-label">Email Notifications</label>
+                            <div class="form-check">
+                                <input type="checkbox" id="email-notifications" class="form-check-input" checked>
+                                <label for="email-notifications" class="form-check-label">Receive email notifications</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Frequency</label>
+                            <select class="form-control form-select">
+                                <option>Immediately</option>
+                                <option>Daily Digest</option>
+                                <option>Weekly Summary</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="settings-group">
+                        <h3>Notification Types</h3>
+                        <div class="form-row">
+                            <label class="form-label">Mission Alerts</label>
+                            <div class="form-check">
+                                <input type="checkbox" id="mission-alerts" class="form-check-input" checked>
+                                <label for="mission-alerts" class="form-check-label">Critical mission alerts</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label"></label>
+                            <div class="form-check">
+                                <input type="checkbox" id="mission-updates" class="form-check-input">
+                                <label for="mission-updates" class="form-check-label">Mission status updates</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">System Alerts</label>
+                            <div class="form-check">
+                                <input type="checkbox" id="system-critical" class="form-check-input" checked>
+                                <label for="system-critical" class="form-check-label">Critical system alerts</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label"></label>
+                            <div class="form-check">
+                                <input type="checkbox" id="system-warnings" class="form-check-input" checked>
+                                <label for="system-warnings" class="form-check-label">System warnings</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Team Communications</label>
+                            <div class="form-check">
+                                <input type="checkbox" id="team-messages" class="form-check-input" checked>
+                                <label for="team-messages" class="form-check-label">Direct messages</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label"></label>
+                            <div class="form-check">
+                                <input type="checkbox" id="team-mentions" class="form-check-input" checked>
+                                <label for="team-mentions" class="form-check-label">Mentions</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row" style="justify-content: flex-end; margin-top: 30px;">
+                        <button class="btn btn-primary">Save Notification Settings</button>
+                    </div>
+                </div>
+                
+                <!-- Preferences Settings -->
+                <div class="settings-content" id="preferences-content">
+                    <div class="settings-group">
+                        <h3>Display Preferences</h3>
+                        <div class="form-row">
+                            <label class="form-label">Theme</label>
+                            <select class="form-control form-select" id="theme-preference">
+                                <option value="dark">Dark Mode</option>
+                                <option value="light">Light Mode</option>
+                                <option value="system">System Preference</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Density</label>
+                            <select class="form-control form-select">
+                                <option>Comfortable</option>
+                                <option>Compact</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="settings-group">
+                        <h3>Language & Region</h3>
+                        <div class="form-row">
+                            <label class="form-label">Language</label>
+                            <select class="form-control form-select">
+                                <option>English</option>
+                                <option>Spanish</option>
+                                <option>French</option>
+                                <option>German</option>
+                                <option>Chinese</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Time Zone</label>
+                            <select class="form-control form-select">
+                                <option>Mars Base Alpha Standard Time (UTC+0)</option>
+                                <option>Earth Central Time (UTC-6)</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Date Format</label>
+                            <select class="form-control form-select">
+                                <option>MM/DD/YYYY</option>
+                                <option>DD/MM/YYYY</option>
+                                <option>YYYY-MM-DD</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="settings-group">
+                        <h3>Data Preferences</h3>
+                        <div class="form-row">
+                            <label class="form-label">Data Collection</label>
+                            <div class="form-check">
+                                <input type="checkbox" id="analytics" class="form-check-input" checked>
+                                <label for="analytics" class="form-check-label">Allow usage analytics</label>
+                            </div>
+                            <p class="form-text">Help improve NebulaWorks by sharing anonymous usage data</p>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Data Export</label>
+                            <button class="btn btn-secondary">Export My Data</button>
+                            <p class="form-text">Download a copy of all your data in JSON format</p>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Account Deletion</label>
+                            <button class="btn btn-danger">Delete Account</button>
+                            <p class="form-text">Permanently delete your account and all associated data</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row" style="justify-content: flex-end; margin-top: 30px;">
+                        <button class="btn btn-primary">Save Preferences</button>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -1082,18 +1387,133 @@
             const navLinks = document.querySelectorAll('.nav-menu a');
             navLinks.forEach(link => {
                 link.addEventListener('click', function() {
-                    if (window.innerWidth <= 992) { // Only for mobile
-                        sidebar.classList.remove('active');
-                        overlay.classList.remove('active');
-                        menuToggle.classList.remove('active');
-                        const icon = menuToggle.querySelector('i');
-                        icon.classList.remove('fa-times');
-                        icon.classList.add('fa-bars');
-                    }
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
                 });
             });
         }
     
+        // Header Scroll Effect
+        function setupHeaderScroll() {
+            const header = document.getElementById('header');
+            if (!header) return;
+            
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', function() {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll <= 0) {
+                    header.classList.remove('header-scrolled');
+                    return;
+                }
+                
+                if (currentScroll > lastScroll && !header.classList.contains('header-scrolled')) {
+                    header.classList.add('header-scrolled');
+                } 
+                
+                lastScroll = currentScroll;
+            });
+        }
+
+        // Update current date
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Get user data from URL or localStorage
+        function getUserData() {
+            // Check URL for user parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const userFromUrl = urlParams.get('user');
+            
+            if (userFromUrl) {
+                const userData = {
+                    fullname: decodeURIComponent(userFromUrl),
+                    email: "commander@nebulaworks.space",
+                    position: "Mission Commander",
+                    department: "Command",
+                    joinDate: "January 15, 2022"
+                };
+                
+                // Store in localStorage for future visits
+                localStorage.setItem('nebulaWorksUser', JSON.stringify(userData));
+                return userData;
+            }
+            
+            // Check localStorage for user data
+            const storedUser = localStorage.getItem('nebulaWorksUser');
+            if (storedUser) {
+                return JSON.parse(storedUser);
+            }
+            
+            // Default fallback
+            return {
+                fullname: "Commander",
+                email: "commander@nebulaworks.space",
+                position: "Mission Commander",
+                department: "Command",
+                joinDate: "January 15, 2022"
+            };
+        }
+
+        // Update user interface with user data
+        function updateUserInterface() {
+            const userData = getUserData();
+            
+            // Get first character of the name for avatar
+            const avatarChar = userData.fullname.charAt(0).toUpperCase();
+            
+            // Update welcome message
+            const usernameElement = document.getElementById('username');
+            if (usernameElement) {
+                usernameElement.textContent = userData.fullname;
+            }
+            
+            // Update user avatar in header
+            const userAvatar = document.getElementById('user-avatar');
+            if (userAvatar) {
+                userAvatar.textContent = avatarChar;
+            }
+            
+            // Update dropdown info
+            const dropdownAvatar = document.getElementById('dropdown-avatar');
+            const dropdownUsername = document.getElementById('dropdown-username');
+            const dropdownUseremail = document.getElementById('dropdown-useremail');
+            
+            if (dropdownAvatar) dropdownAvatar.textContent = avatarChar;
+            if (dropdownUsername) dropdownUsername.textContent = userData.fullname;
+            if (dropdownUseremail) dropdownUseremail.textContent = userData.email;
+            
+            // Update avatar preview in settings
+            const avatarPreview = document.getElementById('avatar-preview');
+            if (avatarPreview) {
+                avatarPreview.textContent = avatarChar;
+            }
+            
+            // Update form fields with user data
+            const fullNameInput = document.getElementById('full-name');
+            const emailInput = document.getElementById('email');
+            const positionInput = document.getElementById('position');
+            const departmentSelect = document.getElementById('department');
+            
+            if (fullNameInput) fullNameInput.value = userData.fullname;
+            if (emailInput) emailInput.value = userData.email;
+            if (positionInput) positionInput.value = userData.position;
+            if (departmentSelect) departmentSelect.value = userData.department;
+        }
+
         // User Dropdown Toggle
         function setupUserDropdown() {
             const userAvatar = document.getElementById('user-avatar');
@@ -1122,6 +1542,132 @@
             });
         }
 
+        // Settings Tabs
+        function setupSettingsTabs() {
+            const tabs = document.querySelectorAll('.settings-tab');
+            const contents = document.querySelectorAll('.settings-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-content`).classList.add('active');
+                });
+            });
+        }
+
+        // Avatar Upload Preview
+        function setupAvatarUpload() {
+            const avatarUpload = document.getElementById('avatar-upload');
+            const avatarPreview = document.getElementById('avatar-preview');
+            
+            if (!avatarUpload || !avatarPreview) return;
+            
+            avatarUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(event) {
+                        // Create image element
+                        const img = document.createElement('img');
+                        img.src = event.target.result;
+                        
+                        // Clear preview and add image
+                        avatarPreview.innerHTML = '';
+                        avatarPreview.appendChild(img);
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Logout Functionality
+        function setupLogout() {
+            const logoutBtn = document.getElementById('logout-btn');
+            
+            if (!logoutBtn) return;
+            
+            logoutBtn.addEventListener('click', function() {
+                // Clear user data from localStorage
+                localStorage.removeItem('nebulaWorksUser');
+                
+                // Redirect to login page
+                window.location.href = 'index.html';
+            });
+        }
+
+        // Weather API Integration
+        async function fetchWeatherData() {
+            const city = 'Tehran'; // Default city
+            // Using a free testing endpoint with shared key (may have rate limits)
+            const url = `https://api.weatherapi.com/v1/current.json?key=3a9a8e0d3b5e4f5d9a922505242405&q=${city}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateWeatherWidget(data);
+                } else {
+                    console.error('Weather API error:', data.error?.message);
+                    // Fallback to default values
+                    document.getElementById('weather-temp').textContent = '24°C';
+                    document.getElementById('weather-desc').textContent = 'Sunny, Tehran';
+                }
+            } catch (error) {
+                console.error('Failed to fetch weather data:', error);
+                // Fallback to default values
+                document.getElementById('weather-temp').textContent = '24°C';
+                document.getElementById('weather-desc').textContent = 'Sunny, Tehran';
+            }
+        }
+
+        function updateWeatherWidget(data) {
+            const temp = Math.round(data.current.temp_c);
+            const description = data.current.condition.text;
+            const city = data.location.name;
+            const iconCode = data.current.condition.icon;
+            
+            document.getElementById('weather-temp').textContent = `${temp}°C`;
+            document.getElementById('weather-desc').textContent = `${description}, ${city}`;
+            
+            // Update weather icon based on condition
+            const weatherIcon = document.querySelector('.weather-icon i');
+            if (weatherIcon) {
+                // Map WeatherAPI conditions to Font Awesome icons
+                const conditionMap = {
+                    'Sunny': 'sun',
+                    'Clear': 'sun',
+                    'Partly cloudy': 'cloud-sun',
+                    'Cloudy': 'cloud',
+                    'Overcast': 'cloud',
+                    'Mist': 'smog',
+                    'Rain': 'cloud-rain',
+                    'Thunderstorm': 'bolt',
+                    'Snow': 'snowflake',
+                    'Fog': 'smog'
+                };
+                
+                // Find matching icon or default to sun
+                let faIcon = 'sun';
+                for (const [key, value] of Object.entries(conditionMap)) {
+                    if (description.includes(key)) {
+                        faIcon = value;
+                        break;
+                    }
+                }
+                
+                weatherIcon.className = `fas fa-${faIcon}`;
+            }
+        }
+
         // Theme Toggle Functionality
         function setupThemeToggle() {
             const themeToggle = document.getElementById('theme-toggle');
@@ -1145,66 +1691,18 @@
             });
         }
 
-        // Update current user info
-        function updateUserInfo() {
-            // Get user from URL or default to Vida
-            const urlParams = new URLSearchParams(window.location.search);
-            const user = urlParams.get('user') || 'vida';
-            
-            const userData = {
-                vida: {
-                    name: "Vida Khoshpey",
-                    email: "vida@nebulaworks.space",
-                    avatar: "V"
-                },
-                yalda: {
-                    name: "Yalda Khoshpey",
-                    email: "yalda@nebulaworks.space",
-                    avatar: "Y"
-                }
-            };
-            
-            const currentUser = userData[user] || userData.vida;
-            
-            // Update UI elements
-            document.getElementById('dropdown-username').textContent = currentUser.name;
-            document.getElementById('dropdown-useremail').textContent = currentUser.email;
-            document.getElementById('user-avatar').textContent = currentUser.avatar;
-            document.getElementById('dropdown-avatar').textContent = currentUser.avatar;
-            document.getElementById('username').value = user;
-            document.getElementById('email').value = currentUser.email;
-        }
-
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             setupMobileMenu();
+            setupHeaderScroll();
+            updateCurrentDate();
+            updateUserInterface();
             setupUserDropdown();
+            setupSettingsTabs();
+            setupAvatarUpload();
+            setupLogout();
+            fetchWeatherData();
             setupThemeToggle();
-            updateUserInfo();
-            
-            // Set active theme in dropdown
-            const savedTheme = localStorage.getItem('nebulaTheme') || 'dark';
-            document.getElementById('theme').value = savedTheme === 'light-theme' ? 'light' : 'dark';
-            
-            // Theme dropdown change handler
-            document.getElementById('theme').addEventListener('change', function() {
-                const themeToggle = document.getElementById('theme-toggle');
-                if (this.value === 'light') {
-                    document.body.classList.add('light-theme');
-                    themeToggle.checked = true;
-                    localStorage.setItem('nebulaTheme', 'light-theme');
-                } else {
-                    document.body.classList.remove('light-theme');
-                    themeToggle.checked = false;
-                    localStorage.setItem('nebulaTheme', 'dark-theme');
-                }
-            });
-            
-            // Logout button functionality
-            document.getElementById('logout-btn').addEventListener('click', function() {
-                localStorage.removeItem('nebulaTheme');
-                window.location.href = 'index.html';
-            });
         });
     </script>
 </body>

@@ -1241,32 +1241,60 @@
             }
         }
 
-        // Get current user from URL or default
-        function getCurrentUser() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const userParam = urlParams.get('user');
-            
-            // Default to Vida if no user specified
-            return userParam ? userParam.toLowerCase() : 'vida';
-        }
 
-        // Update UI based on current user
-        function updateUserInterface() {
-            const currentUser = getCurrentUser();
-            const userData = teamMembers.find(member => member.id === currentUser);
+        // Get user data from URL or localStorage
+        function getUserData() {
+            // Check URL for user parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const userFromUrl = urlParams.get('user');
             
-            if (!userData) return;
-            
-            // Update header
-            const userNameElement = document.getElementById('current-user-name');
-            if (userNameElement) {
-                userNameElement.textContent = userData.name.split(' ')[0]; // First name only
+            if (userFromUrl) {
+                const userData = {
+                    fullname: decodeURIComponent(userFromUrl),
+                    email: "commander@nebulaworks.space",
+                    position: "Mission Commander",
+                    department: "Command",
+                    joinDate: "January 15, 2022"
+                };
+                
+                // Store in localStorage for future visits
+                localStorage.setItem('nebulaWorksUser', JSON.stringify(userData));
+                return userData;
             }
             
-            // Update avatar in header
+            // Check localStorage for user data
+            const storedUser = localStorage.getItem('nebulaWorksUser');
+            if (storedUser) {
+                return JSON.parse(storedUser);
+            }
+            
+            // Default fallback
+            return {
+                fullname: "Commander",
+                email: "commander@nebulaworks.space",
+                position: "Mission Commander",
+                department: "Command",
+                joinDate: "January 15, 2022"
+            };
+        }
+
+        // Update user interface with user data
+        function updateUserInterface() {
+            const userData = getUserData();
+            
+            // Get first character of the name for avatar
+            const avatarChar = userData.fullname.charAt(0).toUpperCase();
+            
+            // Update welcome message
+            const usernameElement = document.getElementById('username');
+            if (usernameElement) {
+                usernameElement.textContent = userData.fullname;
+            }
+            
+            // Update user avatar in header
             const userAvatar = document.getElementById('user-avatar');
             if (userAvatar) {
-                userAvatar.textContent = userData.name.charAt(0);
+                userAvatar.textContent = avatarChar;
             }
             
             // Update dropdown info
@@ -1274,9 +1302,37 @@
             const dropdownUsername = document.getElementById('dropdown-username');
             const dropdownUseremail = document.getElementById('dropdown-useremail');
             
-            if (dropdownAvatar) dropdownAvatar.textContent = userData.name.charAt(0);
-            if (dropdownUsername) dropdownUsername.textContent = userData.name;
-            if (dropdownUseremail) dropdownUseremail.textContent = `${userData.id}@nebulaworks.space`;
+            if (dropdownAvatar) dropdownAvatar.textContent = avatarChar;
+            if (dropdownUsername) dropdownUsername.textContent = userData.fullname;
+            if (dropdownUseremail) dropdownUseremail.textContent = userData.email;
+            
+            // Update current user in team widget
+            const currentUserAvatar = document.getElementById('current-user-avatar');
+            const currentUserName = document.getElementById('current-user-name');
+            const currentUserPosition = document.getElementById('current-user-position');
+            
+            if (currentUserAvatar) currentUserAvatar.textContent = avatarChar;
+            if (currentUserName) currentUserName.textContent = userData.fullname;
+            if (currentUserPosition) currentUserPosition.textContent = userData.position;
+            
+            // Update modal info
+            const modalAvatar = document.getElementById('modal-avatar');
+            const modalUsername = document.getElementById('modal-username');
+            const modalUseremail = document.getElementById('modal-useremail');
+            const modalUserposition = document.getElementById('modal-position');
+            const modalFullname = document.getElementById('modal-fullname');
+            const modalEmail = document.getElementById('modal-email');
+            const modalPosition = document.getElementById('modal-position');
+            const modalDepartment = document.getElementById('modal-department');
+            
+            if (modalAvatar) modalAvatar.textContent = avatarChar;
+            if (modalUsername) modalUsername.textContent = userData.fullname;
+            if (modalUseremail) modalUseremail.textContent = userData.email;
+            if (modalUserposition) modalUserposition.textContent = userData.position;
+            if (modalFullname) modalFullname.textContent = userData.fullname;
+            if (modalEmail) modalEmail.textContent = userData.email;
+            if (modalPosition) modalPosition.textContent = userData.position;
+            if (modalDepartment) modalDepartment.textContent = userData.department;
         }
 
         // Render team members

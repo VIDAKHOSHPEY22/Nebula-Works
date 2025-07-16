@@ -995,7 +995,7 @@
             <!-- Welcome Section -->
             <section class="welcome-section">
                 <div class="welcome-text">
-                    <h1>Messages <span>Center</span></h1>
+                    <h1>Messages <span id="current-user-name">User</span></h1>
                     <p id="current-date">Communicate with your team members</p>
                 </div>
             </section>
@@ -1207,6 +1207,7 @@
             document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
         }
 
+  
         // Get user data from URL or localStorage
         function getUserData() {
             // Check URL for user parameter
@@ -1270,6 +1271,34 @@
             if (dropdownAvatar) dropdownAvatar.textContent = avatarChar;
             if (dropdownUsername) dropdownUsername.textContent = userData.fullname;
             if (dropdownUseremail) dropdownUseremail.textContent = userData.email;
+            
+            // Update current user in team widget
+            const currentUserAvatar = document.getElementById('current-user-avatar');
+            const currentUserName = document.getElementById('current-user-name');
+            const currentUserPosition = document.getElementById('current-user-position');
+            
+            if (currentUserAvatar) currentUserAvatar.textContent = avatarChar;
+            if (currentUserName) currentUserName.textContent = userData.fullname;
+            if (currentUserPosition) currentUserPosition.textContent = userData.position;
+            
+            // Update modal info
+            const modalAvatar = document.getElementById('modal-avatar');
+            const modalUsername = document.getElementById('modal-username');
+            const modalUseremail = document.getElementById('modal-useremail');
+            const modalUserposition = document.getElementById('modal-position');
+            const modalFullname = document.getElementById('modal-fullname');
+            const modalEmail = document.getElementById('modal-email');
+            const modalPosition = document.getElementById('modal-position');
+            const modalDepartment = document.getElementById('modal-department');
+            
+            if (modalAvatar) modalAvatar.textContent = avatarChar;
+            if (modalUsername) modalUsername.textContent = userData.fullname;
+            if (modalUseremail) modalUseremail.textContent = userData.email;
+            if (modalUserposition) modalUserposition.textContent = userData.position;
+            if (modalFullname) modalFullname.textContent = userData.fullname;
+            if (modalEmail) modalEmail.textContent = userData.email;
+            if (modalPosition) modalPosition.textContent = userData.position;
+            if (modalDepartment) modalDepartment.textContent = userData.department;
         }
 
         // User Dropdown Toggle
