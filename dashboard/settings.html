@@ -44,6 +44,14 @@
             --white: #0a0a20;
         }
 
+        body.light-theme .settings-card,
+        body.light-theme .sidebar,
+        body.light-theme header,
+        body.light-theme .user-dropdown {
+            background-color: var(--dark);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -62,6 +70,42 @@
             position: relative;
             overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--darker);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(106, 0, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: var(--white);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Header */
@@ -106,6 +150,17 @@
             font-size: 1.4rem;
             cursor: pointer;
             display: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .menu-toggle.active {
+            background: rgba(106, 0, 255, 0.2);
+            transform: rotate(90deg);
         }
 
         .user-menu {
@@ -114,7 +169,51 @@
             gap: 20px;
         }
 
-        /* Theme Toggle */
+        .notification {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+            color: var(--medium-gray);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Theme Toggle Styles */
         .theme-toggle {
             margin-right: 15px;
         }
@@ -179,7 +278,141 @@
             color: var(--primary);
         }
 
-        /* Main Content */
+        /* User Dropdown */
+        .user-dropdown {
+            position: absolute;
+            top: calc(var(--header-height) + 10px);
+            right: 25px;
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 250px;
+            padding: 15px;
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .user-dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .user-dropdown-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .user-dropdown-info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .user-dropdown-info p {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .user-dropdown-menu {
+            list-style: none;
+        }
+
+        .user-dropdown-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: var(--light-gray);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .user-dropdown-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .user-dropdown-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .user-dropdown-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .user-dropdown-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn i {
+            margin-right: 8px;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Container */
         .main-container {
             display: flex;
             flex-direction: column;
@@ -196,7 +429,7 @@
             position: fixed;
             left: 0;
             top: var(--header-height);
-            transition: var(--transition);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             z-index: 98;
             box-shadow: var(--box-shadow);
             overflow-y: auto;
@@ -259,107 +492,99 @@
             background-color: var(--darker);
         }
 
+        /* Welcome Section */
+        .welcome-section {
+            margin-bottom: 30px;
+            background-color: var(--dark);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--widget-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .welcome-text h1 span {
+            color: var(--primary);
+        }
+
+        .welcome-text p {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
         /* Settings Section */
         .settings-section {
             background-color: var(--dark);
             border-radius: var(--border-radius);
-            box-shadow: var(--widget-shadow);
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .settings-header {
+            padding: 25px;
             margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .settings-header h1 {
-            font-size: 1.8rem;
-            color: var(--white);
-            margin-bottom: 10px;
-        }
-
-        .settings-header p {
-            color: var(--medium-gray);
-            font-size: 0.95rem;
-        }
-
-        /* Settings Tabs */
-        .settings-tabs {
-            display: flex;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 25px;
-        }
-
-        .tab-button {
-            padding: 12px 20px;
-            background: none;
-            border: none;
-            color: var(--medium-gray);
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            position: relative;
-            transition: var(--transition);
-        }
-
-        .tab-button.active {
-            color: var(--primary);
-        }
-
-        .tab-button.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--primary);
-        }
-
-        .tab-button:hover:not(.active) {
-            color: var(--light-gray);
-        }
-
-        /* Tab Content */
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Settings Card */
-        .settings-card {
-            background-color: var(--darker);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 20px;
+            box-shadow: var(--widget-shadow);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .settings-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .settings-card-header h2 {
-            font-size: 1.2rem;
+        .settings-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
             color: var(--white);
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .settings-card-header i {
+        .settings-section h2 i {
             color: var(--primary);
         }
 
-        /* Form Elements */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .settings-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .settings-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary);
+        }
+
+        .settings-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .settings-card-header i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-right: 15px;
+        }
+
+        .settings-card-header h3 {
+            font-size: 1.2rem;
+            color: var(--white);
+        }
+
+        .settings-card-body {
+            margin-top: 15px;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -368,17 +593,17 @@
             display: block;
             margin-bottom: 8px;
             color: var(--light-gray);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 500;
         }
 
         .form-control {
             width: 100%;
-            padding: 12px 15px;
-            background-color: var(--dark);
+            padding: 10px 15px;
+            background-color: var(--dark-gray);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: var(--border-radius);
-            color: var(--light);
+            color: var(--white);
             font-size: 0.95rem;
             transition: var(--transition);
         }
@@ -386,202 +611,72 @@
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(106, 0, 255, 0.2);
+            box-shadow: 0 0 0 3px rgba(106, 0, 255, 0.2);
         }
 
-        .form-row {
-            display: flex;
-            gap: 20px;
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23a0a0c0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px 12px;
         }
 
-        .form-row .form-group {
-            flex: 1;
-        }
-
-        .form-text {
-            font-size: 0.85rem;
-            color: var(--medium-gray);
-            margin-top: 8px;
-        }
-
-        /* Checkbox and Radio */
-        .checkbox-group, .radio-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .checkbox-item, .radio-item {
+        .form-check {
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .checkbox-input, .radio-input {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary);
+            margin-bottom: 15px;
             cursor: pointer;
         }
 
-        .checkbox-label, .radio-label {
-            color: var(--light-gray);
-            font-size: 0.95rem;
-            cursor: pointer;
-        }
-
-        /* Select Dropdown */
-        .select-wrapper {
+        .form-check-input {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background-color: var(--dark-gray);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-right: 10px;
             position: relative;
+            transition: var(--transition);
+            cursor: pointer;
         }
 
-        .select-wrapper::after {
-            content: '\f078';
+        .form-check-input:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .form-check-input:checked::after {
+            content: '\f00c';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             position: absolute;
             top: 50%;
-            right: 15px;
-            transform: translateY(-50%);
-            color: var(--medium-gray);
-            pointer-events: none;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.8rem;
         }
 
-        .select-control {
-            appearance: none;
-            padding-right: 40px;
+        .form-check-label {
+            color: var(--light-gray);
+            font-size: 0.9rem;
         }
 
-        /* Toggle Switch */
-        .toggle-group {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .toggle-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .toggle-label-text {
-            flex: 1;
-        }
-
-        .toggle-label-text h4 {
-            color: var(--white);
-            font-size: 0.95rem;
-            margin-bottom: 3px;
-        }
-
-        .toggle-label-text p {
-            color: var(--medium-gray);
-            font-size: 0.85rem;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-            margin-left: 15px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--dark-gray);
-            transition: var(--transition);
-            border-radius: 34px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: '';
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: var(--white);
-            transition: var(--transition);
-            border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-            background-color: var(--primary);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(26px);
-        }
-
-        /* Color Picker */
-        .color-picker-group {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .color-option {
-            position: relative;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .color-option:hover {
-            transform: scale(1.1);
-        }
-
-        .color-option input {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .color-option .checkmark {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            transition: var(--transition);
-        }
-
-        .color-option input:checked + .checkmark {
-            border-color: var(--white);
-            box-shadow: 0 0 0 2px var(--dark);
-        }
-
-        /* Buttons */
         .btn {
             padding: 10px 20px;
             border-radius: var(--border-radius);
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
             border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
         }
 
         .btn-primary {
             background-color: var(--primary);
-            color: var(--white);
+            color: white;
         }
 
         .btn-primary:hover {
@@ -589,57 +684,44 @@
         }
 
         .btn-secondary {
-            background-color: var(--dark-gray);
+            background-color: rgba(255, 255, 255, 0.1);
             color: var(--light-gray);
         }
 
         .btn-secondary:hover {
-            background-color: var(--medium-gray);
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
-        .btn-danger {
-            background-color: var(--danger);
-            color: var(--white);
-        }
-
-        .btn-danger:hover {
-            background-color: #e04a4a;
-        }
-
-        .btn-group {
+        .settings-footer {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Danger Zone */
         .danger-zone {
-            border: 1px solid rgba(255, 85, 85, 0.3);
+            background-color: rgba(255, 85, 85, 0.1);
             border-radius: var(--border-radius);
-            padding: 20px;
-            margin-top: 40px;
-            background-color: rgba(255, 85, 85, 0.05);
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 85, 85, 0.2);
         }
 
-        .danger-zone-header {
+        .danger-zone h3 {
+            font-size: 1.3rem;
+            color: var(--danger);
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .danger-zone-header h2 {
-            color: var(--danger);
-            font-size: 1.3rem;
-        }
-
-        .danger-zone-header i {
-            color: var(--danger);
         }
 
         .danger-zone p {
-            color: var(--medium-gray);
-            font-size: 0.95rem;
+            color: var(--light-gray);
+            font-size: 0.9rem;
             margin-bottom: 20px;
         }
 
@@ -647,10 +729,13 @@
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: 280px;
+                z-index: 1000;
             }
             
             .sidebar.active {
                 transform: translateX(0);
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             }
             
             .content {
@@ -658,12 +743,7 @@
             }
             
             .menu-toggle {
-                display: block;
-            }
-
-            .form-row {
-                flex-direction: column;
-                gap: 15px;
+                display: flex;
             }
         }
 
@@ -672,20 +752,19 @@
                 --header-height: 60px;
                 --sidebar-width: 260px;
             }
-
-            .settings-tabs {
-                overflow-x: auto;
-                padding-bottom: 5px;
-            }
-
-            .tab-button {
-                white-space: nowrap;
+            
+            .settings-grid {
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 576px) {
             :root {
                 --header-height: 60px;
+            }
+            
+            header {
+                padding: 0 15px;
             }
             
             .logo h1 {
@@ -699,15 +778,11 @@
             .content {
                 padding: 20px 15px;
             }
-
-            .settings-header h1 {
-                font-size: 1.5rem;
-            }
-
-            .btn-group {
+            
+            .settings-footer {
                 flex-direction: column;
             }
-
+            
             .btn {
                 width: 100%;
             }
@@ -715,6 +790,12 @@
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Settings...</div>
+    </div>
+    
     <!-- Header -->
     <header id="header">
         <button class="menu-toggle" id="menuToggle">
@@ -734,6 +815,35 @@
                     <i class="fas fa-moon"></i>
                     <span class="toggle-ball"></span>
                 </label>
+            </div>
+            <div class="notification">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="user-avatar" id="user-avatar">
+                U
+            </div>
+        </div>
+
+        <!-- User Dropdown -->
+        <div class="user-dropdown" id="user-dropdown">
+            <div class="user-dropdown-header">
+                <div class="user-dropdown-avatar" id="dropdown-avatar">U</div>
+                <div class="user-dropdown-info">
+                    <h3 id="dropdown-username">User</h3>
+                    <p id="dropdown-useremail">user@nebulaworks.space</p>
+                </div>
+            </div>
+            <ul class="user-dropdown-menu">
+                <li><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="settings.html" class="active"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="messages.html"><i class="fas fa-envelope"></i> Messages</a></li>
+                <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+            </ul>
+            <div class="user-dropdown-footer">
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </div>
     </header>
@@ -758,351 +868,161 @@
         
         <!-- Content Area -->
         <main class="content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Settings <span>Panel</span></h1>
+                    <p>Customize your NebulaWorks experience</p>
+                </div>
+            </section>
+            
+            <!-- Account Settings -->
             <section class="settings-section">
-                <div class="settings-header">
-                    <h1>Settings</h1>
-                    <p>Manage your account preferences and dashboard settings</p>
-                </div>
-                
-                <!-- Settings Tabs -->
-                <div class="settings-tabs">
-                    <button class="tab-button active" data-tab="account">Account</button>
-                    <button class="tab-button" data-tab="appearance">Appearance</button>
-                    <button class="tab-button" data-tab="notifications">Notifications</button>
-                    <button class="tab-button" data-tab="privacy">Privacy</button>
-                </div>
-                
-                <!-- Account Tab -->
-                <div class="tab-content active" id="account-tab">
+                <h2><i class="fas fa-user-cog"></i> Account Settings</h2>
+                <div class="settings-grid">
+                    <!-- Profile Settings -->
                     <div class="settings-card">
                         <div class="settings-card-header">
-                            <h2><i class="fas fa-user"></i> Profile Information</h2>
+                            <i class="fas fa-user"></i>
+                            <h3>Profile Information</h3>
                         </div>
-                        
-                        <form id="profile-form">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="first-name">First Name</label>
-                                    <input type="text" id="first-name" class="form-control" value="Commander">
-                                </div>
-                                <div class="form-group">
-                                    <label for="last-name">Last Name</label>
-                                    <input type="text" id="last-name" class="form-control" value="User">
-                                </div>
+                        <div class="settings-card-body">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" id="username" class="form-control" value="twin_dev">
                             </div>
-                            
                             <div class="form-group">
                                 <label for="email">Email Address</label>
-                                <input type="email" id="email" class="form-control" value="commander@nebulaworks.space">
+                                <input type="email" id="email" class="form-control" value="twin@nebulaworks.space">
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="position">Position</label>
-                                <input type="text" id="position" class="form-control" value="Mission Commander">
-                            </div>
-                            
                             <div class="form-group">
                                 <label for="bio">Bio</label>
-                                <textarea id="bio" class="form-control" rows="4">Lead mission commander at NebulaWorks, responsible for overseeing all space operations and ensuring crew safety.</textarea>
+                                <textarea id="bio" class="form-control" rows="3">Twin developers creating cosmic web experiences</textarea>
                             </div>
-                            
-                            <div class="btn-group">
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                                <button type="button" class="btn btn-secondary">Cancel</button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                     
+                    <!-- Security Settings -->
                     <div class="settings-card">
                         <div class="settings-card-header">
-                            <h2><i class="fas fa-lock"></i> Password</h2>
+                            <i class="fas fa-shield-alt"></i>
+                            <h3>Security</h3>
                         </div>
-                        
-                        <form id="password-form">
+                        <div class="settings-card-body">
                             <div class="form-group">
                                 <label for="current-password">Current Password</label>
                                 <input type="password" id="current-password" class="form-control">
                             </div>
-                            
                             <div class="form-group">
                                 <label for="new-password">New Password</label>
                                 <input type="password" id="new-password" class="form-control">
-                                <p class="form-text">Password must be at least 8 characters long</p>
                             </div>
-                            
                             <div class="form-group">
-                                <label for="confirm-password">Confirm New Password</label>
+                                <label for="confirm-password">Confirm Password</label>
                                 <input type="password" id="confirm-password" class="form-control">
                             </div>
-                            
-                            <div class="btn-group">
-                                <button type="submit" class="btn btn-primary">Update Password</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Preferences -->
+            <section class="settings-section">
+                <h2><i class="fas fa-sliders-h"></i> Preferences</h2>
+                <div class="settings-grid">
+                    <!-- Display Settings -->
+                    <div class="settings-card">
+                        <div class="settings-card-header">
+                            <i class="fas fa-palette"></i>
+                            <h3>Display</h3>
+                        </div>
+                        <div class="settings-card-body">
+                            <div class="form-group">
+                                <label for="theme">Theme</label>
+                                <select id="theme" class="form-control form-select">
+                                    <option value="dark">Dark Mode</option>
+                                    <option value="light">Light Mode</option>
+                                    <option value="system">System Default</option>
+                                </select>
                             </div>
-                        </form>
+                            <div class="form-group">
+                                <label for="accent-color">Accent Color</label>
+                                <select id="accent-color" class="form-control form-select">
+                                    <option value="purple">Purple</option>
+                                    <option value="blue">Blue</option>
+                                    <option value="green">Green</option>
+                                    <option value="red">Red</option>
+                                    <option value="orange">Orange</option>
+                                </select>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="animations" class="form-check-input" checked>
+                                <label for="animations" class="form-check-label">Enable Animations</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notification Settings -->
+                    <div class="settings-card">
+                        <div class="settings-card-header">
+                            <i class="fas fa-bell"></i>
+                            <h3>Notifications</h3>
+                        </div>
+                        <div class="settings-card-body">
+                            <div class="form-check">
+                                <input type="checkbox" id="email-notifications" class="form-check-input" checked>
+                                <label for="email-notifications" class="form-check-label">Email Notifications</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="push-notifications" class="form-check-input" checked>
+                                <label for="push-notifications" class="form-check-label">Push Notifications</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="message-notifications" class="form-check-input" checked>
+                                <label for="message-notifications" class="form-check-label">Message Alerts</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="project-updates" class="form-check-input">
+                                <label for="project-updates" class="form-check-label">Project Updates</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Appearance Tab -->
-                <div class="tab-content" id="appearance-tab">
+                <div class="settings-footer">
+                    <button class="btn btn-secondary">Cancel</button>
+                    <button class="btn btn-primary">Save Changes</button>
+                </div>
+            </section>
+            
+            <!-- Danger Zone -->
+            <section class="danger-zone">
+                <h3><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
+                <p>These actions are irreversible. Please proceed with caution.</p>
+                <div class="settings-grid">
                     <div class="settings-card">
                         <div class="settings-card-header">
-                            <h2><i class="fas fa-palette"></i> Theme</h2>
+                            <i class="fas fa-trash-alt"></i>
+                            <h3>Delete Account</h3>
                         </div>
-                        
-                        <div class="form-group">
-                            <label>Color Scheme</label>
-                            <div class="color-picker-group">
-                                <label class="color-option">
-                                    <input type="radio" name="theme-color" value="purple" checked>
-                                    <span class="checkmark" style="background-color: #6a00ff;"></span>
-                                </label>
-                                <label class="color-option">
-                                    <input type="radio" name="theme-color" value="blue">
-                                    <span class="checkmark" style="background-color: #0062ff;"></span>
-                                </label>
-                                <label class="color-option">
-                                    <input type="radio" name="theme-color" value="teal">
-                                    <span class="checkmark" style="background-color: #00b4d8;"></span>
-                                </label>
-                                <label class="color-option">
-                                    <input type="radio" name="theme-color" value="green">
-                                    <span class="checkmark" style="background-color: #00b894;"></span>
-                                </label>
-                                <label class="color-option">
-                                    <input type="radio" name="theme-color" value="red">
-                                    <span class="checkmark" style="background-color: #ff4757;"></span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Dark Mode</label>
-                            <div class="toggle-group">
-                                <div class="toggle-item">
-                                    <div class="toggle-label-text">
-                                        <h4>Enable Dark Mode</h4>
-                                        <p>Switch between light and dark color schemes</p>
-                                    </div>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="dark-mode-toggle" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary">Save Preferences</button>
+                        <div class="settings-card-body">
+                            <p>Permanently delete your account and all associated data.</p>
+                            <button class="btn btn-secondary" style="background-color: rgba(255, 85, 85, 0.1); color: var(--danger);">
+                                <i class="fas fa-trash-alt"></i> Delete Account
+                            </button>
                         </div>
                     </div>
                     
                     <div class="settings-card">
                         <div class="settings-card-header">
-                            <h2><i class="fas fa-columns"></i> Layout</h2>
+                            <i class="fas fa-sign-out-alt"></i>
+                            <h3>Logout Everywhere</h3>
                         </div>
-                        
-                        <div class="form-group">
-                            <label>Dashboard Layout</label>
-                            <div class="radio-group">
-                                <label class="radio-item">
-                                    <input type="radio" name="layout" value="default" checked>
-                                    <span class="radio-label">Default (Grid)</span>
-                                </label>
-                                <label class="radio-item">
-                                    <input type="radio" name="layout" value="compact">
-                                    <span class="radio-label">Compact</span>
-                                </label>
-                                <label class="radio-item">
-                                    <input type="radio" name="layout" value="spacious">
-                                    <span class="radio-label">Spacious</span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Sidebar Position</label>
-                            <div class="radio-group">
-                                <label class="radio-item">
-                                    <input type="radio" name="sidebar" value="left" checked>
-                                    <span class="radio-label">Left (Default)</span>
-                                </label>
-                                <label class="radio-item">
-                                    <input type="radio" name="sidebar" value="right">
-                                    <span class="radio-label">Right</span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary">Update Layout</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Notifications Tab -->
-                <div class="tab-content" id="notifications-tab">
-                    <div class="settings-card">
-                        <div class="settings-card-header">
-                            <h2><i class="fas fa-bell"></i> Notification Preferences</h2>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Email Notifications</label>
-                            <div class="toggle-group">
-                                <div class="toggle-item">
-                                    <div class="toggle-label-text">
-                                        <h4>System Messages</h4>
-                                        <p>Important updates about your account and system</p>
-                                    </div>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="toggle-item">
-                                    <div class="toggle-label-text">
-                                        <h4>Project Updates</h4>
-                                        <p>Notifications about project activities and changes</p>
-                                    </div>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="toggle-item">
-                                    <div class="toggle-label-text">
-                                        <h4>Team Messages</h4>
-                                        <p>Notifications from your team members</p>
-                                    </div>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="toggle-item">
-                                    <div class="toggle-label-text">
-                                        <h4>Calendar Events</h4>
-                                        <p>Reminders for upcoming events and meetings</p>
-                                    </div>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Push Notifications</label>
-                            <div class="toggle-group">
-                                <div class="toggle-item">
-                                    <div class="toggle-label-text">
-                                        <h4>Enable Push Notifications</h4>
-                                        <p>Receive real-time notifications on your device</p>
-                                    </div>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary">Save Preferences</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Privacy Tab -->
-                <div class="tab-content" id="privacy-tab">
-                    <div class="settings-card">
-                        <div class="settings-card-header">
-                            <h2><i class="fas fa-shield-alt"></i> Privacy Settings</h2>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Profile Visibility</label>
-                            <div class="radio-group">
-                                <label class="radio-item">
-                                    <input type="radio" name="visibility" value="public" checked>
-                                    <span class="radio-label">Public (Visible to all team members)</span>
-                                </label>
-                                <label class="radio-item">
-                                    <input type="radio" name="visibility" value="team">
-                                    <span class="radio-label">Team Only</span>
-                                </label>
-                                <label class="radio-item">
-                                    <input type="radio" name="visibility" value="private">
-                                    <span class="radio-label">Private (Only visible to you)</span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Activity Sharing</label>
-                            <div class="toggle-group">
-                                <div class="toggle-item">
-                                    <div class="toggle-label-text">
-                                        <h4>Share my activity status</h4>
-                                        <p>Allow others to see when you're active</p>
-                                    </div>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="toggle-item">
-                                    <div class="toggle-label-text">
-                                        <h4>Show my online status</h4>
-                                        <p>Display your availability to team members</p>
-                                    </div>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Data Collection</label>
-                            <div class="toggle-group">
-                                <div class="toggle-item">
-                                    <div class="toggle-label-text">
-                                        <h4>Allow analytics collection</h4>
-                                        <p>Help us improve by sharing usage data</p>
-                                    </div>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary">Update Privacy Settings</button>
-                        </div>
-                    </div>
-                    
-                    <div class="danger-zone">
-                        <div class="danger-zone-header">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <h2>Danger Zone</h2>
-                        </div>
-                        <p>These actions are irreversible. Please proceed with caution.</p>
-                        
-                        <div class="form-group">
-                            <label>Delete Account</label>
-                            <p class="form-text">Permanently delete your account and all associated data</p>
-                            <button type="button" class="btn btn-danger">Delete My Account</button>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Export Data</label>
-                            <p class="form-text">Download a copy of all your personal data</p>
-                            <button type="button" class="btn btn-secondary">Request Data Export</button>
+                        <div class="settings-card-body">
+                            <p>Log out of all devices and revoke all active sessions.</p>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-sign-out-alt"></i> Logout Everywhere
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1111,6 +1031,97 @@
     </div>
 
     <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.opacity = '0';
+                    setTimeout(function() {
+                        loading.style.display = 'none';
+                    }, 500);
+                }
+            }, 1500);
+        });
+    
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (!menuToggle || !sidebar || !overlay) return;
+            
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+                
+                // Change hamburger icon to X when menu is open
+                const icon = menuToggle.querySelector('i');
+                if (sidebar.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                menuToggle.classList.remove('active');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+            
+            // Close menu when clicking on nav links
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 992) { // Only for mobile
+                        sidebar.classList.remove('active');
+                        overlay.classList.remove('active');
+                        menuToggle.classList.remove('active');
+                        const icon = menuToggle.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            });
+        }
+    
+        // User Dropdown Toggle
+        function setupUserDropdown() {
+            const userAvatar = document.getElementById('user-avatar');
+            const userDropdown = document.getElementById('user-dropdown');
+            const overlay = document.getElementById('overlay');
+            
+            if (!userAvatar || !userDropdown || !overlay) return;
+            
+            userAvatar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                userDropdown.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!userDropdown.contains(e.target) && e.target !== userAvatar) {
+                    userDropdown.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        }
+
         // Theme Toggle Functionality
         function setupThemeToggle() {
             const themeToggle = document.getElementById('theme-toggle');
@@ -1134,86 +1145,66 @@
             });
         }
 
-        // Mobile Menu Toggle
-        function setupMobileMenu() {
-            const menuToggle = document.getElementById('menuToggle');
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
+        // Update current user info
+        function updateUserInfo() {
+            // Get user from URL or default to Vida
+            const urlParams = new URLSearchParams(window.location.search);
+            const user = urlParams.get('user') || 'vida';
             
-            if (!menuToggle || !sidebar || !overlay) return;
+            const userData = {
+                vida: {
+                    name: "Vida Khoshpey",
+                    email: "vida@nebulaworks.space",
+                    avatar: "V"
+                },
+                yalda: {
+                    name: "Yalda Khoshpey",
+                    email: "yalda@nebulaworks.space",
+                    avatar: "Y"
+                }
+            };
             
-            menuToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('active');
-                overlay.classList.toggle('active');
-            });
+            const currentUser = userData[user] || userData.vida;
             
-            overlay.addEventListener('click', function() {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-            });
-        }
-
-        // Tab Switching
-        function setupTabs() {
-            const tabButtons = document.querySelectorAll('.tab-button');
-            const tabContents = document.querySelectorAll('.tab-content');
-            
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    // Remove active class from all buttons and contents
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    
-                    // Add active class to clicked button
-                    button.classList.add('active');
-                    
-                    // Show corresponding content
-                    const tabId = button.getAttribute('data-tab');
-                    document.getElementById(`${tabId}-tab`).classList.add('active');
-                });
-            });
-        }
-
-        // Form Submission
-        function setupForms() {
-            const profileForm = document.getElementById('profile-form');
-            const passwordForm = document.getElementById('password-form');
-            
-            if (profileForm) {
-                profileForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    alert('Profile updated successfully!');
-                });
-            }
-            
-            if (passwordForm) {
-                passwordForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const newPassword = document.getElementById('new-password').value;
-                    const confirmPassword = document.getElementById('confirm-password').value;
-                    
-                    if (newPassword !== confirmPassword) {
-                        alert('Passwords do not match!');
-                        return;
-                    }
-                    
-                    if (newPassword.length < 8) {
-                        alert('Password must be at least 8 characters long');
-                        return;
-                    }
-                    
-                    alert('Password updated successfully!');
-                    passwordForm.reset();
-                });
-            }
+            // Update UI elements
+            document.getElementById('dropdown-username').textContent = currentUser.name;
+            document.getElementById('dropdown-useremail').textContent = currentUser.email;
+            document.getElementById('user-avatar').textContent = currentUser.avatar;
+            document.getElementById('dropdown-avatar').textContent = currentUser.avatar;
+            document.getElementById('username').value = user;
+            document.getElementById('email').value = currentUser.email;
         }
 
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            setupThemeToggle();
             setupMobileMenu();
-            setupTabs();
-            setupForms();
+            setupUserDropdown();
+            setupThemeToggle();
+            updateUserInfo();
+            
+            // Set active theme in dropdown
+            const savedTheme = localStorage.getItem('nebulaTheme') || 'dark';
+            document.getElementById('theme').value = savedTheme === 'light-theme' ? 'light' : 'dark';
+            
+            // Theme dropdown change handler
+            document.getElementById('theme').addEventListener('change', function() {
+                const themeToggle = document.getElementById('theme-toggle');
+                if (this.value === 'light') {
+                    document.body.classList.add('light-theme');
+                    themeToggle.checked = true;
+                    localStorage.setItem('nebulaTheme', 'light-theme');
+                } else {
+                    document.body.classList.remove('light-theme');
+                    themeToggle.checked = false;
+                    localStorage.setItem('nebulaTheme', 'dark-theme');
+                }
+            });
+            
+            // Logout button functionality
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                localStorage.removeItem('nebulaTheme');
+                window.location.href = 'index.html';
+            });
         });
     </script>
 </body>

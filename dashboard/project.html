@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects Dashboard | NebulaWorks</title>
+    <title>NebulaWorks Projects</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="logo.png">
     <style>
@@ -44,6 +44,33 @@
             --white: #0a0a20;
         }
 
+        body.light-theme .widget,
+        body.light-theme .system-status,
+        body.light-theme .welcome-section,
+        body.light-theme .quick-link-card,
+        body.light-theme .sidebar,
+        body.light-theme header,
+        body.light-theme .user-dropdown,
+        body.light-theme .modal-content {
+            background-color: var(--dark);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: var(--light);
+        }
+
+        body.light-theme .mission-item,
+        body.light-theme .resource-item {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .mission-item:hover,
+        body.light-theme .resource-item:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+        }
+
+        body.light-theme .gauge::before {
+            background-color: var(--dark);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -64,6 +91,42 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--darker);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(106, 0, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: var(--white);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* Header */
         header {
             position: fixed;
@@ -80,6 +143,10 @@
             z-index: 100;
             transition: var(--transition);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-scrolled {
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
         }
 
         .logo {
@@ -106,6 +173,17 @@
             font-size: 1.4rem;
             cursor: pointer;
             display: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .menu-toggle.active {
+            background: rgba(106, 0, 255, 0.2);
+            transform: rotate(90deg);
         }
 
         .user-menu {
@@ -114,7 +192,51 @@
             gap: 20px;
         }
 
-        /* Theme Toggle */
+        .notification {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+            color: var(--medium-gray);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Theme Toggle Styles */
         .theme-toggle {
             margin-right: 15px;
         }
@@ -179,7 +301,141 @@
             color: var(--primary);
         }
 
-        /* Main Content */
+        /* User Dropdown */
+        .user-dropdown {
+            position: absolute;
+            top: calc(var(--header-height) + 10px);
+            right: 25px;
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 250px;
+            padding: 15px;
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .user-dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .user-dropdown-avatar {
+            width: 50px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .user-dropdown-info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .user-dropdown-info p {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .user-dropdown-menu {
+            list-style: none;
+        }
+
+        .user-dropdown-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: var(--light-gray);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .user-dropdown-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .user-dropdown-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .user-dropdown-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .user-dropdown-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn i {
+            margin-right: 8px;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Container */
         .main-container {
             display: flex;
             flex-direction: column;
@@ -196,7 +452,7 @@
             position: fixed;
             left: 0;
             top: var(--header-height);
-            transition: var(--transition);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             z-index: 98;
             box-shadow: var(--box-shadow);
             overflow-y: auto;
@@ -250,6 +506,39 @@
             flex-grow: 1;
         }
 
+        .company-news {
+            margin-top: 30px;
+            padding: 0 25px;
+        }
+
+        .company-news h3 {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-item {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            padding-left: 8px;
+            border-left: 2px solid var(--dark-gray);
+        }
+
+        .news-item a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .news-item a:hover {
+            color: var(--primary);
+        }
+
         /* Content Area */
         .content {
             flex: 1;
@@ -259,75 +548,124 @@
             background-color: var(--darker);
         }
 
-        /* Projects Section */
-        .projects-section {
+        /* Welcome Section */
+        .welcome-section {
             margin-bottom: 30px;
-        }
-
-        .section-header {
+            background-color: var(--dark);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--widget-shadow);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .section-header h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
             color: var(--white);
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        .section-header h2 i {
+        .welcome-text h1 span {
             color: var(--primary);
         }
 
-        .btn-primary {
-            padding: 10px 20px;
-            background-color: var(--primary);
-            color: white;
+        .welcome-text p {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
+        .weather-widget {
+            display: flex;
+            align-items: center;
+            background-color: rgba(106, 0, 255, 0.1);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(106, 0, 255, 0.2);
+        }
+
+        .weather-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            color: var(--primary);
+        }
+
+        .weather-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 3px;
+            color: var(--white);
+        }
+
+        .weather-info p {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+        }
+
+        /* Projects Container */
+        .projects-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        /* Projects Header */
+        .projects-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .projects-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .projects-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .projects-btn {
+            padding: 8px 15px;
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
             border: none;
             border-radius: var(--border-radius);
-            font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
+            font-size: 0.9rem;
+            font-weight: 500;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .btn-primary:hover {
-            background-color: #5a00e0;
-            transform: translateY(-2px);
+        .projects-btn:hover {
+            background-color: rgba(106, 0, 255, 0.2);
         }
 
+        .projects-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* Project Cards Grid */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
         }
 
         .project-card {
             background-color: var(--dark);
             border-radius: var(--border-radius);
-            padding: 25px;
-            transition: var(--transition);
             box-shadow: var(--widget-shadow);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
             overflow: hidden;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 5px;
-            height: 100%;
-            background-color: var(--status-color, var(--primary));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
         }
 
         .project-card:hover {
@@ -335,197 +673,483 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
+        .project-card-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
         }
 
-        .project-header h3 {
+        .project-card-title {
             font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
             color: var(--white);
-            margin-right: 10px;
         }
 
-        .project-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-icon {
-            background: none;
-            border: none;
-            color: var(--medium-gray);
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--transition);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-icon:hover {
+        .project-card-category {
+            display: inline-block;
+            padding: 3px 8px;
             background-color: rgba(106, 0, 255, 0.1);
             color: var(--primary);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
         }
 
-        .project-description {
+        .project-card-body {
+            padding: 20px;
+        }
+
+        .project-card-description {
             color: var(--medium-gray);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             margin-bottom: 20px;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         .project-progress {
             margin-bottom: 20px;
         }
 
-        .progress-info {
+        .progress-header {
             display: flex;
             justify-content: space-between;
             margin-bottom: 8px;
         }
 
-        .progress-label {
-            font-size: 0.9rem;
+        .progress-title {
+            font-size: 0.85rem;
             color: var(--light-gray);
         }
 
-        .progress-value {
-            font-size: 0.9rem;
+        .progress-percentage {
+            font-size: 0.85rem;
             font-weight: 600;
-            color: var(--status-color, var(--primary));
+            color: var(--white);
         }
 
         .progress-bar {
             height: 8px;
-            background-color: var(--dark-gray);
+            background-color: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            width: var(--progress, 0%);
-            background-color: var(--status-color, var(--primary));
+            background-color: var(--primary);
             border-radius: 4px;
             transition: width 0.5s ease;
         }
 
-        .project-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+        .project-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
             margin-bottom: 20px;
         }
 
-        .meta-item {
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 3px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--medium-gray);
+        }
+
+        .project-card-footer {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
+        }
+
+        .project-deadline {
             font-size: 0.85rem;
             color: var(--medium-gray);
         }
 
-        .meta-item i {
-            color: var(--status-color, var(--primary));
+        .project-deadline i {
+            margin-right: 5px;
+            color: var(--primary);
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .project-action-btn {
+            background: none;
+            border: none;
+            color: var(--medium-gray);
+            cursor: pointer;
+            transition: var(--transition);
             font-size: 0.9rem;
         }
 
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .tag {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            background-color: rgba(106, 0, 255, 0.1);
+        .project-action-btn:hover {
             color: var(--primary);
         }
 
-        /* Project Stats */
-        .project-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+        .project-action-btn.delete:hover {
+            color: var(--danger);
         }
 
-        .stat-card {
+        /* Project Details Section */
+        .project-details {
             background-color: var(--dark);
             border-radius: var(--border-radius);
-            padding: 20px;
             box-shadow: var(--widget-shadow);
+            padding: 25px;
+            margin-bottom: 30px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: var(--transition);
         }
 
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-        }
-
-        .stat-header {
+        .project-details-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .project-details-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .project-details-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .project-details-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+
+        .project-overview {
+            flex: 1;
+        }
+
+        .project-description {
+            margin-bottom: 25px;
+        }
+
+        .project-description p {
+            color: var(--medium-gray);
+            line-height: 1.6;
             margin-bottom: 15px;
         }
 
-        .stat-title {
-            font-size: 0.95rem;
-            color: var(--medium-gray);
+        .project-milestones {
+            margin-top: 30px;
         }
 
-        .stat-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: rgba(106, 0, 255, 0.1);
+        .milestone-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: var(--primary);
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            transition: var(--transition);
         }
 
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
+        .milestone-item:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+        }
+
+        .milestone-checkbox {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+
+        .milestone-info {
+            flex: 1;
+        }
+
+        .milestone-title {
+            font-weight: 500;
             color: var(--white);
             margin-bottom: 5px;
         }
 
-        .stat-change {
-            font-size: 0.85rem;
+        .milestone-date {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .project-sidebar {
+            width: 300px;
+        }
+
+        .project-team {
+            margin-bottom: 25px;
+        }
+
+        .team-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--white);
+        }
+
+        .team-members {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .team-member {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .team-member:hover {
+            transform: scale(1.1);
+        }
+
+        .project-files {
+            margin-bottom: 25px;
+        }
+
+        .files-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--white);
+        }
+
+        .file-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            transition: var(--transition);
+            background-color: rgba(255, 255, 255, 0.05);
         }
 
-        .stat-change.positive {
-            color: var(--success);
+        .file-item:hover {
+            background-color: rgba(106, 0, 255, 0.1);
         }
 
-        .stat-change.negative {
+        .file-icon {
+            margin-right: 10px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-size: 0.9rem;
+            color: var(--white);
+            margin-bottom: 3px;
+        }
+
+        .file-size {
+            font-size: 0.75rem;
+            color: var(--medium-gray);
+        }
+
+        .file-download {
+            color: var(--medium-gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-download:hover {
+            color: var(--primary);
+        }
+
+        /* Project Modal */
+        .project-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .project-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .project-modal-content {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 600px;
+            box-shadow: var(--box-shadow);
+            transform: translateY(-20px);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .project-modal.active .project-modal-content {
+            transform: translateY(0);
+        }
+
+        .project-modal-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .project-modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--white);
+        }
+
+        .project-modal-close {
+            background: none;
+            border: none;
+            color: var(--medium-gray);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .project-modal-close:hover {
             color: var(--danger);
+        }
+
+        .project-modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--light-gray);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            color: var(--white);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(106, 0, 255, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .project-modal-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #5a00e0;
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--light-gray);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: rgba(255, 85, 85, 0.2);
         }
 
         /* Responsive Styles */
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: 280px;
+                z-index: 1000;
             }
             
             .sidebar.active {
                 transform: translateX(0);
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             }
             
             .content {
@@ -533,7 +1157,16 @@
             }
             
             .menu-toggle {
-                display: block;
+                display: flex;
+            }
+
+            .project-details-content {
+                grid-template-columns: 1fr;
+            }
+
+            .project-sidebar {
+                width: 100%;
+                order: -1;
             }
         }
 
@@ -543,18 +1176,75 @@
                 --sidebar-width: 260px;
             }
             
-            .projects-grid {
-                grid-template-columns: 1fr;
+            .welcome-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
             }
             
-            .project-stats {
-                grid-template-columns: 1fr 1fr;
+            .weather-widget {
+                width: 100%;
+            }
+            
+            .projects-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .projects-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .projects-btn {
+                flex: 1;
+                justify-content: center;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            /* Mobile Modal Fixes */
+            .project-modal-content {
+                width: 95%;
+                max-height: 90vh;
+                overflow-y: auto;
+                transform: translateY(0);
+                margin: 20px 0;
+            }
+            
+            .project-modal-body {
+                padding: 15px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .project-modal-footer {
+                flex-wrap: wrap;
+                padding: 15px;
+            }
+            
+            .btn {
+                flex: 1 0 100%;
+                margin-bottom: 10px;
+            }
+            
+            .btn:last-child {
+                margin-bottom: 0;
             }
         }
 
         @media (max-width: 576px) {
             :root {
                 --header-height: 60px;
+            }
+            
+            header {
+                padding: 0 15px;
             }
             
             .logo h1 {
@@ -569,19 +1259,51 @@
                 padding: 20px 15px;
             }
             
-            .project-stats {
+            .projects-grid {
                 grid-template-columns: 1fr;
             }
+
+            /* Small Mobile Modal Fixes */
+            .project-modal-content {
+                width: 100%;
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+            }
             
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
+            .project-modal-header,
+            .project-modal-footer {
+                position: sticky;
+                background: var(--dark);
+                z-index: 1;
+            }
+            
+            .project-modal-header {
+                top: 0;
+            }
+            
+            .project-modal-footer {
+                bottom: 0;
+            }
+            
+            .project-modal-body {
+                padding-bottom: 80px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Projects...</div>
+    </div>
+    
     <!-- Header -->
     <header id="header">
         <button class="menu-toggle" id="menuToggle">
@@ -602,6 +1324,35 @@
                     <span class="toggle-ball"></span>
                 </label>
             </div>
+            <div class="notification">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="user-avatar" id="user-avatar">
+                U
+            </div>
+        </div>
+
+        <!-- User Dropdown -->
+        <div class="user-dropdown" id="user-dropdown">
+            <div class="user-dropdown-header">
+                <div class="user-dropdown-avatar" id="dropdown-avatar">U</div>
+                <div class="user-dropdown-info">
+                    <h3 id="dropdown-username">Commander</h3>
+                    <p id="dropdown-useremail">commander@nebulaworks.space</p>
+                </div>
+            </div>
+            <ul class="user-dropdown-menu">
+                <li><a href="#" id="profile-link"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="messages.html"><i class="fas fa-envelope"></i> Messages</a></li>
+                <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+            </ul>
+            <div class="user-dropdown-footer">
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
         </div>
     </header>
     
@@ -621,307 +1372,700 @@
                 <li><a href="resources.html"><i class="fas fa-file-alt"></i> <span>Resources</span></a></li>
                 <li><a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
             </ul>
+            
+            <div class="company-news">
+                <h3><i class="fas fa-newspaper"></i> Company News</h3>
+                <div class="news-item">
+                    <a href="#">Q3 Financial Results Announced</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">New Mars Colony Initiative</a>
+                </div>
+                <div class="news-item">
+                    <a href="#">Employee Wellness Program Launched</a>
+                </div>
+            </div>
         </nav>
         
         <!-- Content Area -->
         <main class="content">
-            <section class="projects-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-project-diagram"></i> My Projects</h2>
-                    <button class="btn-primary">
-                        <i class="fas fa-plus"></i> New Project
-                    </button>
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Projects, <span id="username">Commander</span></h1>
+                    <p id="current-date">Track and manage all your projects in one place</p>
                 </div>
-                
-                <div class="project-stats">
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <span class="stat-title">Active Projects</span>
-                            <div class="stat-icon">
-                                <i class="fas fa-tasks"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value">12</div>
-                        <div class="stat-change positive">
-                            <i class="fas fa-arrow-up"></i> 3 from last month
-                        </div>
+                <div class="weather-widget" id="weather-widget">
+                    <div class="weather-icon">
+                        <i class="fas fa-sun"></i>
                     </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <span class="stat-title">Completed</span>
-                            <div class="stat-icon">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value">24</div>
-                        <div class="stat-change positive">
-                            <i class="fas fa-arrow-up"></i> 8 from last month
-                        </div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <span class="stat-title">Overdue</span>
-                            <div class="stat-icon">
-                                <i class="fas fa-exclamation-circle"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value">3</div>
-                        <div class="stat-change negative">
-                            <i class="fas fa-arrow-down"></i> 1 from last month
-                        </div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <span class="stat-title">Team Members</span>
-                            <div class="stat-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value">8</div>
-                        <div class="stat-change positive">
-                            <i class="fas fa-arrow-up"></i> 2 new members
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="projects-grid">
-                    <!-- Project 1 -->
-                    <div class="project-card" style="--progress: 75%; --status-color: var(--secondary)">
-                        <div class="project-header">
-                            <h3>Dashboard Redesign</h3>
-                            <div class="project-actions">
-                                <button class="btn-icon">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <p class="project-description">
-                            Complete redesign of the main dashboard interface with new UI components and improved user experience.
-                        </p>
-                        <div class="project-progress">
-                            <div class="progress-info">
-                                <span class="progress-label">Progress</span>
-                                <span class="progress-value">75%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill"></div>
-                            </div>
-                        </div>
-                        <div class="project-meta">
-                            <div class="meta-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>Due: Jun 15, 2025</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-users"></i>
-                                <span>Team: 4</span>
-                            </div>
-                        </div>
-                        <div class="project-tags">
-                            <span class="tag">UI/UX</span>
-                            <span class="tag">Frontend</span>
-                            <span class="tag">Design</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Project 2 -->
-                    <div class="project-card" style="--progress: 30%; --status-color: var(--warning)">
-                        <div class="project-header">
-                            <h3>API Integration</h3>
-                            <div class="project-actions">
-                                <button class="btn-icon">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <p class="project-description">
-                            Integrate weather and calendar APIs into the dashboard system with proper error handling.
-                        </p>
-                        <div class="project-progress">
-                            <div class="progress-info">
-                                <span class="progress-label">Progress</span>
-                                <span class="progress-value">30%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill"></div>
-                            </div>
-                        </div>
-                        <div class="project-meta">
-                            <div class="meta-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>Due: Jul 1, 2025</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-users"></i>
-                                <span>Team: 2</span>
-                            </div>
-                        </div>
-                        <div class="project-tags">
-                            <span class="tag">Backend</span>
-                            <span class="tag">API</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Project 3 -->
-                    <div class="project-card" style="--progress: 90%; --status-color: var(--success)">
-                        <div class="project-header">
-                            <h3>Mobile Responsive</h3>
-                            <div class="project-actions">
-                                <button class="btn-icon">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <p class="project-description">
-                            Make the dashboard fully responsive for mobile devices with touch-friendly interactions.
-                        </p>
-                        <div class="project-progress">
-                            <div class="progress-info">
-                                <span class="progress-label">Progress</span>
-                                <span class="progress-value">90%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill"></div>
-                            </div>
-                        </div>
-                        <div class="project-meta">
-                            <div class="meta-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>Due: May 30, 2025</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-users"></i>
-                                <span>Team: 3</span>
-                            </div>
-                        </div>
-                        <div class="project-tags">
-                            <span class="tag">Mobile</span>
-                            <span class="tag">CSS</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Project 4 -->
-                    <div class="project-card" style="--progress: 15%; --status-color: var(--danger)">
-                        <div class="project-header">
-                            <h3>Database Migration</h3>
-                            <div class="project-actions">
-                                <button class="btn-icon">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <p class="project-description">
-                            Migrate from SQL to NoSQL database with zero downtime and data integrity checks.
-                        </p>
-                        <div class="project-progress">
-                            <div class="progress-info">
-                                <span class="progress-label">Progress</span>
-                                <span class="progress-value">15%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill"></div>
-                            </div>
-                        </div>
-                        <div class="project-meta">
-                            <div class="meta-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>Due: Aug 10, 2025</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-users"></i>
-                                <span>Team: 5</span>
-                            </div>
-                        </div>
-                        <div class="project-tags">
-                            <span class="tag">Database</span>
-                            <span class="tag">Backend</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Project 5 -->
-                    <div class="project-card" style="--progress: 50%; --status-color: var(--primary)">
-                        <div class="project-header">
-                            <h3>Authentication System</h3>
-                            <div class="project-actions">
-                                <button class="btn-icon">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <p class="project-description">
-                            Implement secure authentication with JWT, OAuth 2.0, and multi-factor authentication options.
-                        </p>
-                        <div class="project-progress">
-                            <div class="progress-info">
-                                <span class="progress-label">Progress</span>
-                                <span class="progress-value">50%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill"></div>
-                            </div>
-                        </div>
-                        <div class="project-meta">
-                            <div class="meta-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>Due: Jun 25, 2025</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-users"></i>
-                                <span>Team: 3</span>
-                            </div>
-                        </div>
-                        <div class="project-tags">
-                            <span class="tag">Security</span>
-                            <span class="tag">Backend</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Project 6 -->
-                    <div class="project-card" style="--progress: 100%; --status-color: var(--success)">
-                        <div class="project-header">
-                            <h3>Documentation Update</h3>
-                            <div class="project-actions">
-                                <button class="btn-icon">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <p class="project-description">
-                            Complete technical documentation for all API endpoints and frontend components.
-                        </p>
-                        <div class="project-progress">
-                            <div class="progress-info">
-                                <span class="progress-label">Progress</span>
-                                <span class="progress-value">100%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill"></div>
-                            </div>
-                        </div>
-                        <div class="project-meta">
-                            <div class="meta-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>Completed: May 10, 2025</span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-users"></i>
-                                <span>Team: 2</span>
-                            </div>
-                        </div>
-                        <div class="project-tags">
-                            <span class="tag">Documentation</span>
-                            <span class="tag">Technical Writing</span>
-                        </div>
+                    <div class="weather-info">
+                        <h3 id="weather-temp">24°C</h3>
+                        <p id="weather-desc">Sunny, Mars Base Alpha</p>
                     </div>
                 </div>
             </section>
+            
+            <!-- Projects Container -->
+            <div class="projects-container">
+                <!-- Projects Header -->
+                <div class="projects-header">
+                    <h2 class="projects-title">Active Projects</h2>
+                    <div class="projects-actions">
+                        <button class="projects-btn" id="filter-projects">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <button class="projects-btn" id="new-project-btn">
+                            <i class="fas fa-plus"></i> New Project
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Projects Grid -->
+                <div class="projects-grid">
+                    <!-- Project Card 1 -->
+                    <div class="project-card">
+                        <div class="project-card-header">
+                            <h3 class="project-card-title">Mars Colony Website</h3>
+                            <span class="project-card-category">Web Development</span>
+                        </div>
+                        <div class="project-card-body">
+                            <p class="project-card-description">
+                                Development of the official website for the Mars Colony project with interactive features and mission updates.
+                            </p>
+                            
+                            <div class="project-progress">
+                                <div class="progress-header">
+                                    <span class="progress-title">Project Completion</span>
+                                    <span class="progress-percentage">75%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="project-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">18</div>
+                                    <div class="stat-label">Tasks</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">2</div>
+                                    <div class="stat-label">Members</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">12</div>
+                                    <div class="stat-label">Days Left</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-card-footer">
+                            <div class="project-deadline">
+                                <i class="far fa-calendar-alt"></i> Due: Aug 30, 2023
+                            </div>
+                            <div class="project-actions">
+                                <button class="project-action-btn edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="project-action-btn delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project Card 2 -->
+                    <div class="project-card">
+                        <div class="project-card-header">
+                            <h3 class="project-card-title">Rover Navigation AI</h3>
+                            <span class="project-card-category">AI Research</span>
+                        </div>
+                        <div class="project-card-body">
+                            <p class="project-card-description">
+                                Development of autonomous navigation system for Mars rovers using machine learning algorithms.
+                            </p>
+                            
+                            <div class="project-progress">
+                                <div class="progress-header">
+                                    <span class="progress-title">Project Completion</span>
+                                    <span class="progress-percentage">42%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 42%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="project-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">34</div>
+                                    <div class="stat-label">Tasks</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">8</div>
+                                    <div class="stat-label">Members</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">45</div>
+                                    <div class="stat-label">Days Left</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-card-footer">
+                            <div class="project-deadline">
+                                <i class="far fa-calendar-alt"></i> Due: Oct 15, 2023
+                            </div>
+                            <div class="project-actions">
+                                <button class="project-action-btn edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="project-action-btn delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project Card 3 -->
+                    <div class="project-card">
+                        <div class="project-card-header">
+                            <h3 class="project-card-title">Habitat Life Support</h3>
+                            <span class="project-card-category">Engineering</span>
+                        </div>
+                        <div class="project-card-body">
+                            <p class="project-card-description">
+                                Design and testing of life support systems for the Mars habitat modules.
+                            </p>
+                            
+                            <div class="project-progress">
+                                <div class="progress-header">
+                                    <span class="progress-title">Project Completion</span>
+                                    <span class="progress-percentage">89%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 89%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="project-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">27</div>
+                                    <div class="stat-label">Tasks</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">2</div>
+                                    <div class="stat-label">Members</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">7</div>
+                                    <div class="stat-label">Days Left</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-card-footer">
+                            <div class="project-deadline">
+                                <i class="far fa-calendar-alt"></i> Due: Aug 5, 2023
+                            </div>
+                            <div class="project-actions">
+                                <button class="project-action-btn edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="project-action-btn delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project Details Section -->
+                <div class="project-details">
+                    <div class="project-details-header">
+                        <h3 class="project-details-title">Mars Colony Website - Project Details</h3>
+                        <div class="project-details-actions">
+                            <button class="projects-btn">
+                                <i class="fas fa-chart-line"></i> Reports
+                            </button>
+                            <button class="projects-btn">
+                                <i class="fas fa-cog"></i> Settings
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="project-details-content">
+                        <div class="project-overview">
+                            <div class="project-description">
+                                <h4>Project Description</h4>
+                                <p>
+                                    The Mars Colony Website project involves creating a comprehensive digital platform to showcase our Mars colonization efforts. 
+                                    The website will serve as the primary information hub for scientists, investors, and the general public.
+                                </p>
+                                <p>
+                                    Key features include real-time mission updates, interactive 3D models of the colony, scientific data visualization, 
+                                    and a secure portal for team collaboration.
+                                </p>
+                            </div>
+                            
+                            <div class="project-milestones">
+                                <h4>Milestones</h4>
+                                <div class="milestone-item">
+                                    <input type="checkbox" class="milestone-checkbox" checked>
+                                    <div class="milestone-info">
+                                        <div class="milestone-title">Project Planning & Requirements</div>
+                                        <div class="milestone-date">Completed: June 15, 2023</div>
+                                    </div>
+                                </div>
+                                <div class="milestone-item">
+                                    <input type="checkbox" class="milestone-checkbox" checked>
+                                    <div class="milestone-info">
+                                        <div class="milestone-title">UI/UX Design Approval</div>
+                                        <div class="milestone-date">Completed: July 1, 2023</div>
+                                    </div>
+                                </div>
+                                <div class="milestone-item">
+                                    <input type="checkbox" class="milestone-checkbox">
+                                    <div class="milestone-info">
+                                        <div class="milestone-title">Frontend Development</div>
+                                        <div class="milestone-date">Due: August 10, 2023</div>
+                                    </div>
+                                </div>
+                                <div class="milestone-item">
+                                    <input type="checkbox" class="milestone-checkbox">
+                                    <div class="milestone-info">
+                                        <div class="milestone-title">Backend Integration</div>
+                                        <div class="milestone-date">Due: August 20, 2023</div>
+                                    </div>
+                                </div>
+                                <div class="milestone-item">
+                                    <input type="checkbox" class="milestone-checkbox">
+                                    <div class="milestone-info">
+                                        <div class="milestone-title">Testing & Launch</div>
+                                        <div class="milestone-date">Due: August 30, 2023</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-sidebar">
+                            <div class="project-team">
+                                <h4 class="team-title">Project Team</h4>
+                                <div class="team-members">
+                                    <div class="team-member">VK</div>
+                                    <div class="team-member">YK</div>
+                                </div>
+                            </div>
+                            <!--I don't Know but this section is do good even fake-->
+                            <div class="project-files">
+                                <h4 class="files-title">Project Files(For example😂)</h4>
+                                <div class="file-item">
+                                    <div class="file-icon">
+                                        <i class="far fa-file-pdf"></i>
+                                    </div>
+                                    <div class="file-info">
+                                        <div class="file-name">Project_Specs.pdf</div>
+                                        <div class="file-size">2.4 MB</div>
+                                    </div>
+                                    <div class="file-download">
+                                        <i class="fas fa-download"></i>
+                                    </div>
+                                </div>
+                                <div class="file-item">
+                                    <div class="file-icon">
+                                        <i class="far fa-file-image"></i>
+                                    </div>
+                                    <div class="file-info">
+                                        <div class="file-name">Wireframes.zip</div>
+                                        <div class="file-size">5.7 MB</div>
+                                    </div>
+                                    <div class="file-download">
+                                        <i class="fas fa-download"></i>
+                                    </div>
+                                </div>
+                                <div class="file-item">
+                                    <div class="file-icon">
+                                        <i class="far fa-file-code"></i>
+                                    </div>
+                                    <div class="file-info">
+                                        <div class="file-name">Style_Guide.html</div>
+                                        <div class="file-size">1.2 MB</div>
+                                    </div>
+                                    <div class="file-download">
+                                        <i class="fas fa-download"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="project-progress" style="margin-top: 25px;">
+                                <h4 class="team-title">Detailed Progress</h4>
+                                <div class="progress-header">
+                                    <span class="progress-title">Design</span>
+                                    <span class="progress-percentage">100%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%; background-color: var(--success);"></div>
+                                </div>
+                                
+                                <div class="progress-header">
+                                    <span class="progress-title">Frontend</span>
+                                    <span class="progress-percentage">75%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%;"></div>
+                                </div>
+                                
+                                <div class="progress-header">
+                                    <span class="progress-title">Backend</span>
+                                    <span class="progress-percentage">50%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 50%;"></div>
+                                </div>
+                                
+                                <div class="progress-header">
+                                    <span class="progress-title">Testing</span>
+                                    <span class="progress-percentage">30%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 30%; background-color: var(--warning);"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
+    <!-- Project Modal -->
+    <div class="project-modal" id="project-modal">
+        <div class="project-modal-content">
+            <div class="project-modal-header">
+                <h2 id="project-modal-title">New Project</h2>
+                <button class="project-modal-close" id="project-modal-close">&times;</button>
+            </div>
+            <div class="project-modal-body">
+                <form id="project-form">
+                    <div class="form-group">
+                        <label for="project-title">Project Title</label>
+                        <input type="text" id="project-title" class="form-control" placeholder="Enter project title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project-category">Category</label>
+                        <select id="project-category" class="form-control" required>
+                            <option value="">Select category</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="AI Research">AI Research</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Science">Science</option>
+                            <option value="Marketing">Marketing</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project-description">Description</label>
+                        <textarea id="project-description" class="form-control" rows="4" placeholder="Enter project description"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="project-start">Start Date</label>
+                            <input type="date" id="project-start" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-end">End Date</label>
+                            <input type="date" id="project-end" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project-team">Team Members</label>
+                        <select id="project-team" class="form-control" multiple>
+                            <option value="VK">VIDA KHOSHPEY (Lead Developer & Backend)</option>
+                            <option value="YK">YALDA KHOSHPEY (UI/UX Designer & Frontend)</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="project-modal-footer">
+                <button class="btn btn-secondary" id="cancel-project-btn">
+                    Cancel
+                </button>
+                <button class="btn btn-primary" id="save-project-btn">
+                    <i class="fas fa-save"></i> Save Project
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.opacity = '0';
+                    setTimeout(function() {
+                        loading.style.display = 'none';
+                    }, 500);
+                }
+            }, 1500);
+        });
+    
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (!menuToggle || !sidebar || !overlay) return;
+            
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+                
+                // Change hamburger icon to X when menu is open
+                const icon = menuToggle.querySelector('i');
+                if (sidebar.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                menuToggle.classList.remove('active');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+            
+            // Close menu when clicking on nav links
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
+            });
+        }
+    
+        // Header Scroll Effect
+        function setupHeaderScroll() {
+            const header = document.getElementById('header');
+            if (!header) return;
+            
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', function() {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll <= 0) {
+                    header.classList.remove('header-scrolled');
+                    return;
+                }
+                
+                if (currentScroll > lastScroll && !header.classList.contains('header-scrolled')) {
+                    header.classList.add('header-scrolled');
+                } 
+                
+                lastScroll = currentScroll;
+            });
+        }
+
+        // Update current date
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Get user data from URL or localStorage
+        function getUserData() {
+            // Check URL for user parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const userFromUrl = urlParams.get('user');
+            
+            if (userFromUrl) {
+                const userData = {
+                    fullname: decodeURIComponent(userFromUrl),
+                    email: "commander@nebulaworks.space",
+                    position: "Mission Commander",
+                    department: "Command",
+                    joinDate: "January 15, 2022"
+                };
+                
+                // Store in localStorage for future visits
+                localStorage.setItem('nebulaWorksUser', JSON.stringify(userData));
+                return userData;
+            }
+            
+            // Check localStorage for user data
+            const storedUser = localStorage.getItem('nebulaWorksUser');
+            if (storedUser) {
+                return JSON.parse(storedUser);
+            }
+            
+            // Default fallback
+            return {
+                fullname: "Commander",
+                email: "commander@nebulaworks.space",
+                position: "Mission Commander",
+                department: "Command",
+                joinDate: "January 15, 2022"
+            };
+        }
+
+        // Update user interface with user data
+        function updateUserInterface() {
+            const userData = getUserData();
+            
+            // Get first character of the name for avatar
+            const avatarChar = userData.fullname.charAt(0).toUpperCase();
+            
+            // Update welcome message
+            const usernameElement = document.getElementById('username');
+            if (usernameElement) {
+                usernameElement.textContent = userData.fullname;
+            }
+            
+            // Update user avatar in header
+            const userAvatar = document.getElementById('user-avatar');
+            if (userAvatar) {
+                userAvatar.textContent = avatarChar;
+            }
+            
+            // Update dropdown info
+            const dropdownAvatar = document.getElementById('dropdown-avatar');
+            const dropdownUsername = document.getElementById('dropdown-username');
+            const dropdownUseremail = document.getElementById('dropdown-useremail');
+            
+            if (dropdownAvatar) dropdownAvatar.textContent = avatarChar;
+            if (dropdownUsername) dropdownUsername.textContent = userData.fullname;
+            if (dropdownUseremail) dropdownUseremail.textContent = userData.email;
+        }
+
+        // User Dropdown Toggle
+        function setupUserDropdown() {
+            const userAvatar = document.getElementById('user-avatar');
+            const userDropdown = document.getElementById('user-dropdown');
+            const overlay = document.getElementById('overlay');
+            
+            if (!userAvatar || !userDropdown || !overlay) return;
+            
+            userAvatar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                userDropdown.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!userDropdown.contains(e.target) && e.target !== userAvatar) {
+                    userDropdown.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        }
+
+        // Logout Functionality
+        function setupLogout() {
+            const logoutBtn = document.getElementById('logout-btn');
+            
+            if (!logoutBtn) return;
+            
+            logoutBtn.addEventListener('click', function() {
+                // Clear user data from localStorage
+                localStorage.removeItem('nebulaWorksUser');
+                
+                // Redirect to login page
+                window.location.href = 'index.html';
+            });
+        }
+
+        // Weather API Integration
+        async function fetchWeatherData() {
+            const city = 'Tehran'; // Default city
+            //  shared key (may have rate limits) it's fake
+            const url = `https://api.weatherapi.com/v1/current.json?key=3a9a8e0d3b5e4f5d9a922505242405&q=${city}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateWeatherWidget(data);
+                } else {
+                    console.error('Weather API error:', data.error?.message);
+                    // Fallback to default values
+                    document.getElementById('weather-temp').textContent = '24°C';
+                    document.getElementById('weather-desc').textContent = 'Sunny, Tehran';
+                }
+            } catch (error) {
+                console.error('Failed to fetch weather data:', error);
+                // Fallback to default values
+                document.getElementById('weather-temp').textContent = '24°C';
+                document.getElementById('weather-desc').textContent = 'Sunny, Tehran';
+            }
+        }
+
+        function updateWeatherWidget(data) {
+            const temp = Math.round(data.current.temp_c);
+            const description = data.current.condition.text;
+            const city = data.location.name;
+            
+            document.getElementById('weather-temp').textContent = `${temp}°C`;
+            document.getElementById('weather-desc').textContent = `${description}, ${city}`;
+            
+            // Update weather icon based on condition
+            const weatherIcon = document.querySelector('.weather-icon i');
+            if (weatherIcon) {
+                // Map WeatherAPI conditions to Font Awesome icons
+                const conditionMap = {
+                    'Sunny': 'sun',
+                    'Clear': 'sun',
+                    'Partly cloudy': 'cloud-sun',
+                    'Cloudy': 'cloud',
+                    'Overcast': 'cloud',
+                    'Mist': 'smog',
+                    'Rain': 'cloud-rain',
+                    'Thunderstorm': 'bolt',
+                    'Snow': 'snowflake',
+                    'Fog': 'smog'
+                };
+                
+                // Find matching icon or default to sun
+                let faIcon = 'sun';
+                for (const [key, value] of Object.entries(conditionMap)) {
+                    if (description.includes(key)) {
+                        faIcon = value;
+                        break;
+                    }
+                }
+                
+                weatherIcon.className = `fas fa-${faIcon}`;
+            }
+        }
+
         // Theme Toggle Functionality
         function setupThemeToggle() {
             const themeToggle = document.getElementById('theme-toggle');
@@ -945,29 +2089,58 @@
             });
         }
 
-        // Mobile Menu Toggle
-        function setupMobileMenu() {
-            const menuToggle = document.getElementById('menuToggle');
-            const sidebar = document.getElementById('sidebar');
+        // Project Modal Functionality
+        function setupProjectModal() {
+            const newProjectBtn = document.getElementById('new-project-btn');
+            const projectModal = document.getElementById('project-modal');
+            const projectModalClose = document.getElementById('project-modal-close');
+            const cancelProjectBtn = document.getElementById('cancel-project-btn');
             const overlay = document.getElementById('overlay');
             
-            if (!menuToggle || !sidebar || !overlay) return;
+            if (!newProjectBtn || !projectModal || !projectModalClose || !cancelProjectBtn || !overlay) return;
             
-            menuToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('active');
-                overlay.classList.toggle('active');
+            // Open modal
+            newProjectBtn.addEventListener('click', function() {
+                projectModal.classList.add('active');
+                overlay.classList.add('active');
+            });
+            
+            // Close modal
+            projectModalClose.addEventListener('click', function() {
+                projectModal.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            cancelProjectBtn.addEventListener('click', function() {
+                projectModal.classList.remove('active');
+                overlay.classList.remove('active');
             });
             
             overlay.addEventListener('click', function() {
-                sidebar.classList.remove('active');
+                projectModal.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Save project (just for demo)
+            document.getElementById('save-project-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Project saved successfully! (This is just a demo)');
+                projectModal.classList.remove('active');
                 overlay.classList.remove('active');
             });
         }
 
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            setupThemeToggle();
             setupMobileMenu();
+            setupHeaderScroll();
+            updateCurrentDate();
+            updateUserInterface();
+            setupUserDropdown();
+            setupLogout();
+            fetchWeatherData();
+            setupThemeToggle();
+            setupProjectModal();
             
             // Add hover effect to project cards
             const projectCards = document.querySelectorAll('.project-card');
@@ -979,23 +2152,32 @@
                 
                 card.addEventListener('mouseleave', () => {
                     card.style.transform = '';
-                    card.style.boxShadow = 'var(--widget-shadow)';
+                    card.style.boxShadow = '';
                 });
             });
             
-            // Add hover effect to stat cards
-            const statCards = document.querySelectorAll('.stat-card');
-            statCards.forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    card.style.transform = 'translateY(-3px)';
-                    card.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.25)';
-                });
-                
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = '';
-                    card.style.boxShadow = 'var(--widget-shadow)';
+            // Add click effect to interactive elements
+            const interactiveElements = document.querySelectorAll('.milestone-item, .file-item, .team-member');
+            interactiveElements.forEach(el => {
+                el.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
                 });
             });
+            
+            // Simulate progress animation
+            setTimeout(() => {
+                const progressBars = document.querySelectorAll('.progress-fill');
+                progressBars.forEach(bar => {
+                    const targetWidth = bar.style.width;
+                    bar.style.width = '0';
+                    setTimeout(() => {
+                        bar.style.width = targetWidth;
+                    }, 100);
+                });
+            }, 500);
         });
     </script>
 </body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meet Our Team | NebulaWorks</title>
+    <title>Twin Developers | NebulaWorks</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="logo.png">
     <style>
@@ -44,6 +44,16 @@
             --white: #0a0a20;
         }
 
+        body.light-theme .team-card,
+        body.light-theme .team-section,
+        body.light-theme .twin-synergy,
+        body.light-theme .sidebar,
+        body.light-theme header,
+        body.light-theme .user-dropdown {
+            background-color: var(--dark);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -62,6 +72,42 @@
             position: relative;
             overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--darker);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(106, 0, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: var(--white);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Header */
@@ -106,6 +152,17 @@
             font-size: 1.4rem;
             cursor: pointer;
             display: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .menu-toggle.active {
+            background: rgba(106, 0, 255, 0.2);
+            transform: rotate(90deg);
         }
 
         .user-menu {
@@ -114,7 +171,51 @@
             gap: 20px;
         }
 
-        /* Theme Toggle */
+        .notification {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+            color: var(--medium-gray);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Theme Toggle Styles */
         .theme-toggle {
             margin-right: 15px;
         }
@@ -179,7 +280,141 @@
             color: var(--primary);
         }
 
-        /* Main Content */
+        /* User Dropdown */
+        .user-dropdown {
+            position: absolute;
+            top: calc(var(--header-height) + 10px);
+            right: 25px;
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 250px;
+            padding: 15px;
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .user-dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .user-dropdown-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .user-dropdown-info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .user-dropdown-info p {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .user-dropdown-menu {
+            list-style: none;
+        }
+
+        .user-dropdown-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: var(--light-gray);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .user-dropdown-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .user-dropdown-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .user-dropdown-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .user-dropdown-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn i {
+            margin-right: 8px;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Container */
         .main-container {
             display: flex;
             flex-direction: column;
@@ -196,7 +431,7 @@
             position: fixed;
             left: 0;
             top: var(--header-height);
-            transition: var(--transition);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             z-index: 98;
             box-shadow: var(--box-shadow);
             overflow-y: auto;
@@ -259,232 +494,392 @@
             background-color: var(--darker);
         }
 
+        /* Welcome Section */
+        .welcome-section {
+            margin-bottom: 30px;
+            background-color: var(--dark);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--widget-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .welcome-text h1 span {
+            color: var(--primary);
+        }
+
+        .welcome-text p {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
         /* Team Section */
         .team-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 30px;
-        }
-
-        .team-header {
-            text-align: center;
-            margin-bottom: 40px;
-            animation: fadeIn 1s ease;
-        }
-
-        .team-header h1 {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .team-header h1::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: var(--secondary);
-            border-radius: 3px;
-        }
-
-        .team-header p {
-            font-size: 1.1rem;
-            color: var(--medium-gray);
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        .team-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .team-member {
             background-color: var(--dark);
             border-radius: var(--border-radius);
-            padding: 30px;
-            transition: var(--transition);
+            padding: 25px;
+            margin-bottom: 30px;
             box-shadow: var(--widget-shadow);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
+        }
+
+        .team-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .team-section h2 i {
+            color: var(--primary);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .team-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
-            animation: slideUp 0.8s ease;
         }
 
-        .team-member:nth-child(2) {
-            animation-delay: 0.2s;
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary);
         }
 
-        .team-member::before {
+        .team-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-        }
-
-        .team-member:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .member-image {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            border: 5px solid rgba(106, 0, 255, 0.2);
-            object-fit: cover;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(106, 0, 255, 0.1) 0%, transparent 100%);
+            opacity: 0;
             transition: var(--transition);
-            position: relative;
+            z-index: -1;
+        }
+
+        .team-card:hover::before {
+            opacity: 1;
+        }
+
+        .team-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .team-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-right: 15px;
             overflow: hidden;
+            border: 3px solid var(--primary);
+            transition: var(--transition);
         }
 
-        .team-member:hover .member-image {
-            border-color: var(--primary);
+        .team-card:hover .team-avatar {
             transform: scale(1.05);
+            box-shadow: 0 0 0 5px rgba(106, 0, 255, 0.2);
         }
 
-        .member-image img {
+        .team-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .member-info h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
+        .team-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
             color: var(--white);
         }
 
-        .member-info p.position {
-            color: var(--primary);
-            font-weight: 600;
-            margin-bottom: 15px;
+        .team-info p {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
         }
 
-        .member-info p.bio {
-            color: var(--medium-gray);
-            margin-bottom: 20px;
+        .team-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .status-online {
+            background-color: rgba(0, 255, 170, 0.1);
+            color: var(--success);
+        }
+
+        .status-offline {
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+        }
+
+        .team-card-body {
+            margin-top: 15px;
+        }
+
+        .team-bio {
+            font-size: 0.9rem;
+            color: var(--light-gray);
+            margin-bottom: 15px;
             line-height: 1.6;
         }
 
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
+        .team-skills {
+            margin-top: 15px;
         }
 
-        .social-links a {
-            width: 40px;
-            height: 40px;
+        .skill-item {
+            margin-bottom: 10px;
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .skill-name {
+            font-size: 0.85rem;
+            color: var(--light-gray);
+        }
+
+        .skill-percent {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .skill-bar {
+            height: 6px;
+            background-color: var(--dark-gray);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        .team-social {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .team-social a {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background-color: rgba(106, 0, 255, 0.1);
-            color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--light-gray);
             transition: var(--transition);
         }
 
-        .social-links a:hover {
+        .team-social a:hover {
             background-color: var(--primary);
             color: white;
             transform: translateY(-3px);
         }
 
-        .twin-section {
+        /* Twin Synergy Section */
+        .twin-synergy {
             background-color: var(--dark);
             border-radius: var(--border-radius);
-            padding: 40px;
-            margin-top: 50px;
+            padding: 25px;
+            margin-bottom: 30px;
             box-shadow: var(--widget-shadow);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            animation: fadeIn 1s ease;
-        }
-
-        .twin-section h2 {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 20px;
             position: relative;
-            display: inline-block;
+            overflow: hidden;
         }
 
-        .twin-section h2::after {
+        .twin-synergy::before {
             content: '';
             position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: var(--secondary);
-            border-radius: 3px;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(106, 0, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: -1;
         }
 
-        .twin-section p {
-            color: var(--medium-gray);
-            max-width: 800px;
-            margin: 0 auto 20px;
+        .twin-synergy h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .twin-synergy h2 i {
+            color: var(--accent);
+        }
+
+        .twin-synergy p {
+            color: var(--light-gray);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
             line-height: 1.6;
-            font-size: 1.1rem;
         }
 
         .twin-highlight {
             display: inline-flex;
             align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background-color: rgba(106, 0, 255, 0.1);
+            border-radius: var(--border-radius);
+            color: var(--secondary);
+            font-weight: 500;
+            margin-top: 10px;
+            border: 1px solid rgba(106, 0, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .twin-highlight:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Dropdown Menu for Team Cards */
+        .team-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: var(--dark);
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: var(--box-shadow);
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            max-height: 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: none;
+        }
+
+        .team-card.active .team-dropdown {
+            opacity: 1;
+            visibility: visible;
+            max-height: 500px;
+            padding: 15px;
+        }
+
+        .dropdown-item {
+            padding: 10px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dropdown-item:hover {
             background-color: rgba(106, 0, 255, 0.1);
             color: var(--primary);
-            padding: 8px 15px;
-            border-radius: 30px;
-            margin-top: 20px;
-            font-weight: 600;
         }
 
-        .twin-highlight i {
-            margin-right: 8px;
-            color: var(--secondary);
+        .dropdown-item i {
+            color: var(--medium-gray);
+            width: 20px;
+            text-align: center;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .dropdown-item:hover i {
+            color: var(--primary);
         }
 
-        @keyframes slideUp {
-            from { 
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .team-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 5;
+        }
+
+        .team-toggle:hover {
+            background-color: rgba(106, 0, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .team-card.active .team-toggle {
+            transform: rotate(180deg);
+            background-color: rgba(106, 0, 255, 0.2);
         }
 
         /* Responsive Styles */
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: 280px;
+                z-index: 1000;
             }
             
             .sidebar.active {
                 transform: translateX(0);
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             }
             
             .content {
@@ -492,7 +887,7 @@
             }
             
             .menu-toggle {
-                display: block;
+                display: flex;
             }
         }
 
@@ -502,26 +897,28 @@
                 --sidebar-width: 260px;
             }
             
-            .team-header h1 {
-                font-size: 2rem;
+            .team-grid {
+                grid-template-columns: 1fr;
             }
             
-            .team-header p {
-                font-size: 1rem;
+            .team-card-header {
+                flex-direction: column;
+                text-align: center;
             }
             
-            .twin-section h2 {
-                font-size: 1.8rem;
-            }
-            
-            .twin-section p {
-                font-size: 1rem;
+            .team-avatar {
+                margin-right: 0;
+                margin-bottom: 15px;
             }
         }
 
         @media (max-width: 576px) {
             :root {
                 --header-height: 60px;
+            }
+            
+            header {
+                padding: 0 15px;
             }
             
             .logo h1 {
@@ -536,22 +933,21 @@
                 padding: 20px 15px;
             }
             
-            .team-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .member-image {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .member-info h3 {
-                font-size: 1.3rem;
+            .welcome-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Initializing Twin Portal...</div>
+    </div>
+    
     <!-- Header -->
     <header id="header">
         <button class="menu-toggle" id="menuToggle">
@@ -571,6 +967,35 @@
                     <i class="fas fa-moon"></i>
                     <span class="toggle-ball"></span>
                 </label>
+            </div>
+            <div class="notification">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="user-avatar" id="user-avatar">
+                U
+            </div>
+        </div>
+
+        <!-- User Dropdown -->
+        <div class="user-dropdown" id="user-dropdown">
+            <div class="user-dropdown-header">
+                <div class="user-dropdown-avatar" id="dropdown-avatar">U</div>
+                <div class="user-dropdown-info">
+                    <h3 id="dropdown-username">Commander</h3>
+                    <p id="dropdown-useremail">commander@nebulaworks.space</p>
+                </div>
+            </div>
+            <ul class="user-dropdown-menu">
+                <li><a href="#" id="profile-link"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="messages.html"><i class="fas fa-envelope"></i> Messages</a></li>
+                <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+            </ul>
+            <div class="user-dropdown-footer">
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </div>
     </header>
@@ -595,60 +1020,165 @@
         
         <!-- Content Area -->
         <main class="content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Welcome, <span id="current-user-name">User</span></h1>
+                    <p id="current-date">Loading date...</p>
+                </div>
+            </section>
+            
+            <!-- Team Section -->
             <section class="team-section">
-                <div class="team-header">
-                    <h1>Meet Our Cosmic Team</h1>
-                    <p>We're a dynamic duo of twin developers, combining our powers to create stellar digital experiences. Two minds, one vision, and infinite possibilities.</p>
+                <h2><i class="fas fa-user-astronaut"></i> Development Team</h2>
+                <div class="team-grid" id="team-grid">
+                    <!-- Team members will be dynamically inserted here -->
                 </div>
-                
-                <div class="team-container">
-                    <div class="team-member">
-                        <div class="member-image">
-                            <img src="https://github.com/VIDAKHOSHPEY22.png" alt="Vida Khoshpey">
-                        </div>
-                        <div class="member-info">
-                            <h3>Vida Khoshpey</h3>
-                            <p class="position">Lead Developer & UI/UX Designer</p>
-                            <p class="bio">With a passion for clean code and beautiful interfaces, I architect the digital experiences that power our projects. My focus is on creating intuitive, performant applications that users love.</p>
-                            <div class="social-links">
-                                <a href="https://github.com/VIDAKHOSHPEY22" target="_blank"><i class="fab fa-github"></i></a>
-                                <a href="https://www.linkedin.com/in/vida-khoshpey-820124265" target="_blank"><i class="fab fa-linkedin"></i></a>
-                                <a href="https://www.instagram.com/vida_twin?igsh=MTV0Y2RxeW84ZGUzcA==" target="_blank"><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="team-member">
-                        <div class="member-image">
-                            <img src="https://github.com/YALDAKHOSHPEY.png" alt="Yalda Khoshpey">
-                        </div>
-                        <div class="member-info">
-                            <h3>Yalda Khoshpey</h3>
-                            <p class="position">Front-End Developer & Creative Director</p>
-                            <p class="bio">I bring designs to life with pixel-perfect precision and smooth animations. My expertise lies in creating engaging, responsive interfaces that tell compelling stories through interaction.</p>
-                            <div class="social-links">
-                                <a href="https://github.com/YALDAKHOSHPEY" target="_blank"><i class="fab fa-github"></i></a>
-                                <a href="https://www.linkedin.com/in/yalda-twin-331ba6312?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"><i class="fab fa-linkedin"></i></a>
-                                <a href="https://dev.to/yaldakhoshpey" target="_blank"><i class="fab fa-dev"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="twin-section">
-                    <h2>Twin Synergy</h2>
-                    <p>Being twins gives us a unique advantage in our development process. We share an almost telepathic understanding that allows us to collaborate seamlessly, anticipate each other's thoughts, and complement each other's skills perfectly.</p>
-                    <p>While we may look alike, our approaches to problem-solving are beautifully distinct. This duality enables us to tackle challenges from multiple perspectives, ensuring we deliver comprehensive solutions that account for diverse user needs.</p>
-                    <div class="twin-highlight">
-                        <i class="fas fa-star"></i>
-                        Two minds, one vision, double the creativity
-                    </div>
+            </section>
+            
+            <!-- Twin Synergy Section -->
+            <section class="twin-synergy">
+                <h2><i class="fas fa-infinity"></i> Twin Synergy</h2>
+                <p>Our twin developers bring a unique advantage to every project. With an almost telepathic understanding, they collaborate seamlessly, anticipate each other's thoughts, and complement each other's skills perfectly.</p>
+                <p>While they share the same DNA, their approaches to problem-solving are beautifully distinct. This duality enables them to tackle challenges from multiple perspectives, ensuring comprehensive solutions that account for diverse user needs.</p>
+                <div class="twin-highlight">
+                    <i class="fas fa-star"></i>
+                    Two minds, one vision, double the creativity
                 </div>
             </section>
         </main>
     </div>
 
     <script>
+        // User data with real information
+        const teamMembers = [
+            {
+                id: "vida",
+                name: "Vida Khoshpey",
+                role: "Lead Developer & UI/UX Designer",
+                status: "online",
+                bio: "With a passion for clean code and beautiful interfaces, I architect the digital experiences that power our projects. My focus is on creating intuitive, performant applications that users love.",
+                skills: [
+                    { name: "UI/UX Design", percent: 95 },
+                    { name: "Frontend Development", percent: 92 },
+                    { name: "Project Management", percent: 88 }
+                ],
+                social: [
+                    { icon: "github", url: "https://github.com/VIDAKHOSHPEY22" },
+                    { icon: "linkedin", url: "https://www.linkedin.com/in/vida-khoshpey-820124265" },
+                    { icon: "instagram", url: "https://www.instagram.com/vida_twin?igsh=MTV0Y2RxeW84ZGUzcA==" }
+                ],
+                avatar: "https://github.com/VIDAKHOSHPEY22.png"
+            },
+            {
+                id: "yalda",
+                name: "Yalda Khoshpey",
+                role: "Front-End Developer & Creative Director",
+                status: "online",
+                bio: "I bring designs to life with pixel-perfect precision and smooth animations. My expertise lies in creating engaging, responsive interfaces that tell compelling stories through interaction.",
+                skills: [
+                    { name: "Frontend Development", percent: 96 },
+                    { name: "Creative Direction", percent: 94 },
+                    { name: "Animation", percent: 90 }
+                ],
+                social: [
+                    { icon: "github", url: "https://github.com/YALDAKHOSHPEY" },
+                    { icon: "linkedin", url: "https://www.linkedin.com/in/yalda-twin-331ba6312" },
+                    { icon: "dev", url: "https://dev.to/yaldakhoshpey" }
+                ],
+                avatar: "https://github.com/YALDAKHOSHPEY.png"
+            }
+        ];
+
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.opacity = '0';
+                    setTimeout(function() {
+                        loading.style.display = 'none';
+                    }, 500);
+                }
+            }, 1500);
+        });
+    
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (!menuToggle || !sidebar || !overlay) return;
+            
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+                
+                // Change hamburger icon to X when menu is open
+                const icon = menuToggle.querySelector('i');
+                if (sidebar.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                menuToggle.classList.remove('active');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+            
+            // Close menu when clicking on nav links
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
+            });
+        }
+    
+        // User Dropdown Toggle
+        function setupUserDropdown() {
+            const userAvatar = document.getElementById('user-avatar');
+            const userDropdown = document.getElementById('user-dropdown');
+            const overlay = document.getElementById('overlay');
+            
+            if (!userAvatar || !userDropdown || !overlay) return;
+            
+            userAvatar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                userDropdown.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!userDropdown.contains(e.target) && e.target !== userAvatar) {
+                    userDropdown.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        }
+
         // Theme Toggle Functionality
         function setupThemeToggle() {
             const themeToggle = document.getElementById('theme-toggle');
@@ -672,42 +1202,173 @@
             });
         }
 
-        // Mobile Menu Toggle
-        function setupMobileMenu() {
-            const menuToggle = document.getElementById('menuToggle');
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
+        // Team Card Dropdown Toggle
+        function toggleDropdown(cardId) {
+            const card = document.getElementById(cardId);
+            card.classList.toggle('active');
             
-            if (!menuToggle || !sidebar || !overlay) return;
+            // Close other dropdowns when opening a new one
+            if (card.classList.contains('active')) {
+                document.querySelectorAll('.team-card').forEach(otherCard => {
+                    if (otherCard.id !== cardId && otherCard.classList.contains('active')) {
+                        otherCard.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.team-card') && !e.target.closest('.team-toggle')) {
+                document.querySelectorAll('.team-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+            }
+        });
+
+        // Update current date
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            const dateElement = document.getElementById('current-date');
+            if (dateElement) {
+                dateElement.textContent = now.toLocaleDateString('en-US', options);
+            }
+        }
+
+        // Get current user from URL or default
+        function getCurrentUser() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userParam = urlParams.get('user');
             
-            menuToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('active');
-                overlay.classList.toggle('active');
-            });
+            // Default to Vida if no user specified
+            return userParam ? userParam.toLowerCase() : 'vida';
+        }
+
+        // Update UI based on current user
+        function updateUserInterface() {
+            const currentUser = getCurrentUser();
+            const userData = teamMembers.find(member => member.id === currentUser);
             
-            overlay.addEventListener('click', function() {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-            });
+            if (!userData) return;
+            
+            // Update header
+            const userNameElement = document.getElementById('current-user-name');
+            if (userNameElement) {
+                userNameElement.textContent = userData.name.split(' ')[0]; // First name only
+            }
+            
+            // Update avatar in header
+            const userAvatar = document.getElementById('user-avatar');
+            if (userAvatar) {
+                userAvatar.textContent = userData.name.charAt(0);
+            }
+            
+            // Update dropdown info
+            const dropdownAvatar = document.getElementById('dropdown-avatar');
+            const dropdownUsername = document.getElementById('dropdown-username');
+            const dropdownUseremail = document.getElementById('dropdown-useremail');
+            
+            if (dropdownAvatar) dropdownAvatar.textContent = userData.name.charAt(0);
+            if (dropdownUsername) dropdownUsername.textContent = userData.name;
+            if (dropdownUseremail) dropdownUseremail.textContent = `${userData.id}@nebulaworks.space`;
+        }
+
+        // Render team members
+        function renderTeamMembers() {
+            const teamGrid = document.getElementById('team-grid');
+            if (!teamGrid) return;
+            
+            teamGrid.innerHTML = teamMembers.map(member => `
+                <div class="team-card" id="${member.id}-card">
+                    <div class="team-toggle" onclick="toggleDropdown('${member.id}-card')">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="team-card-header">
+                        <div class="team-avatar">
+                            <img src="${member.avatar}" alt="${member.name}" onerror="this.onerror=null; this.textContent='${member.name.charAt(0)}'">
+                        </div>
+                        <div class="team-info">
+                            <h3>${member.name}</h3>
+                            <p>${member.role}</p>
+                            <span class="team-status status-${member.status}">${member.status === 'online' ? 'Online' : 'Offline'}</span>
+                        </div>
+                    </div>
+                    <div class="team-card-body">
+                        <p class="team-bio">${member.bio}</p>
+                        <div class="team-skills">
+                            ${member.skills.map(skill => `
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name">${skill.name}</span>
+                                    <span class="skill-percent">${skill.percent}%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: ${skill.percent}%"></div>
+                                </div>
+                            </div>
+                            `).join('')}
+                        </div>
+                        <div class="team-social">
+                            ${member.social.map(social => `
+                            <a href="${social.url}" target="_blank" aria-label="${social.icon}">
+                                <i class="fab fa-${social.icon}"></i>
+                            </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="team-dropdown">
+                        <div class="dropdown-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>View Schedule</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>Send Message</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="fas fa-tasks"></i>
+                            <span>Current Projects</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="fas fa-code-branch"></i>
+                            <span>GitHub Activity</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            setupThemeToggle();
             setupMobileMenu();
+            setupUserDropdown();
+            setupThemeToggle();
+            updateCurrentDate();
+            updateUserInterface();
+            renderTeamMembers();
             
-            // Add hover effect to team members
-            const teamMembers = document.querySelectorAll('.team-member');
-            teamMembers.forEach(member => {
-                member.addEventListener('mouseenter', () => {
-                    member.style.transform = 'translateY(-10px)';
-                    member.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.3)';
+            // Animate skill bars when they come into view
+            const skillBars = document.querySelectorAll('.skill-progress');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const width = entry.target.style.width;
+                        entry.target.style.width = '0';
+                        setTimeout(() => {
+                            entry.target.style.width = width;
+                        }, 100);
+                    }
                 });
-                
-                member.addEventListener('mouseleave', () => {
-                    member.style.transform = '';
-                    member.style.boxShadow = 'var(--widget-shadow)';
-                });
+            }, { threshold: 0.1 });
+            
+            skillBars.forEach(bar => {
+                observer.observe(bar);
             });
         });
     </script>

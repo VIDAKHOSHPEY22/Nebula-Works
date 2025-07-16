@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resources | NebulaWorks</title>
+    <title>Resources | NebulaWorks Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="logo.png">
     <style>
@@ -44,6 +44,16 @@
             --white: #0a0a20;
         }
 
+        body.light-theme .resource-card,
+        body.light-theme .resources-section,
+        body.light-theme .challenge-banner,
+        body.light-theme .sidebar,
+        body.light-theme header,
+        body.light-theme .user-dropdown {
+            background-color: var(--dark);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -62,6 +72,42 @@
             position: relative;
             overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--darker);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(106, 0, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: var(--white);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Header */
@@ -106,6 +152,17 @@
             font-size: 1.4rem;
             cursor: pointer;
             display: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .menu-toggle.active {
+            background: rgba(106, 0, 255, 0.2);
+            transform: rotate(90deg);
         }
 
         .user-menu {
@@ -114,7 +171,51 @@
             gap: 20px;
         }
 
-        /* Theme Toggle */
+        .notification {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+            color: var(--medium-gray);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Theme Toggle Styles */
         .theme-toggle {
             margin-right: 15px;
         }
@@ -179,7 +280,141 @@
             color: var(--primary);
         }
 
-        /* Main Content */
+        /* User Dropdown */
+        .user-dropdown {
+            position: absolute;
+            top: calc(var(--header-height) + 10px);
+            right: 25px;
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 250px;
+            padding: 15px;
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .user-dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .user-dropdown-avatar {
+            width: 50px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .user-dropdown-info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .user-dropdown-info p {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+        .user-dropdown-menu {
+            list-style: none;
+        }
+
+        .user-dropdown-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: var(--light-gray);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .user-dropdown-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .user-dropdown-menu li a:hover {
+            background-color: rgba(106, 0, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .user-dropdown-menu li a:hover i {
+            color: var(--primary);
+        }
+
+        .user-dropdown-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn i {
+            margin-right: 8px;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Container */
         .main-container {
             display: flex;
             flex-direction: column;
@@ -196,7 +431,7 @@
             position: fixed;
             left: 0;
             top: var(--header-height);
-            transition: var(--transition);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             z-index: 98;
             box-shadow: var(--box-shadow);
             overflow-y: auto;
@@ -259,13 +494,133 @@
             background-color: var(--darker);
         }
 
+        /* Welcome Section */
+        .welcome-section {
+            margin-bottom: 30px;
+            background-color: var(--dark);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--widget-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .welcome-text h1 span {
+            color: var(--primary);
+        }
+
+        .welcome-text p {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--medium-gray);
+        }
+
+        /* Challenge Banner */
+        .challenge-banner {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-banner::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .challenge-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .challenge-content {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .challenge-content h3 {
+            color: var(--white);
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .challenge-content p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 15px;
+            max-width: 600px;
+        }
+
+        .challenge-button {
+            background-color: var(--white);
+            color: var(--primary);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        .challenge-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background-color: var(--light);
+        }
+
+        .challenge-button i {
+            transition: var(--transition);
+        }
+
+        .challenge-button:hover i {
+            transform: translateX(3px);
+        }
+
         /* Resources Section */
         .resources-section {
             background-color: var(--dark);
             border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
             box-shadow: var(--widget-shadow);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 30px;
         }
 
         .section-header {
@@ -304,9 +659,16 @@
         }
 
         .resource-icon {
-            font-size: 2rem;
-            color: var(--primary);
+            width: 60px;
+            height: 60px;
+            background-color: rgba(106, 0, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 15px;
+            color: var(--primary);
+            font-size: 1.5rem;
         }
 
         .resource-card h3 {
@@ -318,93 +680,48 @@
         .resource-card p {
             color: var(--medium-gray);
             margin-bottom: 15px;
-            font-size: 0.95rem;
             line-height: 1.6;
         }
 
         .resource-link {
-            display: inline-flex;
-            align-items: center;
             color: var(--primary);
             text-decoration: none;
             font-weight: 500;
             transition: var(--transition);
-        }
-
-        .resource-link i {
-            margin-left: 5px;
-            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .resource-link:hover {
             color: var(--secondary);
         }
 
+        .resource-link i {
+            transition: var(--transition);
+        }
+
         .resource-link:hover i {
             transform: translateX(3px);
         }
 
-        .challenge-banner {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: var(--border-radius);
-            padding: 25px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .challenge-content {
-            flex: 1;
-        }
-
-        .challenge-content h3 {
-            color: var(--white);
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-        }
-
-        .challenge-content p {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 15px;
-            max-width: 600px;
-        }
-
-        .challenge-button {
-            background-color: var(--white);
-            color: var(--primary);
-            border: none;
-            border-radius: var(--border-radius);
-            padding: 10px 20px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition);
-        }
-
-        .challenge-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .challenge-button i {
-            transition: var(--transition);
-        }
-
-        .challenge-button:hover i {
-            transform: translateX(3px);
-        }
-
         /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .resources-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: 280px;
+                z-index: 1000;
             }
             
             .sidebar.active {
                 transform: translateX(0);
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             }
             
             .content {
@@ -412,7 +729,7 @@
             }
             
             .menu-toggle {
-                display: block;
+                display: flex;
             }
 
             .challenge-banner {
@@ -433,13 +750,27 @@
             }
 
             .resources-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .section-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .welcome-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
             }
         }
 
         @media (max-width: 576px) {
             :root {
                 --header-height: 60px;
+            }
+            
+            header {
+                padding: 0 15px;
             }
             
             .logo h1 {
@@ -451,16 +782,26 @@
             }
             
             .content {
-                padding: 15px;
+                padding: 20px 15px;
             }
 
-            .section-header h2 {
-                font-size: 1.5rem;
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .resource-card {
+                padding: 15px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Resources...</div>
+    </div>
+    
     <!-- Header -->
     <header id="header">
         <button class="menu-toggle" id="menuToggle">
@@ -480,6 +821,35 @@
                     <i class="fas fa-moon"></i>
                     <span class="toggle-ball"></span>
                 </label>
+            </div>
+            <div class="notification">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="user-avatar" id="user-avatar">
+                U
+            </div>
+        </div>
+
+        <!-- User Dropdown -->
+        <div class="user-dropdown" id="user-dropdown">
+            <div class="user-dropdown-header">
+                <div class="user-dropdown-avatar" id="dropdown-avatar">U</div>
+                <div class="user-dropdown-info">
+                    <h3 id="dropdown-username">Commander</h3>
+                    <p id="dropdown-useremail">commander@nebulaworks.space</p>
+                </div>
+            </div>
+            <ul class="user-dropdown-menu">
+                <li><a href="#" id="profile-link"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="messages.html"><i class="fas fa-envelope"></i> Messages</a></li>
+                <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+            </ul>
+            <div class="user-dropdown-footer">
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </div>
     </header>
@@ -504,136 +874,178 @@
         
         <!-- Content Area -->
         <main class="content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Welcome back, <span id="username">Commander</span></h1>
+                    <p id="current-date">Monday, July 15, 2023</p>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-book-open"></i>
+                    <span>12 Development Resources</span>
+                </div>
+            </section>
+
             <!-- Dev.to Challenge Banner -->
             <div class="challenge-banner">
                 <div class="challenge-content">
                     <h3>Dev.to Frontend Challenge: Office Edition</h3>
-                    <p>I'm participating in this exciting challenge to build an office management dashboard with $3000 in prizes! Check out the challenge details and join me!</p>
+                    <p>I built this dashboard as part of Dev.to's frontend challenge to create an office management dashboard with $3000 in prizes!</p>
                     <a href="https://dev.to/devteam/join-our-newest-frontend-challenge-office-edition-sponsored-by-axero-with-3000-in-prizes-21ap" class="challenge-button" target="_blank">
                         View Challenge <i class="fas fa-external-link-alt"></i>
                     </a>
                 </div>
             </div>
-
+            
+            <!-- Project Resources Section -->
             <section class="resources-section">
                 <div class="section-header">
-                    <h2>Project Resources</h2>
-                    <p>Here are the tools, libraries, and resources I used to build this office management dashboard for the Dev.to Frontend Challenge.</p>
+                    <h2>Project Development Resources</h2>
+                    <p>Here are the tools, libraries, and resources I used to build this office management dashboard:</p>
                 </div>
                 
                 <div class="resources-grid">
-                    <!-- Frontend Frameworks -->
+                    <!-- HTML5 -->
                     <div class="resource-card">
                         <div class="resource-icon">
                             <i class="fab fa-html5"></i>
                         </div>
-                        <h3>HTML5 & CSS3</h3>
-                        <p>The foundation of this project built with semantic HTML and modern CSS features including CSS variables for theming.</p>
-                        <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" class="resource-link" target="_blank">
-                            Learn more <i class="fas fa-arrow-right"></i>
+                        <h3>HTML5</h3>
+                        <p>Semantic HTML5 markup for structure and accessibility, with modern elements and attributes.</p>
+                        <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" class="resource-link">
+                            Learn HTML5 <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                     
+                    <!-- CSS3 -->
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fab fa-css3-alt"></i>
+                        </div>
+                        <h3>CSS3</h3>
+                        <p>Advanced styling with CSS Variables, Flexbox, Grid, and responsive design principles.</p>
+                        <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" class="resource-link">
+                            Learn CSS3 <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- JavaScript -->
                     <div class="resource-card">
                         <div class="resource-icon">
                             <i class="fab fa-js"></i>
                         </div>
                         <h3>JavaScript</h3>
-                        <p>Vanilla JavaScript for all interactive elements, DOM manipulation, and local storage for theme preferences.</p>
-                        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" class="resource-link" target="_blank">
-                            Learn more <i class="fas fa-arrow-right"></i>
+                        <p>Vanilla JavaScript for DOM manipulation, event handling, and localStorage functionality.</p>
+                        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" class="resource-link">
+                            Learn JS <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                     
-                    <!-- UI Libraries -->
+                    <!-- Font Awesome -->
                     <div class="resource-card">
                         <div class="resource-icon">
                             <i class="fab fa-font-awesome"></i>
                         </div>
                         <h3>Font Awesome</h3>
-                        <p>Beautiful icons used throughout the interface for better visual communication and user experience.</p>
-                        <a href="https://fontawesome.com/" class="resource-link" target="_blank">
-                            Learn more <i class="fas fa-arrow-right"></i>
+                        <p>Beautiful icons used throughout the interface for better visual communication.</p>
+                        <a href="https://fontawesome.com/" target="_blank" class="resource-link">
+                            Get Icons <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                     
-                    <div class="resource-card">
-                        <div class="resource-icon">
-                            <i class="fas fa-palette"></i>
-                        </div>
-                        <h3>CSS Variables</h3>
-                        <p>Custom properties for consistent theming and easy switching between dark and light modes.</p>
-                        <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties" class="resource-link" target="_blank">
-                            Learn more <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    
-                    <!-- Design Resources -->
-                    <div class="resource-card">
-                        <div class="resource-icon">
-                            <i class="fas fa-magic"></i>
-                        </div>
-                        <h3>Color Scheme</h3>
-                        <p>Custom color palette with primary purple (#6a00ff), teal accent (#00e5ff), and pink highlight (#ff00aa).</p>
-                        <a href="https://coolors.co/" class="resource-link" target="_blank">
-                            Generate your own <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    
+                    <!-- Google Fonts -->
                     <div class="resource-card">
                         <div class="resource-icon">
                             <i class="fas fa-font"></i>
                         </div>
                         <h3>Google Fonts</h3>
-                        <p>Using the clean and modern 'Segoe UI' system font stack for optimal readability across platforms.</p>
-                        <a href="https://fonts.google.com/" class="resource-link" target="_blank">
-                            Explore fonts <i class="fas fa-arrow-right"></i>
+                        <p>Using the clean and modern 'Segoe UI' system font stack for optimal readability.</p>
+                        <a href="https://fonts.google.com/" target="_blank" class="resource-link">
+                            Explore Fonts <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                     
-                    <!-- Development Tools -->
-                    <div class="resource-card">
-                        <div class="resource-icon">
-                            <i class="fab fa-github"></i>
-                        </div>
-                        <h3>GitHub</h3>
-                        <p>Version control and project hosting. The complete source code is available on GitHub.</p>
-                        <a href="https://github.com/" class="resource-link" target="_blank">
-                            Learn more <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    
+                    <!-- VS Code -->
                     <div class="resource-card">
                         <div class="resource-icon">
                             <i class="fas fa-code"></i>
                         </div>
                         <h3>VS Code</h3>
                         <p>My code editor of choice with extensions for HTML, CSS, and JavaScript development.</p>
-                        <a href="https://code.visualstudio.com/" class="resource-link" target="_blank">
+                        <a href="https://code.visualstudio.com/" target="_blank" class="resource-link">
                             Download <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                     
-                    <!-- Inspiration -->
+                    <!-- GitHub -->
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <h3>GitHub</h3>
+                        <p>Version control and project hosting. The complete source code is available on GitHub.</p>
+                        <a href="https://github.com/" target="_blank" class="resource-link">
+                            View Code <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- Dev.to -->
                     <div class="resource-card">
                         <div class="resource-icon">
                             <i class="fab fa-dev"></i>
                         </div>
-                        <h3>Dev.to Community</h3>
+                        <h3>Dev.to</h3>
                         <p>Inspired by the Dev.to Frontend Challenge to create an office management dashboard.</p>
-                        <a href="https://dev.to/" class="resource-link" target="_blank">
-                            Join community <i class="fas fa-arrow-right"></i>
+                        <a href="https://dev.to/" target="_blank" class="resource-link">
+                            Join Community <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                     
+                    <!-- CSS Tricks -->
                     <div class="resource-card">
                         <div class="resource-icon">
-                            <i class="fas fa-lightbulb"></i>
+                            <i class="fas fa-tricks"></i>
                         </div>
-                        <h3>UI Design Patterns</h3>
-                        <p>Modern dashboard design patterns inspired by popular productivity tools like Notion and ClickUp.</p>
-                        <a href="https://www.uipatterns.io/" class="resource-link" target="_blank">
-                            Explore patterns <i class="fas fa-arrow-right"></i>
+                        <h3>CSS Tricks</h3>
+                        <p>For modern CSS techniques and layout solutions used throughout the project.</p>
+                        <a href="https://css-tricks.com/" target="_blank" class="resource-link">
+                            Learn CSS <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- MDN Web Docs -->
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3>MDN Web Docs</h3>
+                        <p>Comprehensive reference for HTML, CSS, and JavaScript features and APIs.</p>
+                        <a href="https://developer.mozilla.org/" target="_blank" class="resource-link">
+                            Read Docs <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- Coolors -->
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h3>Coolors</h3>
+                        <p>Used to generate the color palette with primary purple (#6a00ff) and teal accent (#00e5ff).</p>
+                        <a href="https://coolors.co/" target="_blank" class="resource-link">
+                            Generate Palette <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- UI Design Patterns -->
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h3>UI Patterns</h3>
+                        <p>Modern dashboard design patterns inspired by tools like Notion and ClickUp.</p>
+                        <a href="https://www.uipatterns.io/" target="_blank" class="resource-link">
+                            Explore Patterns <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
@@ -642,6 +1054,200 @@
     </div>
 
     <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.opacity = '0';
+                    setTimeout(function() {
+                        loading.style.display = 'none';
+                    }, 500);
+                }
+            }, 1500);
+        });
+    
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (!menuToggle || !sidebar || !overlay) return;
+            
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+                
+                // Change hamburger icon to X when menu is open
+                const icon = menuToggle.querySelector('i');
+                if (sidebar.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                menuToggle.classList.remove('active');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+            
+            // Close menu when clicking on nav links
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
+            });
+        }
+    
+        // Update current date
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+  
+        // Get user data from URL or localStorage
+        function getUserData() {
+            // Check URL for user parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const userFromUrl = urlParams.get('user');
+            
+            if (userFromUrl) {
+                const userData = {
+                    fullname: decodeURIComponent(userFromUrl),
+                    email: "commander@nebulaworks.space",
+                    position: "Mission Commander",
+                    department: "Command",
+                    joinDate: "January 15, 2022"
+                };
+                
+                // Store in localStorage for future visits
+                localStorage.setItem('nebulaWorksUser', JSON.stringify(userData));
+                return userData;
+            }
+            
+            // Check localStorage for user data
+            const storedUser = localStorage.getItem('nebulaWorksUser');
+            if (storedUser) {
+                return JSON.parse(storedUser);
+            }
+            
+            // Default fallback
+            return {
+                fullname: "Commander",
+                email: "commander@nebulaworks.space",
+                position: "Mission Commander",
+                department: "Command",
+                joinDate: "January 15, 2022"
+            };
+        }
+
+        // Update user interface with user data
+        function updateUserInterface() {
+            const userData = getUserData();
+            
+            // Get first character of the name for avatar
+            const avatarChar = userData.fullname.charAt(0).toUpperCase();
+            
+            // Update welcome message
+            const usernameElement = document.getElementById('username');
+            if (usernameElement) {
+                usernameElement.textContent = userData.fullname;
+            }
+            
+            // Update user avatar in header
+            const userAvatar = document.getElementById('user-avatar');
+            if (userAvatar) {
+                userAvatar.textContent = avatarChar;
+            }
+            
+            // Update dropdown info
+            const dropdownAvatar = document.getElementById('dropdown-avatar');
+            const dropdownUsername = document.getElementById('dropdown-username');
+            const dropdownUseremail = document.getElementById('dropdown-useremail');
+            
+            if (dropdownAvatar) dropdownAvatar.textContent = avatarChar;
+            if (dropdownUsername) dropdownUsername.textContent = userData.fullname;
+            if (dropdownUseremail) dropdownUseremail.textContent = userData.email;
+            
+            // Update current user in team widget
+            const currentUserAvatar = document.getElementById('current-user-avatar');
+            const currentUserName = document.getElementById('current-user-name');
+            const currentUserPosition = document.getElementById('current-user-position');
+            
+            if (currentUserAvatar) currentUserAvatar.textContent = avatarChar;
+            if (currentUserName) currentUserName.textContent = userData.fullname;
+            if (currentUserPosition) currentUserPosition.textContent = userData.position;
+            
+            // Update modal info
+            const modalAvatar = document.getElementById('modal-avatar');
+            const modalUsername = document.getElementById('modal-username');
+            const modalUseremail = document.getElementById('modal-useremail');
+            const modalUserposition = document.getElementById('modal-position');
+            const modalFullname = document.getElementById('modal-fullname');
+            const modalEmail = document.getElementById('modal-email');
+            const modalPosition = document.getElementById('modal-position');
+            const modalDepartment = document.getElementById('modal-department');
+            
+            if (modalAvatar) modalAvatar.textContent = avatarChar;
+            if (modalUsername) modalUsername.textContent = userData.fullname;
+            if (modalUseremail) modalUseremail.textContent = userData.email;
+            if (modalUserposition) modalUserposition.textContent = userData.position;
+            if (modalFullname) modalFullname.textContent = userData.fullname;
+            if (modalEmail) modalEmail.textContent = userData.email;
+            if (modalPosition) modalPosition.textContent = userData.position;
+            if (modalDepartment) modalDepartment.textContent = userData.department;
+        }
+        // User Dropdown Toggle
+        function setupUserDropdown() {
+            const userAvatar = document.getElementById('user-avatar');
+            const userDropdown = document.getElementById('user-dropdown');
+            const overlay = document.getElementById('overlay');
+            
+            if (!userAvatar || !userDropdown || !overlay) return;
+            
+            userAvatar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                userDropdown.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!userDropdown.contains(e.target) && e.target !== userAvatar) {
+                    userDropdown.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        }
+
         // Theme Toggle Functionality
         function setupThemeToggle() {
             const themeToggle = document.getElementById('theme-toggle');
@@ -665,29 +1271,27 @@
             });
         }
 
-        // Mobile Menu Toggle
-        function setupMobileMenu() {
-            const menuToggle = document.getElementById('menuToggle');
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            
-            if (!menuToggle || !sidebar || !overlay) return;
-            
-            menuToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('active');
-                overlay.classList.toggle('active');
-            });
-            
-            overlay.addEventListener('click', function() {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-            });
-        }
-
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            setupThemeToggle();
             setupMobileMenu();
+            updateCurrentDate();
+            updateUserInterface();
+            setupUserDropdown();
+            setupThemeToggle();
+            
+            // Add hover effect to resource cards
+            const resourceCards = document.querySelectorAll('.resource-card');
+            resourceCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-5px)';
+                    card.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                    card.style.boxShadow = '';
+                });
+            });
         });
     </script>
 </body>
