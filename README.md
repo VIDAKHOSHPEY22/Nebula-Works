@@ -8,6 +8,7 @@
 </p>
 
 <p align="center">
+<p align="center">
   <img src="https://img.shields.io/github/stars/VIDAKHOSHPEY22/Nebula-Works?style=social" alt="GitHub Stars" />
   <img src="https://img.shields.io/github/forks/VIDAKHOSHPEY22/Nebula-Works?style=social" alt="GitHub Forks" />
   <img src="https://img.shields.io/github/last-commit/VIDAKHOSHPEY22/Nebula-Works" alt="Last Commit" />
