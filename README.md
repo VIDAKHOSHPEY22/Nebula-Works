@@ -7,6 +7,15 @@
   </a>
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/github/stars/VIDAKHOSHPEY22/Nebula-Works?style=social" alt="GitHub Stars" />
+  <img src="https://img.shields.io/github/forks/VIDAKHOSHPEY22/Nebula-Works?style=social" alt="GitHub Forks" />
+  <img src="https://img.shields.io/github/last-commit/VIDAKHOSHPEY22/Nebula-Works" alt="Last Commit" />
+  <img src="https://img.shields.io/github/languages/top/VIDAKHOSHPEY22/Nebula-Works" alt="Top Language" />
+  <img src="https://img.shields.io/github/issues/VIDAKHOSHPEY22/Nebula-Works" alt="Open Issues" />
+  <img src="https://img.shields.io/github/license/VIDAKHOSHPEY22/Nebula-Works" alt="License" />
+</p>
+
 ---
 
 <h1 align="center">🌌 Nebula Works - Galactic Admin Dashboard</h1>
