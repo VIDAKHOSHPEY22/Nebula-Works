@@ -1,4 +1,4 @@
-<!--that's 😎 cool?! if you liked give me star✨😉-->
+<!--that's 😎 cool?! if you liked give me star ✨😉-->
 <p align="center">
   <a href="README.md">
     <img src="https://img.shields.io/badge/🇬🇧 English-0d6efd?style=for-the-badge&logo=googletranslate&logoColor=white" alt="English Version">
